@@ -1,0 +1,30 @@
+services:
+
+  postgres:
+    image: postgis/postgis:16-3.4
+    container_name: gis_postgres
+
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: gisdb
+
+    ports:
+      - "5432:5432"
+
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  geoserver:
+    image: kartoza/geoserver
+    container_name: gis_geoserver
+
+    ports:
+      - "8080:8080"
+
+    environment:
+      GEOSERVER_ADMIN_USER: admin
+      GEOSERVER_ADMIN_PASSWORD: geoserver
+
+volumes:
+  postgres_data:
