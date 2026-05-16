@@ -1,7 +1,7 @@
 function Navbar() {
   return (
-    <header>
-      <h2>GIS Platform</h2>
+    <header className="navbar">
+      <h2>Web GIS Enterprise</h2>
     </header>
   )
 }
