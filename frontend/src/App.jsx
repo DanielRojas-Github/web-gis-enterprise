@@ -1,11 +1,8 @@
+import AppRouter from '@app/router/AppRouter'
+
 function App() {
-  return (
-    <div>
-      <h1>GIS Enterprise Platform</h1>
-    </div>
-  )
+  return <AppRouter />
 }
 
 export default App
-
 
