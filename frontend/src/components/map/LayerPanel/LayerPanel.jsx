@@ -1,12 +1,23 @@
+import { GIS_LAYERS } from '@constants/layers'
+
 function LayerPanel() {
   return (
     <div className="layer-panel">
       <h3>Layers</h3>
 
       <ul>
-        <li>OpenStreetMap</li>
-        <li>Roads</li>
-        <li>Buildings</li>
+        {GIS_LAYERS.map((layer) => (
+          <li key={layer.id}>
+            <label>
+              <input
+                type="checkbox"
+                defaultChecked={layer.visible}
+              />
+
+              {layer.label}
+            </label>
+          </li>
+        ))}
       </ul>
     </div>
   )
