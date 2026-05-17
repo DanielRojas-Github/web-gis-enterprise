@@ -3,6 +3,7 @@ import { createRoot } from 'react-dom/client'
 import 'leaflet/dist/leaflet.css'
 import '@styles/globals.css'
 import '@styles/layout.css'
+import '@styles/map.css'
 
 import App from './App.jsx'
 
