@@ -15,8 +15,6 @@ export default defineConfig({
 
       '@app': path.resolve(__dirname, './src/app'),
 
-      '@components': path.resolve(__dirname, './src/components'),
-
       '@features': path.resolve(__dirname, './src/features'),
 
       '@layouts': path.resolve(__dirname, './src/layouts'),

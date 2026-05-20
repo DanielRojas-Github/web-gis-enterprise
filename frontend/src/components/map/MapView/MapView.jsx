@@ -1,28 +1,66 @@
-import { MapContainer, TileLayer } from 'react-leaflet'
+import {
+  MapContainer,
+  TileLayer,
+} from 'react-leaflet'
 
-import LayerPanel from '@components/map/LayerPanel/LayerPanel'
-import MapControls from '@components/map/MapControls/MapControls'
+import { useLayers }
+  from '@/store/layers/hooks/useLayers'
 
-import { mapConfig, tileLayers } from '@services/map/map.service'
+import LayerRenderer
+  from '@/gis/layers/renderers/LayerRenderer'
 
-function MapView() {
+import { useMapInteractions }
+  from '@/gis/interactions/hooks/useMapInteractions'
+
+import FeaturePopup
+  from '@/gis/popups/FeaturePopup'
+
+import { flattenLayers }
+  from '@/gis/utils/flattenLayers'
+
+const MapInteractions = () => {
+
+  useMapInteractions()
+
+  return null
+}
+
+const MapView = () => {
+
+  const { state } = useLayers()
+
+  const visibleLayers =
+    flattenLayers(state.layers)
+
   return (
-    <div className="map-wrapper">
-      <LayerPanel />
 
-      <MapControls />
+    <MapContainer
+      center={[-17.7833, -63.1821]}
+      zoom={6}
+      style={{
+        height: '100vh',
+        width: '100%',
+      }}
+    >
 
-      <MapContainer
-        center={mapConfig.center}
-        zoom={mapConfig.zoom}
-        style={{ width: '100%', height: '100%' }}
-      >
-        <TileLayer
-          attribution={tileLayers.osm.attribution}
-          url={tileLayers.osm.url}
+      {/* Capa base del mapa */}
+      <TileLayer
+        attribution='&copy; OpenStreetMap contributors'
+        url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
+      />
+
+      <MapInteractions />
+
+      <FeaturePopup />
+
+      {visibleLayers.map((layer) => (
+        <LayerRenderer
+          key={layer.id}
+          layer={layer}
         />
-      </MapContainer>
-    </div>
+      ))}
+
+    </MapContainer>
   )
 }
 

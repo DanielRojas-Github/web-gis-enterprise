@@ -4,11 +4,16 @@ import 'leaflet/dist/leaflet.css'
 import '@styles/globals.css'
 import '@styles/layout.css'
 import '@styles/map.css'
-
-import App from './App.jsx'
+import   GISProvider  from '@/store/gis/GISProvider'
+import  LayerProvider  from '@/store/layers/LayerProvider'
+import App from './App'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <App />
-  </StrictMode>,
+    <GISProvider>
+      <LayerProvider>
+        <App />
+      </LayerProvider>
+    </GISProvider>
+  </StrictMode>
 )
