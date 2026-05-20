@@ -4,6 +4,8 @@ import { LAYER_ACTIONS } from '@/store/layers/layerActions'
 
 import OpacitySlider from './OpacitySlider'
 
+import LayerLegend from './LayerLegend'
+
 const LayerItem = ({ layer }) => {
   const { dispatch } = useLayers()
 
@@ -43,7 +45,11 @@ const LayerItem = ({ layer }) => {
         opacity={layer.opacity}
         onChange={handleOpacityChange}
       />
+      <LayerLegend
+    legendUrl={layer.legendUrl}  />
+
     </div>
+      
   )
 }
 

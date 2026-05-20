@@ -16,4 +16,25 @@ export const operationalLayers = [
 
     layers: 'gis:departments',
   },
+  
+  {
+  id: 'rivers',
+
+  name: 'Rivers',
+
+  type: 'WMS',
+
+  visible: true,
+
+  opacity: 1,
+
+  zIndex: 2,
+
+  url: '...',
+
+  layers: 'workspace:rivers',
+
+  legendUrl:
+    'https://dummyimage.com/120x30/4da6ff/ffffff.png&text=Rivers'
+}
 ]
