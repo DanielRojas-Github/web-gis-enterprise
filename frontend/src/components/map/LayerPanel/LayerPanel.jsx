@@ -1,24 +1,21 @@
-import { GIS_LAYERS } from '@constants/layers'
+import { useLayers }
+  from '@/store/layers/hooks/useLayers'
 
-function LayerPanel() {
+import LayerItem from '@/gis/components/layers/LayerItem'
+
+const LayerPanel = () => {
+  const { state } = useLayers()
+
   return (
     <div className="layer-panel">
       <h3>Layers</h3>
 
-      <ul>
-        {GIS_LAYERS.map((layer) => (
-          <li key={layer.id}>
-            <label>
-              <input
-                type="checkbox"
-                defaultChecked={layer.visible}
-              />
-
-              {layer.label}
-            </label>
-          </li>
-        ))}
-      </ul>
+      {state.layers.map((layer) => (
+        <LayerItem
+          key={layer.id}
+          layer={layer}
+        />
+      ))}
     </div>
   )
 }

@@ -69,21 +69,70 @@ export const layerReducer = (state, action) => {
   return {
     ...state,
 
-    layers: state.layers.map((group) => ({
-      ...group,
-
-      children: group.children.map((layer) => {
-        if (layer.id === action.payload.layerId) {
-          return {
+    layers: state.layers.map((layer) =>
+      layer.id ===
+      action.payload.layerId
+        ? {
             ...layer,
-            opacity: action.payload.opacity,
+            opacity:
+              action.payload.opacity,
           }
-        }
-
-        return layer
-      }),
-    })),
+        : layer
+    ),
   }
+    case LAYER_ACTIONS.MOVE_LAYER_UP: {
+  const layers = [...state.layers]
+
+  const index = layers.findIndex(
+    (layer) =>
+      layer.id === action.payload
+  )
+
+  if (index <= 0) return state
+
+  ;[
+    layers[index - 1],
+    layers[index],
+  ] = [
+    layers[index],
+    layers[index - 1],
+  ]
+
+  return {
+    ...state,
+    layers,
+  }
+}
+
+case LAYER_ACTIONS.MOVE_LAYER_DOWN: {
+  const layers = [...state.layers]
+
+  const index = layers.findIndex(
+    (layer) =>
+      layer.id === action.payload
+  )
+
+  if (
+    index === -1 ||
+    index === layers.length - 1
+  ) {
+    return state
+  }
+
+  ;[
+    layers[index + 1],
+    layers[index],
+  ] = [
+    layers[index],
+    layers[index + 1],
+  ]
+
+  return {
+    ...state,
+    layers,
+  }
+}
+
     default:
       return state
   }

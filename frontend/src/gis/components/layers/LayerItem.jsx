@@ -6,6 +6,8 @@ import OpacitySlider from './OpacitySlider'
 
 import LayerLegend from './LayerLegend'
 
+import LayerOrderingControls from './LayerOrderingControls'
+
 const LayerItem = ({ layer }) => {
   const { dispatch } = useLayers()
 
@@ -21,6 +23,24 @@ const LayerItem = ({ layer }) => {
       },
     })
   }
+
+const moveLayerUp = () => {
+  dispatch({
+    type:
+      LAYER_ACTIONS.MOVE_LAYER_UP,
+
+    payload: layer.id,
+  })
+}
+
+const moveLayerDown = () => {
+  dispatch({
+    type:
+      LAYER_ACTIONS.MOVE_LAYER_DOWN,
+
+    payload: layer.id,
+  })
+}
 
   return (
     <div className="layer-item">
@@ -41,6 +61,10 @@ const LayerItem = ({ layer }) => {
         <span>{layer.name}</span>
       </div>
 
+      <LayerOrderingControls
+        onMoveUp={moveLayerUp}
+        onMoveDown={moveLayerDown}
+      />
       <OpacitySlider
         opacity={layer.opacity}
         onChange={handleOpacityChange}

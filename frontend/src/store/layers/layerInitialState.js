@@ -1,9 +1,9 @@
 export const layerInitialState = {
   layers: [],
 
-  activeLayer: null,
+  // activeLayer: null,
 
-  loadingLayers: false,
+  // loadingLayers: false,
 
-  layerErrors: null,
+  // layerErrors: null,
 }

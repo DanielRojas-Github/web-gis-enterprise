@@ -49,3 +49,15 @@
   padding: 0;
   overflow: hidden;
 }
+
+.layer-order-controls {
+  display: flex;
+
+  gap: 0.25rem;
+
+  margin-top: 0.5rem;
+}
+
+.layer-order-controls button {
+  cursor: pointer;
+}
