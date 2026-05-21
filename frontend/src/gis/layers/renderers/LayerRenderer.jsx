@@ -1,4 +1,4 @@
-import { layerFactory } from './factories/layerFactory'
+import { layerFactory } from '../factories/layerFactory'
 
 const LayerRenderer = ({ layer }) => {
   return (layerFactory(layer))

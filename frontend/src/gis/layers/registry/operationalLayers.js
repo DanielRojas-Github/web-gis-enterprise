@@ -15,6 +15,9 @@ export const operationalLayers = [
     url: 'http://localhost:8080/geoserver/wms',
 
     layers: 'gis:departments',
+
+    legendUrl:
+    'https://dummyimage.com/120x30/ff9800/ffffff.png&text=Departments',
   },
   
   {
