@@ -1,4 +1,7 @@
-import { useEffect } from 'react'
+import {
+  useEffect,
+  useRef,
+} from 'react'
 
 import { useLayers } from '@/store/layers/hooks/useLayers'
 
@@ -10,16 +13,56 @@ import MapView  from '@/gis/components/map/MapView'//frontend\src\gis\components
 
 import LayerPanel from '@/gis/components/layers/LayerPanel'//frontend\src\gis\components\layers\LayerPanel.jsx
 
+import {
+  loadLayerState,
+  saveLayerState,
+} from '@/gis/services/persistence/layerPersistence'
 
 function App() {
-  const { dispatch } = useLayers() // Access the dispatch function from the layers context
+ const {
+  state,
+  dispatch,
+} = useLayers()
 
-  useEffect(() => {
-    dispatch({
-      type: LAYER_ACTIONS.SET_LAYERS,
-      payload: operationalLayers,
-    })
-  }, [dispatch])
+ const hydrated =
+  useRef(false)
+
+useEffect(() => {
+
+  const persistedLayers =
+    loadLayerState()
+
+  dispatch({
+    type:
+      LAYER_ACTIONS.SET_LAYERS,
+
+    payload:
+      persistedLayers ||
+      operationalLayers,
+  })
+
+  hydrated.current =
+    true
+
+}, [dispatch])
+ 
+ useEffect(() => {
+
+  if (
+    !hydrated.current
+  ) {
+    return
+  }
+
+  if (
+    state.layers.length
+  ) {
+    saveLayerState(
+      state.layers
+    )
+  }
+
+}, [state.layers])
 
   return (
     <div className="app-layout">

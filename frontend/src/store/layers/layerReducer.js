@@ -1,6 +1,9 @@
 import { LAYER_ACTIONS }
   from './layerActions'
 
+import { updateLayerTree }
+  from '@/gis/utils/updateLayerTree'
+
 export const layerReducer = (
   state,
   action
@@ -38,68 +41,44 @@ export const layerReducer = (
       }
 
     case LAYER_ACTIONS.TOGGLE_LAYER:
-      return {
-        ...state,
+       return {
+    ...state,
 
-        layers:
-          state.layers.map(
-            (group) => ({
-              ...group,
+    layers:
+      updateLayerTree(
+        state.layers,
 
-              children:
-                group.children.map(
-                  (layer) => {
-                    if (
-                      layer.id ===
-                      action.payload
-                    ) {
-                      return {
-                        ...layer,
+        action.payload,
 
-                        visible:
-                          !layer.visible,
-                      }
-                    }
+        (layer) => ({
+          ...layer,
 
-                    return layer
-                  }
-                ),
-            })
-          ),
-      }
+          visible:
+            !layer.visible,
+        })
+      ),
+  }
 
-    case LAYER_ACTIONS.SET_LAYER_OPACITY:
-      return {
-        ...state,
+   case LAYER_ACTIONS.SET_LAYER_OPACITY:
+  return {
+    ...state,
 
-        layers:
-          state.layers.map(
-            (group) => ({
-              ...group,
+    layers:
+      updateLayerTree(
+        state.layers,
 
-              children:
-                group.children.map(
-                  (layer) => {
-                    if (
-                      layer.id ===
-                      action.payload.id
-                    ) {
-                      return {
-                        ...layer,
+        action.payload.id,
 
-                        opacity:
-                          action.payload
-                            .opacity,
-                      }
-                    }
+        (layer) => ({
+          ...layer,
 
-                    return layer
-                  }
-                ),
-            })
-          ),
-      }
-    
+          opacity:
+            action.payload
+              .opacity,
+        })
+      ),
+  }
+  
     case LAYER_ACTIONS.TOGGLE_GROUP:
   return {
     ...state,
