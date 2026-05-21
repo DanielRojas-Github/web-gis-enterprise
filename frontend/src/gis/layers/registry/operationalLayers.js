@@ -6,55 +6,83 @@ export const operationalLayers = [
 
     type: 'group',
 
-    expanded: true,
-
     visible: true,
+
+    expanded: true,
 
     children: [
       {
-        id: 'departments',
+        id: 'hydrology',
 
-        name: 'Departments',
+        name: 'Hydrology',
 
-        type: 'WMS',
+        type: 'group',
 
         visible: true,
 
-        opacity: 1,
+        expanded: true,
 
-        zIndex: 100,
+        children: [
+          {
+            id: 'rivers',
 
-        url:
-          'http://localhost:8080/geoserver/wms',
+            name: 'Rivers',
 
-        layers:
-          'gis:departments',
+            type: 'WMS',
 
-        legendUrl:
-          'https://dummyimage.com/120x30/009933/ffffff.png&text=Departments',
+            visible: true,
+
+            opacity: 1,
+
+            zIndex: 101,
+
+            url:
+              'http://localhost:8080/geoserver/wms',
+
+            layers:
+              'gis:rivers',
+
+            legendUrl:
+              'https://dummyimage.com/120x30/4da6ff/ffffff.png&text=Rivers',
+          },
+        ],
       },
 
       {
-        id: 'rivers',
+        id: 'vegetation',
 
-        name: 'Rivers',
+        name: 'Vegetation',
 
-        type: 'WMS',
+        type: 'group',
 
         visible: true,
 
-        opacity: 1,
+        expanded: true,
 
-        zIndex: 101,
+        children: [
+          {
+            id: 'departments',
 
-        url:
-          'http://localhost:8080/geoserver/wms',
+            name: 'Departments',
 
-        layers:
-          'gis:rivers',
+            type: 'WMS',
 
-        legendUrl:
-          'https://dummyimage.com/120x30/4da6ff/ffffff.png&text=Rivers',
+            visible: true,
+
+            opacity: 1,
+
+            zIndex: 100,
+
+            url:
+              'http://localhost:8080/geoserver/wms',
+
+            layers:
+              'gis:departments',
+
+            legendUrl:
+              'https://dummyimage.com/120x30/009933/ffffff.png&text=Departments',
+          },
+        ],
       },
     ],
   },

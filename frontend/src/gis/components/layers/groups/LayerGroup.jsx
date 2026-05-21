@@ -2,7 +2,7 @@ import { useState }
   from 'react'
 
 import LayerItem
-  from '..//LayerItem'
+  from '../LayerItem'
 
 import { useLayers }
   from '@/store/layers/hooks/useLayers'
@@ -74,16 +74,35 @@ const LayerGroup = ({
         <div className="layer-group-children">
 
           {group.children.map(
-            (layer) => (
-              <LayerItem
-                key={
-                  layer.id
-                }
-                layer={
-                  layer
-                }
-              />
-            )
+            (child) => {
+
+              if (
+                child.type ===
+                'group'
+              ) {
+                return (
+                  <LayerGroup
+                    key={
+                      child.id
+                    }
+                    group={
+                      child
+                    }
+                  />
+                )
+              }
+
+              return (
+                <LayerItem
+                  key={
+                    child.id
+                  }
+                  layer={
+                    child
+                  }
+                />
+              )
+            }
           )}
 
         </div>
