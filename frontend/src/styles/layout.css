@@ -61,3 +61,65 @@
 .layer-order-controls button {
   cursor: pointer;
 }
+
+.layer-item {
+  cursor: grab;
+}
+
+.layer-item:active {
+  cursor: grabbing;
+}
+
+.draggable-layer-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.layer-drag-handle {
+  cursor: grab;
+
+  user-select: none;
+
+  padding: 4px 8px;
+
+  border-radius: 4px;
+
+  background: #2d2d2d;
+
+  color: white;
+
+  font-size: 14px;
+}
+
+.layer-drag-handle:active {
+  cursor: grabbing;
+}
+
+.layer-group {
+  margin-bottom: 10px;
+}
+
+.layer-group-header {
+  font-weight: bold;
+
+  cursor: pointer;
+
+  padding: 6px;
+
+  background: #2d2d2d;
+
+  color: white;
+
+  border-radius: 4px;
+}
+
+.layer-group-children {
+  padding-left: 20px;
+
+  margin-top: 8px;
+}
+
+.layer-group-header input {
+  cursor: pointer;
+}

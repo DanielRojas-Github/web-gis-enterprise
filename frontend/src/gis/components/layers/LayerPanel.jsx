@@ -1,26 +1,26 @@
-import { useLayerStore } from "../../store/layerStore"
+import { useLayers }
+  from '@/store/layers/hooks/useLayers'
 
-import LayerGroup from "./LayerGroup"
+
+//import DraggableLayerItem from './DraggableLayerItem'
+
+import LayerGroup
+  from '@/gis/components/layers/groups/LayerGroup'
 
 const LayerPanel = () => {
-  const {
-    layers,
-    toggleLayer,
-    toggleGroup
-  } = useLayerStore()
+  const { state } = useLayers()
 
   return (
     <div className="layer-panel">
-      <h2>Layers</h2>
+      <h3>Layers</h3>
 
-      {layers.map((group) => (
-        <LayerGroup
-          key={group.id}
-          group={group}
-          toggleGroup={toggleGroup}
-          toggleLayer={toggleLayer}
-        />
-      ))}
+      {state.layers.map((group) => (
+  <LayerGroup
+    key={group.id}
+    group={group}
+  />
+))}
+      
     </div>
   )
 }

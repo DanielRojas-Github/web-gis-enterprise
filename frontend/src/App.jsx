@@ -4,15 +4,15 @@ import { useLayers } from '@/store/layers/hooks/useLayers'
 
 import { operationalLayers } from '@/gis/layers/registry/operationalLayers'
 
-import { LAYER_ACTIONS } from '@/store/layers/layerActions'
+import { LAYER_ACTIONS } from '@/store/layers/layerActions'//frontend\src\store\layers\layerActions.js
 
-import MapView  from '@/components/map/MapView/MapView'
+import MapView  from '@/gis/components/map/MapView'//frontend\src\gis\components\map\MapView.jsx
 
-import LayerPanel from '@/components/map/LayerPanel/LayerPanel'
+import LayerPanel from '@/gis/components/layers/LayerPanel'//frontend\src\gis\components\layers\LayerPanel.jsx
 
 
 function App() {
-  const { dispatch } = useLayers()
+  const { dispatch } = useLayers() // Access the dispatch function from the layers context
 
   useEffect(() => {
     dispatch({

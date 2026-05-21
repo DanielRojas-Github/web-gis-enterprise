@@ -1,79 +1,86 @@
-import { useLayers } from '@/store/layers/hooks/useLayers'
+import { useLayers }
+  from '@/store/layers/hooks/useLayers'
 
-import { LAYER_ACTIONS } from '@/store/layers/layerActions'
+import { LAYER_ACTIONS }
+  from '@/store/layers/layerActions'
 
-import OpacitySlider from './OpacitySlider'
+import OpacitySlider
+  from './OpacitySlider'
 
-import LayerLegend from './LayerLegend'
+import LayerLegend
+  from './LayerLegend'
 
-import LayerOrderingControls from './LayerOrderingControls'
+const LayerItem = ({
+  layer,
+}) => {
 
-const LayerItem = ({ layer }) => {
-  const { dispatch } = useLayers()
+  const { dispatch } =
+    useLayers()
 
-  const handleOpacityChange = (
-    opacity
-  ) => {
-    dispatch({
-      type: LAYER_ACTIONS.UPDATE_OPACITY,
+  const handleOpacityChange =
+    (opacity) => {
 
-      payload: {
-        layerId: layer.id,
-        opacity,
-      },
-    })
-  }
+      dispatch({
+        type:
+          LAYER_ACTIONS.SET_LAYER_OPACITY,
 
-const moveLayerUp = () => {
-  dispatch({
-    type:
-      LAYER_ACTIONS.MOVE_LAYER_UP,
+        payload: {
+          id: layer.id,
 
-    payload: layer.id,
-  })
-}
+          opacity,
+        },
+      })
+    }
 
-const moveLayerDown = () => {
-  dispatch({
-    type:
-      LAYER_ACTIONS.MOVE_LAYER_DOWN,
+  const handleToggleLayer =
+    () => {
 
-    payload: layer.id,
-  })
-}
+      dispatch({
+        type:
+          LAYER_ACTIONS.TOGGLE_LAYER,
+
+        payload:
+          layer.id,
+      })
+    }
 
   return (
     <div className="layer-item">
+
       <div className="layer-item-header">
+
         <input
           type="checkbox"
-          checked={layer.visible}
-          onChange={() =>
-            dispatch({
-              type:
-                LAYER_ACTIONS.TOGGLE_LAYER,
-
-              payload: layer.id,
-            })
+          checked={
+            layer.visible
+          }
+          onChange={
+            handleToggleLayer
           }
         />
 
-        <span>{layer.name}</span>
+        <span>
+          {layer.name}
+        </span>
+
       </div>
 
-      <LayerOrderingControls
-        onMoveUp={moveLayerUp}
-        onMoveDown={moveLayerDown}
-      />
       <OpacitySlider
-        opacity={layer.opacity}
-        onChange={handleOpacityChange}
+        opacity={
+          layer.opacity
+        }
+        onChange={
+          handleOpacityChange
+        }
       />
+
       <LayerLegend
-    legendUrl={layer.legendUrl}  />
+        legendUrl={
+          layer.legendUrl
+        }
+      />
 
     </div>
-      
   )
 }
 

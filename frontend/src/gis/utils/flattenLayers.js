@@ -1,15 +1,25 @@
-export const flattenLayers = (groups) => {
+export const flattenLayers = (
+  layers
+) => {
   const result = []
 
-  groups.forEach((group) => {
-    if (!group.children) return
-
-    group.children.forEach((layer) => {
-      if (layer.visible) {
-        result.push(layer)
+  const traverse = (
+    items
+  ) => {
+    items.forEach((item) => {
+      if (
+        item.type === 'group'
+      ) {
+        traverse(
+          item.children || []
+        )
+      } else {
+        result.push(item)
       }
     })
-  })
+  }
+
+  traverse(layers)
 
   return result
 }

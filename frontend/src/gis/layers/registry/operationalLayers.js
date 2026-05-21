@@ -1,43 +1,61 @@
 export const operationalLayers = [
   {
-    id: 'departments',
+    id: 'environment',
 
-    name: 'Departments',
+    name: 'Environment',
 
-    type: 'WMS',
+    type: 'group',
+
+    expanded: true,
 
     visible: true,
 
-    opacity: 1,
+    children: [
+      {
+        id: 'departments',
 
-    zIndex: 100,
+        name: 'Departments',
 
-    url: 'http://localhost:8080/geoserver/wms',
+        type: 'WMS',
 
-    layers: 'gis:departments',
+        visible: true,
 
-    legendUrl:
-    'https://dummyimage.com/120x30/ff9800/ffffff.png&text=Departments',
+        opacity: 1,
+
+        zIndex: 100,
+
+        url:
+          'http://localhost:8080/geoserver/wms',
+
+        layers:
+          'gis:departments',
+
+        legendUrl:
+          'https://dummyimage.com/120x30/009933/ffffff.png&text=Departments',
+      },
+
+      {
+        id: 'rivers',
+
+        name: 'Rivers',
+
+        type: 'WMS',
+
+        visible: true,
+
+        opacity: 1,
+
+        zIndex: 101,
+
+        url:
+          'http://localhost:8080/geoserver/wms',
+
+        layers:
+          'gis:rivers',
+
+        legendUrl:
+          'https://dummyimage.com/120x30/4da6ff/ffffff.png&text=Rivers',
+      },
+    ],
   },
-  
-  {
-  id: 'rivers',
-
-  name: 'Rivers',
-
-  type: 'WMS',
-
-  visible: true,
-
-  opacity: 1,
-
-  zIndex: 2,
-
-  url: '...',
-
-  layers: 'workspace:rivers',
-
-  legendUrl:
-    'https://dummyimage.com/120x30/4da6ff/ffffff.png&text=Rivers'
-}
 ]
