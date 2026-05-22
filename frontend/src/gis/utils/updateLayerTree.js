@@ -1,12 +1,19 @@
 export const updateLayerTree =
   (
     items,
-    layerId,
+    targetId,
     updater
   ) => {
 
     return items.map(
       (item) => {
+
+        if (
+          item.id ===
+          targetId
+        ) {
+          return updater(item)
+        }
 
         if (
           item.type ===
@@ -21,17 +28,11 @@ export const updateLayerTree =
                 item.children ||
                   [],
 
-                layerId,
+                targetId,
 
                 updater
               ),
           }
-        }
-
-        if (
-          item.id === layerId
-        ) {
-          return updater(item)
         }
 
         return item
