@@ -1,9 +1,15 @@
 export const gisInitialState = {
+
+  map: null,
+
   selectedFeature: null,
 
   selectedFeatures: [],
 
-  mapCenter: [-17.7833, -63.1821],
+  mapCenter: [
+    -17.7833,
+    -63.1821,
+  ],
 
   zoom: 6,
 
@@ -22,4 +28,8 @@ export const gisInitialState = {
   filters: {},
 
   visibleLayers: [],
+
+  user: {
+    role: 'viewer',
+  },
 }

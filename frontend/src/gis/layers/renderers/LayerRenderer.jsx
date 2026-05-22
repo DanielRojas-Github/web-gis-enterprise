@@ -1,7 +1,22 @@
-import { layerFactory } from '../factories/layerFactory'
+import WMSRenderer
+  from './WMSRenderer'
 
-const LayerRenderer = ({ layer }) => {
-  return (layerFactory(layer))
+const LayerRenderer = ({
+  layer,
+}) => {
+
+  switch (layer.type) {
+
+    case 'WMS':
+      return (
+        <WMSRenderer
+          layer={layer}
+        />
+      )
+
+    default:
+      return null
+  }
 }
 
 export default LayerRenderer

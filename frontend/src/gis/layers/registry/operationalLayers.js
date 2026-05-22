@@ -1,8 +1,11 @@
+import { defaultLayerMetadata } from '@/gis/layers/registry/defaultLayerMetadata'
+import { geoserverConfig } from '@/gis/services/geoserver/geoserverConfig'
 export const operationalLayers = [
-  {
-    id: 'environment',
 
-    name: 'Environment',
+  {
+    id: 'administrative',
+
+    name: 'Administrative',
 
     type: 'group',
 
@@ -11,78 +14,155 @@ export const operationalLayers = [
     expanded: true,
 
     children: [
+
       {
-        id: 'hydrology',
+        id: 'departments',
 
-        name: 'Hydrology',
+        name: 'Departments',
 
-        type: 'group',
+        type: 'WMS',
 
         visible: true,
 
-        expanded: true,
+        opacity: 1,
 
-        children: [
-          {
-            id: 'rivers',
+        zIndex: 100,
 
-            name: 'Rivers',
+        url:
+          'http://localhost:8080/geoserver/wms',
 
-            type: 'WMS',
+        layers:
+          `${geoserverConfig.workspace}:departments`,
 
-            visible: true,
+        ...defaultLayerMetadata,
 
-            opacity: 1,
+        metadata: {
 
-            zIndex: 101,
+          attribution:
+            'Administrative Dataset',
 
-            url:
-              'http://localhost:8080/geoserver/wms',
+          geometryType:
+            'Polygon',
 
-            layers:
-              'gis:rivers',
+          crs: 'EPSG:4326',
 
-            legendUrl:
-              'https://dummyimage.com/120x30/4da6ff/ffffff.png&text=Rivers',
-          },
-        ],
+          category: 'administrative',
+
+          keywords: [
+            'administrative',
+            'boundaries',
+          ],
+        },
       },
+    ],
+  },
+
+  {
+    id: 'hydrology',
+
+    name: 'Hydrology',
+
+    type: 'group',
+
+    visible: true,
+
+    expanded: true,
+
+    children: [
 
       {
-        id: 'vegetation',
+        id: 'rivers',
 
-        name: 'Vegetation',
+        name: 'Rivers',
 
-        type: 'group',
+        type: 'WMS',
 
         visible: true,
 
-        expanded: true,
+        opacity: 1,
 
-        children: [
-          {
-            id: 'departments',
+        zIndex: 2,
 
-            name: 'Departments',
+        url:
+          'http://localhost:8080/geoserver/wms',
 
-            type: 'WMS',
+        layers:
+         `${geoserverConfig.workspace}:rivers`,
 
-            visible: true,
+        ...defaultLayerMetadata,
 
-            opacity: 1,
+        metadata: {
 
-            zIndex: 100,
+          attribution:
+            'Hydrology Dataset',
 
-            url:
-              'http://localhost:8080/geoserver/wms',
+          geometryType:
+            'LineString',
 
-            layers:
-              'gis:departments',
+          crs: 'EPSG:4326',
 
-            legendUrl:
-              'https://dummyimage.com/120x30/009933/ffffff.png&text=Departments',
-          },
-        ],
+          category: 'hydrology',
+
+          keywords: [
+            'hydrology',
+            'water',
+          ],
+        },
+      },
+    ],
+  },
+
+  {
+    id: 'transportation',
+
+    name: 'Transportation',
+
+    type: 'group',
+
+    visible: true,
+
+    expanded: true,
+
+    children: [
+
+      {
+        id: 'roads',
+
+        name: 'Roads',
+
+        type: 'WMS',
+
+        visible: true,
+
+        opacity: 1,
+
+        zIndex: 3,
+
+        url:
+          'http://localhost:8080/geoserver/wms',
+
+        layers:
+          `${geoserverConfig.workspace}:roads`,
+
+        ...defaultLayerMetadata,
+
+        metadata: {
+
+          attribution:
+            'Transportation Dataset',
+
+          geometryType:
+            'LineString',
+
+          crs: 'EPSG:4326',
+
+          category: 'transportation',
+
+          keywords: [
+            'roads',
+            'transport',
+          ],
+        },
       },
     ],
   },

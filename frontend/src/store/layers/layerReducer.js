@@ -4,6 +4,14 @@ import { LAYER_ACTIONS }
 import { updateLayerTree }
   from '@/gis/utils/updateLayerTree'
 
+import {
+  removeNodeFromTree,
+} from '@/gis/utils/removeNodeFromTree'
+
+import {
+  insertNodeIntoGroup,
+} from '@/gis/utils/insertNodeIntoGroup'
+
 export const layerReducer = (
   state,
   action
@@ -78,7 +86,7 @@ export const layerReducer = (
         })
       ),
   }
-  
+
     case LAYER_ACTIONS.TOGGLE_GROUP:
   return {
     ...state,
@@ -138,6 +146,66 @@ export const layerReducer = (
         layerErrors:
           action.payload,
       }
+    
+    case
+  LAYER_ACTIONS
+    .TOGGLE_GROUP_EXPANDED:
+
+  return {
+    ...state,
+
+    layers:
+      updateLayerTree(
+        state.layers,
+
+        action.payload,
+
+        (group) => ({
+          ...group,
+
+          expanded:
+            !group.expanded,
+        })
+      ),
+  }
+
+  case LAYER_ACTIONS.MOVE_NODE: {
+
+  const {
+    nodeId,
+    targetGroupId,
+  } = action.payload
+
+  const {
+    tree,
+    removedNode,
+  } =
+    removeNodeFromTree(
+      state.layers,
+
+      nodeId
+    )
+
+  if (!removedNode) {
+    return state
+  }
+
+  const updatedTree =
+    insertNodeIntoGroup(
+      tree,
+
+      targetGroupId,
+
+      removedNode
+    )
+
+  return {
+    ...state,
+
+    layers:
+      updatedTree,
+  }
+}
 
     default:
       return state

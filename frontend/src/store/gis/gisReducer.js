@@ -55,7 +55,13 @@ export const gisReducer = (state, action) => {
         ...state,
         visibleLayers: action.payload,
       }
+    case GIS_ACTIONS.SET_FILTERS:
+  return {
+    ...state,
 
+    filters:
+      action.payload,
+  }
     default:
       return state
   }

@@ -1,28 +1,40 @@
-import { useState }
-  from 'react'
+import {
+  useEffect,
+  useRef,
+} from 'react'
 
-import LayerItem
-  from '../LayerItem'
+import {
+  useLayers,
+} from '@/store/layers/hooks/useLayers'
 
-import { useLayers }
-  from '@/store/layers/hooks/useLayers'
+import {
+  LAYER_ACTIONS,
+} from '@/store/layers/layerActions'
 
-import { LAYER_ACTIONS }
-  from '@/store/layers/layerActions'
+import {
+  getGroupVisibilityState,
+} from '@/gis/utils/getGroupVisibilityState'
+
+import LayerDropZone
+  from '../LayerDropZone'
+
+import DraggableLayerItem
+  from '../DraggableLayerItem'
 
 const LayerGroup = ({
   group,
 }) => {
 
-  const [
-    expanded,
-    setExpanded,
-  ] = useState(
-    group.expanded
-  )
-
   const { dispatch } =
     useLayers()
+
+  const checkboxRef =
+    useRef(null)
+
+  const visibilityState =
+    getGroupVisibilityState(
+      group
+    )
 
   const handleToggleGroup =
     (event) => {
@@ -31,12 +43,27 @@ const LayerGroup = ({
 
       dispatch({
         type:
-          LAYER_ACTIONS.TOGGLE_GROUP,
+          LAYER_ACTIONS
+            .TOGGLE_GROUP,
 
         payload:
           group.id,
       })
     }
+
+  useEffect(() => {
+
+    if (
+      checkboxRef.current
+    ) {
+
+      checkboxRef.current
+        .indeterminate =
+          visibilityState
+            .indeterminate
+    }
+
+  }, [visibilityState])
 
   return (
     <div className="layer-group">
@@ -44,14 +71,22 @@ const LayerGroup = ({
       <div className="layer-group-header">
 
         <div
-          className="layer-group-title"
+          className="
+            layer-group-title
+          "
+
           onClick={() =>
-            setExpanded(
-              !expanded
-            )
+            dispatch({
+              type:
+                LAYER_ACTIONS
+                  .TOGGLE_GROUP_EXPANDED,
+
+              payload:
+                group.id,
+            })
           }
         >
-          {expanded
+          {group.expanded
             ? '▼'
             : '▶'}{' '}
 
@@ -59,10 +94,14 @@ const LayerGroup = ({
         </div>
 
         <input
+          ref={checkboxRef}
+
           type="checkbox"
+
           checked={
-            group.visible
+            visibilityState.checked
           }
+
           onChange={
             handleToggleGroup
           }
@@ -70,8 +109,17 @@ const LayerGroup = ({
 
       </div>
 
-      {expanded && (
-        <div className="layer-group-children">
+      <LayerDropZone
+        groupId={group.id}
+      />
+
+      {group.expanded && (
+
+        <div
+          className="
+            layer-group-children
+          "
+        >
 
           {group.children.map(
             (child) => {
@@ -80,11 +128,13 @@ const LayerGroup = ({
                 child.type ===
                 'group'
               ) {
+
                 return (
                   <LayerGroup
                     key={
                       child.id
                     }
+
                     group={
                       child
                     }
@@ -93,10 +143,11 @@ const LayerGroup = ({
               }
 
               return (
-                <LayerItem
+                <DraggableLayerItem
                   key={
                     child.id
                   }
+
                   layer={
                     child
                   }
