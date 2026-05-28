@@ -9,7 +9,7 @@ import { operationalLayers } from '@/gis/layers/registry/operationalLayers'
 
 import { LAYER_ACTIONS } from '@/store/layers/layerActions'//frontend\src\store\layers\layerActions.js
 
-import MapView  from '@/gis/components/map/MapView'//frontend\src\gis\components\map\MapView.jsx
+import MapView from '@/gis/components/map/MapView'//frontend\src\gis\components\map\MapView.jsx
 
 import LayerPanel from '@/gis/components/layers/LayerPanel'
 
@@ -31,119 +31,88 @@ import { mockSelectedFeature }
 import SelectionControls
   from '@/gis/selection/components/SelectionControls'
 
+import CoordinateInspector
+  from '@/gis/components/status/CoordinateInspector'
+
+import ToolBar
+  from '@/gis/tools/components/ToolBar'
+
+import { toolManager } from '@/gis/tools/manager/ToolManager'
+
+window.toolManager = toolManager
+
 function App() {
- const {
-  state,
-  dispatch,
-} = useLayers()
+  const {
+    state,
+    dispatch,
+  } = useLayers()
 
- const hydrated =
-  useRef(false)
+  const hydrated =
+    useRef(false)
 
-const {
-  dispatch: gisDispatch,
-} = useGIS()
+  const {
+    dispatch: gisDispatch,
+  } = useGIS()
 
-useEffect(() => {
+  useEffect(() => {
 
-  const persistedLayers =
-    loadLayerState()
+    const persistedLayers =
+      loadLayerState()
 
-  dispatch({
-    type:
-      LAYER_ACTIONS.SET_LAYERS,
+    dispatch({
+      type:
+        LAYER_ACTIONS.SET_LAYERS,
 
-    payload:
-      persistedLayers ||
-      operationalLayers,
-  })
+      payload:
+        persistedLayers ||
+        operationalLayers,
+    })
 
-  hydrated.current =
-    true
+    hydrated.current =
+      true
 
-}, [dispatch])
+  }, [dispatch])
 
-useEffect(() => {
+  useEffect(() => {
 
-  gisDispatch({
-    type:
-      GIS_ACTIONS.SET_SELECTED_FEATURE,
+    gisDispatch({
+      type:
+        GIS_ACTIONS.SET_SELECTED_FEATURE,
 
-    payload:
-      mockSelectedFeature,
-  })
+      payload:
+        mockSelectedFeature,
+    })
 
-}, [gisDispatch])
- 
- useEffect(() => {
+  }, [gisDispatch])
 
-  if (
-    !hydrated.current
-  ) {
-    return
-  }
+  useEffect(() => {
 
-  if (
-    state.layers.length
-  ) {
-    saveLayerState(
-      state.layers
-    )
-  }
+    if (
+      !hydrated.current
+    ) {
+      return
+    }
 
-}, [state.layers])
+    if (
+      state.layers.length
+    ) {
+      saveLayerState(
+        state.layers
+      )
+    }
 
-    
+  }, [state.layers])
+
+
   return (
     <div className="app-layout">
       <LayerPanel />
       <h1>Web GIS Enterprise</h1>
-      <button
-  onClick={() =>
-    gisDispatch({
-      type:
-        GIS_ACTIONS.SET_FILTERS,
-
-      payload: {
-        category:
-          'hydrology',
-      },
-    })
-  }
->
-  Hydrology
-</button>
-
-<button
-  onClick={() =>
-    gisDispatch({
-      type:
-        GIS_ACTIONS.SET_FILTERS,
-
-      payload: {
-        category:
-          'transportation',
-      },
-    })
-  }
->
-  Transportation
-</button>
-
-<button
-  onClick={() =>
-    gisDispatch({
-      type:
-        GIS_ACTIONS.SET_FILTERS,
-
-      payload: {},
-    })
-  }
->
-  Reset Filters
-</button>
+   
       <SelectionControls />
+      <ToolBar />
       <MapView />
+      <CoordinateInspector />
     </div>
   )
 }

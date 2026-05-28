@@ -62,6 +62,26 @@ export const gisReducer = (state, action) => {
     filters:
       action.payload,
   }
+
+  case GIS_ACTIONS.ADD_MEASUREMENT_POINT:
+  return {
+    ...state,
+
+    measurements: [
+      ...state.measurements,// Keep existing points
+
+      action.payload, //
+    ],
+  }
+
+case GIS_ACTIONS.CLEAR_MEASUREMENTS:
+
+  return {
+    ...state,
+
+    measurements: [], // Clear all measurement points
+  }
+  
     default:
       return state
   }

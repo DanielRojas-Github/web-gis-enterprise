@@ -4,7 +4,7 @@ import LayerItem
 import LayerDragHandle
   from './LayerDragHandle'
 
-const DraggableLayerItem = ({
+const DraggableLayerItem = ({ // Recibe la capa como prop para renderizar su información y manejar el arrastre
   layer,
 }) => {
 

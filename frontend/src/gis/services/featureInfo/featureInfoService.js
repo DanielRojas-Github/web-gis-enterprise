@@ -3,6 +3,7 @@ import { geoserverConfig } from '../geoserver/geoserverConfig'
 export const getFeatureInfo = async ({
   layer,
   lat,
+  lng,
   bbox,
   width,
   height,

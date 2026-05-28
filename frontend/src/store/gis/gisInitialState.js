@@ -13,7 +13,7 @@ export const gisInitialState = {
 
   zoom: 6,
 
-  activeTool: null,
+  activeTool: 'IDENTIFY',
 
   loading: false,
 

@@ -12,8 +12,8 @@ import LayerRenderer
 import { useMapInteractions }
   from '@/gis/interactions/hooks/useMapInteractions'
 
-import FeaturePopup
-  from '@/gis/popups/FeaturePopup'
+// import FeaturePopup
+// from '@/gis/popups/FeaturePopup'
 
 import { flattenLayers }
   from '@/gis/utils/flattenLayers'
@@ -26,8 +26,8 @@ import {
   isLayerInScale,
 } from '@/gis/utils/isLayerInScale'
 
-import { 
-  useGIS 
+import {
+  useGIS
 } from '@/store/gis/hooks/useGIS' //frontend/src/hooks/useGis.js
 
 import {
@@ -41,6 +41,24 @@ import {
 import SelectionRenderer
   from '@/gis/selection/renderers/SelectionRenderer'
 
+//import MapClickHandler
+ //from '@/gis/interactions/components/MapClickHandler'
+
+import MapClickMarker
+  from '@/gis/interactions/renderers/MapClickMarker'
+
+import MeasurementRenderer
+  from '@/gis/measurements/renderers/MeasurementRenderer'
+
+import {
+  TOOL_TYPES,
+} from '@/gis/tools/toolTypes'
+
+import MapEventHandler
+  from '@/gis/interactions/events/MapEventHandler'
+
+import  MeasureOverlay
+  from '@/gis/tools/overlays/measure/MeasureOverlay' //frontend\src\gis\tools\overlays\measure\MeasureOverlay.jsx
 
 
 const MapInteractions = () => {
@@ -55,50 +73,50 @@ const MapInteractions = () => {
 const MapView = () => {
 
   const {
-  state:
+    state:
     layerState,
-} = useLayers()
+  } = useLayers()
 
-const {
-  state:
+  const {
+    state:
     gisState,
-} = useGIS()
+  } = useGIS()
 
- const visibleLayers =
-  flattenLayers(
-    layerState.layers
-  ).filter(
-  (layer) => {
+  const visibleLayers =
+    flattenLayers(
+      layerState.layers
+    ).filter(
+      (layer) => {
 
-    const inScale =
-      isLayerInScale(
-        layer,
+        const inScale =
+          isLayerInScale(
+            layer,
 
-        gisState.zoom
-      )
+            gisState.zoom
+          )
 
-    const hasAccess =
-      canUserAccessLayer(
-        layer,
+        const hasAccess =
+          canUserAccessLayer(
+            layer,
 
-        gisState.user.role
-      )
+            gisState.user.role
+          )
 
-  const matchesFilters =
-  layerMatchesFilters(
-    layer,
+        const matchesFilters =
+          layerMatchesFilters(
+            layer,
 
-    gisState.filters
-  )
-  
-  
-return (
-  inScale &&
-  hasAccess &&
-  matchesFilters
-)
-  }
-)
+            gisState.filters
+          )
+
+
+        return (
+          inScale &&
+          hasAccess &&
+          matchesFilters
+        )
+      }
+    )
 
   return (
 
@@ -106,7 +124,7 @@ return (
       // center={[-17.7833, -63.1821]}
       // zoom={6}
       center={[-21.5355, -64.7296]}
-zoom={13}
+      zoom={13}
       style={{
         height: '100vh',
         width: '100%',
@@ -119,22 +137,37 @@ zoom={13}
         url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
       />
 
-      <MapInteractions />
-{/* 
-      <FeaturePopup /> */}
-      <SelectionRenderer
-  feature={
-    gisState.selectedFeature
-  }
-/>
+      <MapInteractions /> // Maneja interacciones globales del mapa como clics, zoom, etc.
+
+      <MapEventHandler /> // Maneja eventos específicos del mapa y delega a la herramienta activa
+
+      {/* <MapClickHandler /> // Maneja clics en el mapa para herramientas como identificación, medición, etc. */}
+
+      <MapClickMarker /> // Renderiza un marcador temporal en la ubicación del clic para herramientas que lo requieran
+
+      <MeasureOverlay /> // Renderiza la superposición de medición si hay puntos de medición activos
+      {/* 
+      <FeaturePopup /> */} // Renderiza un popup para mostrar información de la característica seleccionada
+      {gisState.activeTool ===
+        TOOL_TYPES.IDENTIFY && ( // Renderiza la selección solo si la herramienta activa es IDENTIFY
+
+          <SelectionRenderer //
+            feature={
+              gisState.selectedFeature
+            }
+          />
+        )}
+      <MeasurementRenderer />
       {visibleLayers.map((layer) => (
         <LayerRenderer
           key={layer.id}
           layer={layer}
         />
-        
+
       ))}
-      
+
+      <MapEventHandler />
+
     </MapContainer>
   )
 }
