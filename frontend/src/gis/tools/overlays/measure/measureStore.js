@@ -1,4 +1,3 @@
-console.log('MEASURE STORE LOADED')
 
 export const measureState = {
   points: [],
@@ -14,7 +13,7 @@ export const measureState = {
   },
 
   subscribe(listener) {
-    console.log('SUBSCRIBE EXISTS')
+    
 
     this.listeners.push(listener)
 

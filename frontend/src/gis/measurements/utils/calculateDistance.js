@@ -1,59 +1,36 @@
-export const calculateDistance =
-  (points) => {
+export function calculateDistance(point1, point2) { // Función que calcula la distancia entre dos puntos geográficos utilizando la fórmula de Haversine
 
-    if (
-      !points ||
-      points.length < 2
-    ) {
-      return 0
-    }
+  const R = 6371e3
 
-    let totalDistance = 0
+  const lat1 =
+    point1.lat * Math.PI / 180
 
-    for (
-      let i = 1;
-      i < points.length;
-      i++
-    ) {
+  const lat2 =
+    point2.lat * Math.PI / 180
 
-      if (
-        !points[i - 1] ||
-        !points[i]
-      ) {
-        continue
-      }
+  const deltaLat =
+    (point2.lat - point1.lat)
+    * Math.PI / 180
 
-      const [
-        lat1,
-        lng1,
-      ] = points[i - 1]
+  const deltaLng =
+    (point2.lng - point1.lng)
+    * Math.PI / 180
 
-      const [
-        lat2,
-        lng2,
-      ] = points[i]
+  const a =
+    Math.sin(deltaLat / 2)
+    * Math.sin(deltaLat / 2) +
 
-      if (
-        lat1 === undefined ||
-        lng1 === undefined ||
-        lat2 === undefined ||
-        lng2 === undefined
-      ) {
-        continue
-      }
+    Math.cos(lat1)
+    * Math.cos(lat2) *
 
-      const dx =
-        lat2 - lat1
+    Math.sin(deltaLng / 2)
+    * Math.sin(deltaLng / 2)
 
-      const dy =
-        lng2 - lng1
+  const c =
+    2 * Math.atan2(
+      Math.sqrt(a),
+      Math.sqrt(1 - a)
+    )
 
-      totalDistance +=
-        Math.sqrt(
-          dx * dx +
-          dy * dy
-        )
-    }
-
-    return totalDistance
-  }
+  return R * c
+}

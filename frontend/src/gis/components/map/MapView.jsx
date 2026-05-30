@@ -28,7 +28,7 @@ import {
 
 import {
   useGIS
-} from '@/store/gis/hooks/useGIS' //frontend/src/hooks/useGis.js
+} from '@/store/gis/hooks/useGIS'
 
 import {
   canUserAccessLayer,
@@ -47,8 +47,8 @@ import SelectionRenderer
 import MapClickMarker
   from '@/gis/interactions/renderers/MapClickMarker'
 
-import MeasurementRenderer
-  from '@/gis/measurements/renderers/MeasurementRenderer'
+// import MeasurementRenderer
+  // from '@/gis/measurements/renderers/MeasurementRenderer'
 
 import {
   TOOL_TYPES,
@@ -57,8 +57,8 @@ import {
 import MapEventHandler
   from '@/gis/interactions/events/MapEventHandler'
 
-import  MeasureOverlay
-  from '@/gis/tools/overlays/measure/MeasureOverlay' //frontend\src\gis\tools\overlays\measure\MeasureOverlay.jsx
+ import  MeasureOverlay
+   from '@/gis/tools/overlays/measure/MeasureOverlay' //frontend\src\gis\tools\overlays\measure\MeasureOverlay.jsx
 
 
 const MapInteractions = () => {
@@ -137,19 +137,19 @@ const MapView = () => {
         url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
       />
 
-      <MapInteractions /> // Maneja interacciones globales del mapa como clics, zoom, etc.
+      {/* <MapInteractions />  */}
 
-      <MapEventHandler /> // Maneja eventos específicos del mapa y delega a la herramienta activa
+      <MapEventHandler /> 
+      <MeasureOverlay /> 
 
-      {/* <MapClickHandler /> // Maneja clics en el mapa para herramientas como identificación, medición, etc. */}
+      {/* <MapClickHandler /> 
 
-      <MapClickMarker /> // Renderiza un marcador temporal en la ubicación del clic para herramientas que lo requieran
-
-      <MeasureOverlay /> // Renderiza la superposición de medición si hay puntos de medición activos
-      {/* 
-      <FeaturePopup /> */} // Renderiza un popup para mostrar información de la característica seleccionada
+      <MapClickMarker /> 
+      
+      
+      <FeaturePopup /> */} 
       {gisState.activeTool ===
-        TOOL_TYPES.IDENTIFY && ( // Renderiza la selección solo si la herramienta activa es IDENTIFY
+        TOOL_TYPES.IDENTIFY && ( 
 
           <SelectionRenderer //
             feature={
@@ -157,7 +157,7 @@ const MapView = () => {
             }
           />
         )}
-      <MeasurementRenderer />
+      {/* <MeasurementRenderer /> */}
       {visibleLayers.map((layer) => (
         <LayerRenderer
           key={layer.id}
@@ -166,7 +166,7 @@ const MapView = () => {
 
       ))}
 
-      <MapEventHandler />
+    
 
     </MapContainer>
   )

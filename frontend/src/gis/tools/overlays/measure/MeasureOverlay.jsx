@@ -1,33 +1,27 @@
-// import { Polyline } from 'react-leaflet'
+import {
+  Polyline,
+  Marker,
+  Popup,
+} from 'react-leaflet'
 
-// import { measureState } from './measureStore' //frontend\src\gis\tools\overlays\measure\measureStore.js
+import {
+  useEffect,
+  useState,
+} from 'react'
 
-// export default function MeasureOverlay() {
+import { measureState }
+  from './measureStore'
 
-//   if (measureState.points.length < 2) {
-//     return null
-//   }
-
-//   return (
-//     <Polyline positions={measureState.points} />
-//   )
-
-// } anteriormente se importaba el estado de medición directamente desde el store, pero ahora se debe usar el hook useMeasure para acceder al estado de medición de forma reactiva y mantener la consistencia con el resto de la aplicación.
-console.log(measureState)
-import { useEffect, useState } from 'react'
-
-import { Polyline } from 'react-leaflet'
-
-import { measureState } from './measureStore.js' //frontend\src\gis\tools\overlays\measure\measureStore.js
+import { calculateTotalDistance }
+  from './measureUtils'
 
 export default function MeasureOverlay() {
-  
+
   const [, forceUpdate] = useState(0)
 
   useEffect(() => {
     return measureState.subscribe(() => {
-      forceUpdate((v) => v + 1)
-      
+      forceUpdate(v => v + 1)
     })
   }, [])
 
@@ -35,8 +29,35 @@ export default function MeasureOverlay() {
     return null
   }
 
+  const totalDistance =
+    calculateTotalDistance(
+      measureState.points
+    )
+
   return (
-   
-    <Polyline positions={measureState.points} />
+    <>
+      <Polyline
+        positions={measureState.points}
+        pathOptions={{
+          color: 'red',
+          weight: 4,
+        }}
+      />
+
+      <Marker
+        position={
+          measureState.points[
+            measureState.points.length - 1
+          ]
+        }
+      >
+        <Popup>
+          Distancia:
+          {' '}
+          {(totalDistance / 1000).toFixed(2)}
+          {' '}km
+        </Popup>
+      </Marker>
+    </>
   )
 }

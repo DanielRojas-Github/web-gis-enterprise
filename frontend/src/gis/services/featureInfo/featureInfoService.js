@@ -1,6 +1,6 @@
 import { geoserverConfig } from '../geoserver/geoserverConfig'
 
-export const getFeatureInfo = async ({
+export const getFeatureInfo = async ({ // Función que realiza una solicitud GetFeatureInfo al servidor GeoServer para obtener información de características en una ubicación específica
   layer,
   lat,
   lng,

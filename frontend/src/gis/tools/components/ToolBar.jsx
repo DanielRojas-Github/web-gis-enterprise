@@ -9,6 +9,12 @@ import {
   TOOL_TYPES,
 } from '@/gis/tools/toolTypes'
 
+import { toolManager }
+  from '@/gis/tools/manager/ToolManager'
+
+
+
+
 const ToolBar = () => { 
 
   const {
@@ -16,41 +22,35 @@ const ToolBar = () => {
     dispatch,
   } = useGIS()
 
- const setTool = 
-  (tool) => {
+ const setTool = (tool) => {
 
-    dispatch({
-      type:
-        GIS_ACTIONS.SET_ACTIVE_TOOL,
+  toolManager.activate(tool)
 
-      payload:
-        tool,
-    })
+  dispatch({
+    type:
+      GIS_ACTIONS.SET_ACTIVE_TOOL,
 
-    dispatch({
-      type:
-        GIS_ACTIONS.SET_SELECTED_FEATURE,
+    payload:
+      tool,
+  })
 
-      payload:
-        null,
-    })
+  dispatch({
+    type:
+      GIS_ACTIONS.SET_SELECTED_FEATURE,
 
-    dispatch({
-      type:
-        GIS_ACTIONS.SET_FEATURE_INFO,
+    payload:
+      null,
+  })
 
-      payload:
-        null,
-    })
-  }
-  const clearMeasurements =
-  () => {
-    dispatch({
-      type:
-        GIS_ACTIONS.CLEAR_MEASUREMENTS,
-    })
- 
-  } 
+  dispatch({
+    type:
+      GIS_ACTIONS.SET_FEATURE_INFO,
+
+    payload:
+      null,
+  })
+}
+  const clearMeasurements = () => { dispatch({ type: GIS_ACTIONS.CLEAR_MEASUREMENTS, }) }
   return (
     <div
       style={{
