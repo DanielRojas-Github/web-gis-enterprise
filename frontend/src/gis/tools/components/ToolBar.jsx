@@ -23,7 +23,7 @@ const ToolBar = () => {
   } = useGIS()
 
  const setTool = (tool) => {
-
+  console.log('SELECTING TOOL:', tool)
   toolManager.activate(tool)
 
   dispatch({

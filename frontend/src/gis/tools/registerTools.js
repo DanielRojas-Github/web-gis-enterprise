@@ -1,12 +1,25 @@
-import { toolRegistry } from '@/gis/tools/manager/ToolRegistry'
+import { toolRegistry }
+from '@/gis/tools/manager/ToolRegistry'
 
-import { MeasureTool } from './tools/measure/MeasureTool'
+import { MeasureTool }
+from './tools/measure/MeasureTool'
 
-import { IdentifyTool } from './tools/identify/IdentifyTool'
+import { IdentifyTool }
+from './tools/identify/IdentifyTool'
 
-export const registerTools = () => { // Registers all available GIS tools in the tool registry
+import { DrawTool }
+from './tools/draw/DrawTool'
+
+export const registerTools = () => {
+
   toolRegistry.register(MeasureTool)
 
   toolRegistry.register(IdentifyTool)
 
+  toolRegistry.register(DrawTool)
+
+  console.log(
+    'REGISTERED TOOLS:',
+    toolRegistry.getAll()
+  )
 }

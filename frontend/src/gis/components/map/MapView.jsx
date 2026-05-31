@@ -58,7 +58,10 @@ import MapEventHandler
   from '@/gis/interactions/events/MapEventHandler'
 
  import  MeasureOverlay
-   from '@/gis/tools/overlays/measure/MeasureOverlay' //frontend\src\gis\tools\overlays\measure\MeasureOverlay.jsx
+   from '@/gis/tools/overlays/measure/MeasureOverlay' 
+
+import DrawOverlay
+from '@/gis/tools/overlays/draw/DrawOverlay'   //frontend\src\gis\tools\overlays\measure\MeasureOverlay.jsx
 
 
 const MapInteractions = () => {
@@ -117,7 +120,7 @@ const MapView = () => {
         )
       }
     )
-
+  console.log('DrawOverlay imported:', DrawOverlay)
   return (
 
     <MapContainer
@@ -141,6 +144,8 @@ const MapView = () => {
 
       <MapEventHandler /> 
       <MeasureOverlay /> 
+      <DrawOverlay />
+      
 
       {/* <MapClickHandler /> 
 
