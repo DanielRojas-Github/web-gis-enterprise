@@ -12,6 +12,12 @@ import {
 import { toolManager }
   from '@/gis/tools/manager/ToolManager'
 
+import { drawState }
+from '@/gis/tools/overlays/draw/drawStore'
+
+import { DRAW_TYPES }
+from '@/gis/tools/tools/draw/drawTypes'
+
 
 
 
@@ -106,6 +112,35 @@ const ToolBar = () => {
         Draw
       </button>
       <button
+  onClick={() =>
+    drawState.setType(
+      DRAW_TYPES.POINT
+    )
+  }
+>
+  Point
+</button>
+
+<button
+  onClick={() =>
+    drawState.setType(
+      DRAW_TYPES.POLYLINE
+    )
+  }
+>
+  Polyline
+</button>
+
+<button
+  onClick={() =>
+    drawState.setType(
+      DRAW_TYPES.POLYGON
+    )
+  }
+>
+  Polygon
+</button>
+      <button
   onClick={
     clearMeasurements
   }
@@ -122,6 +157,7 @@ const ToolBar = () => {
       </div>
 
     </div>
+ 
   )
 }
 

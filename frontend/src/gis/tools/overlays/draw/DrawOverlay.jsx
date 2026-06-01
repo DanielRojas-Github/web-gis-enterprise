@@ -11,11 +11,13 @@ import {
 import { drawState }
 from './drawStore'
 
-console.log('DrawOverlay file loaded')
+import { Polygon }
+from 'react-leaflet'
+
+import { DRAW_TYPES }
+from '@/gis/tools/tools/draw/drawTypes'
 
 export default function DrawOverlay() {
-
-  console.log('DrawOverlay component mounted')
 
   const [, forceUpdate] =
     useState(0)
@@ -34,10 +36,76 @@ export default function DrawOverlay() {
   }, [])
 
   return (
-    <>
-      <Marker
-        position={[-21.5355, -64.7296]}
-      />
-    </>
-  )
+  <>
+
+    {drawState.type ===
+      DRAW_TYPES.POINT &&
+
+      drawState.points.map(
+        (point, index) => (
+          <Marker
+            key={index}
+            position={point}
+          />
+        )
+      )
+    }
+
+    {drawState.type ===
+      DRAW_TYPES.POLYLINE && (
+        <>
+          {drawState.points.map(
+            (point, index) => (
+              <Marker
+                key={index}
+                position={point}
+              />
+            )
+          )}
+
+          {drawState.points.length >= 2 && (
+            <Polyline
+              positions={
+                drawState.points
+              }
+              pathOptions={{
+                color: 'blue',
+                weight: 4,
+              }}
+            />
+          )}
+        </>
+      )
+    }
+
+    {drawState.type ===
+      DRAW_TYPES.POLYGON && (
+
+        <>
+
+          {drawState.points.map(
+            (point, index) => (
+              <Marker
+                key={index}
+                position={point}
+              />
+            )
+          )}
+
+          {drawState.points.length >= 3 && (
+
+            <Polygon
+              positions={
+                drawState.points
+              }
+            />
+
+          )}
+
+        </>
+
+      )}
+
+  </>
+)
 }

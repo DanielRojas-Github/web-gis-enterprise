@@ -1,34 +1,52 @@
-console.log('DrawStore.js loaded')
+
 export const drawState = {
 
-  points: [],
+    type: 'polyline',
 
-  listeners: [],
+    points: [],
 
-  setPoints(points) {
+    listeners: [],
 
-    this.points = points
+    setType(type) {
 
-    this.listeners.forEach(
-      listener => listener()
-    )
-  },
+        this.type = type
 
-  clear() {
-
-    this.setPoints([])
-  },
-
-  subscribe(listener) {
-
-    this.listeners.push(listener)
-
-    return () => {
-
-      this.listeners =
-        this.listeners.filter(
-          l => l !== listener
+        this.listeners.forEach(
+            listener => listener()
         )
-    }
-  },
+    },
+
+    setPoints(points) {
+
+
+        this.points = points
+
+
+        this.listeners.forEach(
+            listener => listener()
+        )
+    },
+
+    clear() {
+
+        this.points = []
+
+        this.listeners.forEach(
+            listener => listener()
+        )
+    },
+
+    subscribe(listener) {
+
+        this.listeners.push(listener)
+
+        return () => {
+
+
+            this.listeners =
+                this.listeners.filter(
+                    l => l !== listener
+                )
+        }
+    },
 }
