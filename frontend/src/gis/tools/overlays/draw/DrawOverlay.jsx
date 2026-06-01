@@ -37,7 +37,44 @@ export default function DrawOverlay() {
 
   return (
   <>
+    {drawState.features.map(
+  (feature, index) => {
 
+    if (
+      feature.type ===
+      DRAW_TYPES.POLYLINE
+    ) {
+      return (
+        <Polyline
+          key={`feature-${index}`}
+          positions={
+            feature.points
+          }
+          pathOptions={{
+            color: 'green',
+            weight: 4,
+          }}
+        />
+      )
+    }
+
+    if (
+      feature.type ===
+      DRAW_TYPES.POLYGON
+    ) {
+      return (
+        <Polygon
+          key={`feature-${index}`}
+          positions={
+            feature.points
+          }
+        />
+      )
+    }
+
+    return null
+  }
+)}
     {drawState.type ===
       DRAW_TYPES.POINT &&
 

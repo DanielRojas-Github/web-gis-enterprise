@@ -1,6 +1,6 @@
-console.log('DrawTool.js loaded')
+
 import { drawState }
-from '@/gis/tools/overlays/draw/drawStore'//frontend\src\gis\tools\overlays\draw\drawStore.js
+from '@/gis/tools/overlays/draw/drawStore'
 
 export const DrawTool = {
 
@@ -21,15 +21,40 @@ export const DrawTool = {
   },
 
   onMapClick(event) {
+   if (drawState.finished) {
 
+  return
+}
     drawState.setPoints([
       ...drawState.points,
       event.latlng,
     ])
 
-    console.log(
-      'DRAW POINTS:',
-      drawState.points
-    )
+  
   },
+  onDoubleClick() {
+
+  drawState.addFeature({
+
+  id:
+    crypto.randomUUID(),
+
+  type:
+    drawState.type,
+
+  points: [
+    ...drawState.points
+  ],
+})
+ console.log(
+  drawState.features
+)
+
+
+  drawState.setFinished(
+    true
+  )
+
+},
+
 }
