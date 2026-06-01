@@ -17,11 +17,22 @@ from 'react-leaflet'
 import { DRAW_TYPES }
 from '@/gis/tools/tools/draw/drawTypes'
 
+import {
+  useLocalFeatureSelection
+}
+from '@/gis/selection/hooks/useLocalFeatureSelection'
+
 export default function DrawOverlay() {
 
   const [, forceUpdate] =
     useState(0)
 
+  const {
+  selectedFeature,
+  selectFeature,
+}
+=
+useLocalFeatureSelection()
   useEffect(() => {
 
     return drawState.subscribe(
@@ -35,10 +46,15 @@ export default function DrawOverlay() {
 
   }, [])
 
+  const isSelected =
+  feature =>
+    selectedFeature?.id ===
+    feature.id
+
   return (
   <>
     {drawState.features.map(
-  (feature, index) => {
+  feature => {
 
     if (
       feature.type ===
@@ -46,15 +62,24 @@ export default function DrawOverlay() {
     ) {
       return (
         <Polyline
-          key={`feature-${index}`}
-          positions={
-            feature.points
-          }
-          pathOptions={{
-            color: 'green',
-            weight: 4,
-          }}
-        />
+  key={feature.id}
+  positions={feature.points}
+  pathOptions={{
+    color:
+      isSelected(feature)
+        ? '#ff5500'
+        : 'green',
+
+    weight:
+      isSelected(feature)
+        ? 6
+        : 4,
+  }}
+  eventHandlers={{
+    click: () =>
+      selectFeature(feature)
+  }}
+/>
       )
     }
 
@@ -63,12 +88,25 @@ export default function DrawOverlay() {
       DRAW_TYPES.POLYGON
     ) {
       return (
-        <Polygon
-          key={`feature-${index}`}
-          positions={
-            feature.points
-          }
-        />
+     <Polygon
+  key={feature.id}
+  positions={feature.points}
+  pathOptions={{
+    color:
+      isSelected(feature)
+        ? '#ff5500'
+        : '#3388ff',
+
+    weight:
+      isSelected(feature)
+        ? 5
+        : 3,
+  }}
+  eventHandlers={{
+    click: () =>
+      selectFeature(feature)
+  }}
+/> 
       )
     }
 

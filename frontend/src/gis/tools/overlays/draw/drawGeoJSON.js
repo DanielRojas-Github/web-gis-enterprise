@@ -60,6 +60,8 @@ export function featureToGeoJSON(
     return {
       type: 'Feature',
 
+       id: feature.id,
+
       geometry: {
         type: 'Polygon',
 
