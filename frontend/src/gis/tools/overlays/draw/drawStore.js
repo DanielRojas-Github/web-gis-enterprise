@@ -89,4 +89,18 @@ export const drawState = {
     listener => listener()
   )
 },
+updateFeature(updatedFeature) {
+
+  this.features =
+    this.features.map(
+      feature =>
+        feature.id === updatedFeature.id
+          ? updatedFeature
+          : feature
+    )
+
+  this.listeners.forEach(
+    listener => listener()
+  )
+},
 }
