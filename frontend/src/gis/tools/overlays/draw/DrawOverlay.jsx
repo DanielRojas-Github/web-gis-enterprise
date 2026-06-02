@@ -104,6 +104,7 @@ useLocalFeatureSelection()
   }}
   eventHandlers={{
     click: () =>
+        
       selectFeature(feature)
   }}
 /> 
