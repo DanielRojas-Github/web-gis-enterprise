@@ -27,10 +27,13 @@ useGIS()
 
   const feature =
     state.editingFeature
-
-  if (!feature) {
-    return null
-  }
+  if (
+  !state.isEditing ||
+  !feature
+) {
+  return null
+}
+ 
 
   const handleVertexMove =
   (
@@ -75,7 +78,62 @@ useGIS()
         updatedFeature,
     })
   }
+   const handleVertexDelete =
+  vertexIndex => {
 
+    let updatedPoints =
+      feature.points.filter(
+        (_, index) =>
+          index !== vertexIndex
+      )
+
+    // Polygon mínimo 3 vértices
+    if (
+      feature.type === 'polygon' &&
+      updatedPoints.length < 3
+    ) {
+      return
+    }
+
+    // Polyline mínimo 2 vértices
+    if (
+      feature.type === 'polyline' &&
+      updatedPoints.length < 2
+    ) {
+      return
+    }
+
+    const updatedFeature = {
+
+      ...feature,
+
+      points: updatedPoints,
+    }
+
+    drawState.updateFeature(
+      updatedFeature
+    )
+
+    dispatch({
+      type:
+        GIS_ACTIONS
+          .SET_EDITING_FEATURE,
+
+      payload:
+        updatedFeature,
+    })
+
+    dispatch({
+      type:
+        GIS_ACTIONS
+          .SET_SELECTED_FEATURE,
+
+      payload:
+        updatedFeature,
+    })
+    
+  }
+  
   return (
     <>
       {feature.points.map(
@@ -96,6 +154,12 @@ useGIS()
         event.target.getLatLng()
       )
     },
+    dblclick: () => {
+
+    handleVertexDelete(
+      index
+    )
+  },
   }}
 />
         )

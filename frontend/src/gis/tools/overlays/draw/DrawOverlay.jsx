@@ -22,6 +22,12 @@ import {
 }
 from '@/gis/selection/hooks/useLocalFeatureSelection'
 
+import { useGIS }
+from '@/store/gis/hooks/useGIS'
+
+import { GIS_ACTIONS }
+from '@/store/gis/gisActions'
+
 export default function DrawOverlay() {
 
   const [, forceUpdate] =
@@ -33,6 +39,9 @@ export default function DrawOverlay() {
 }
 =
 useLocalFeatureSelection()
+
+const { state, dispatch } =
+  useGIS()
 
   useEffect(() => {
 
@@ -51,6 +60,55 @@ useLocalFeatureSelection()
   feature =>
     selectedFeature?.id ===
     feature.id
+  
+  const handleAddVertex = (
+  feature,
+  latlng
+) => {
+
+  if (
+    state.editingFeature?.id !==
+    feature.id
+  ) {
+    return
+  }
+
+  const updatedFeature = {
+
+    ...feature,
+
+    points: [
+
+      ...feature.points,
+
+      latlng,
+    ],
+  }
+
+  drawState.updateFeature(
+    updatedFeature
+  )
+
+  dispatch({
+
+    type:
+      GIS_ACTIONS
+        .SET_EDITING_FEATURE,
+
+    payload:
+      updatedFeature,
+  })
+
+  dispatch({
+
+    type:
+      GIS_ACTIONS
+        .SET_SELECTED_FEATURE,
+
+    payload:
+      updatedFeature,
+  })
+}
 
   return (
   <>
@@ -76,10 +134,18 @@ useLocalFeatureSelection()
         ? 6
         : 4,
   }}
-  eventHandlers={{
-    click: () =>
-      selectFeature(feature)
-  }}
+eventHandlers={{
+
+  click: () => selectFeature(feature),
+
+  dblclick: event => {
+
+    handleAddVertex(
+      feature,
+      event.latlng
+    )
+  },
+}}
 />
       )
     }
@@ -103,11 +169,16 @@ useLocalFeatureSelection()
         ? 5
         : 3,
   }}
-  eventHandlers={{
-    click: () =>
-        
-      selectFeature(feature)
-  }}
+ eventHandlers={{
+  click: () => selectFeature(feature),
+  dblclick: event => {
+
+    handleAddVertex(
+      feature,
+      event.latlng
+    )
+  },
+}}
 /> 
       )
     }
