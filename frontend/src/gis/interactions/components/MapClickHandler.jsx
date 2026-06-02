@@ -17,7 +17,7 @@ import {
   TOOL_TYPES,
 } from '@/gis/tools/toolTypes'
 
-const MapClickHandler = () => {
+const MapClickHandler = () => { // Componente que maneja los clics en el mapa y delega la acción a la herramienta activa
 
   const {
     state,

@@ -50,9 +50,9 @@ import SelectionRenderer
 // import MeasurementRenderer
 // from '@/gis/measurements/renderers/MeasurementRenderer'
 
-import {
-  TOOL_TYPES,
-} from '@/gis/tools/toolTypes'
+// import {
+//   TOOL_TYPES,
+// } from '@/gis/tools/toolTypes'
 
 import MapEventHandler
   from '@/gis/interactions/events/MapEventHandler'
@@ -121,55 +121,56 @@ const MapView = () => {
       }
     )
   console.log(
-  'Selected Feature:',
-  gisState.selectedFeature
-)
+    'Selected Feature:',
+    gisState.selectedFeature
+  )
   return (
 
     <>
 
-    <MapContainer
-      center={[-21.5355, -64.7296]}
-      zoom={13}
-      style={{
-        height: '100vh',
-        width: '100%',
-      }}
-    >
+      <MapContainer
+        center={[-21.5355, -64.7296]}
+        zoom={13}
+        style={{
+          height: '100vh',
+          width: '100%',
+        }}
+      >
 
-      {/* Capa base del mapa */}
-      <TileLayer
-        attribution='&copy; OpenStreetMap contributors'
-        url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
-      />
+        {/* Capa base del mapa */}
+        <TileLayer
+          attribution='&copy; OpenStreetMap contributors'
+          url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
+        />
 
-      <MapInteractions />
+        <MapInteractions />
 
-      <MapEventHandler />
+        <MapEventHandler />
 
-      <MeasureOverlay />
+        <MeasureOverlay />
 
-      <DrawOverlay />
+        <DrawOverlay />
 
-      {/* <MapClickHandler /> 
+        {/* <MapClickHandler /> 
       <MapClickMarker /> 
       <FeaturePopup /> */}
 
+
+
+
+        {/* <MeasurementRenderer /> */}
+        {visibleLayers.map((layer) => (
+          <LayerRenderer
+            key={layer.id}
+            layer={layer}
+          />
+        ))}
+      </MapContainer>
+
+      <SelectionRenderer
+        feature={gisState.selectedFeature} 
+      />
       
-         
-        
-      {/* <MeasurementRenderer /> */}
-      {visibleLayers.map((layer) => (
-        <LayerRenderer
-          key={layer.id}
-          layer={layer}
-        />
-      ))}
-    </MapContainer>
-    
-    <SelectionRenderer
-      feature={gisState.selectedFeature}
-    />
     </>
   )
 }

@@ -14,7 +14,6 @@ import { registerTools } from '@/gis/tools/registerTools'
 
 import App from './App'
 
-// Inicialización global GIS
 registerTools()
 
 createRoot(document.getElementById('root')).render(

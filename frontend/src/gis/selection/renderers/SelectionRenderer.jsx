@@ -1,10 +1,20 @@
 import { useGIS }
-from '@/store/gis/hooks/useGIS'
+  from '@/store/gis/hooks/useGIS'
+
+import { drawState }
+  from '@/gis/tools/overlays/draw/drawStore'
+
+import { GIS_ACTIONS }
+  from '@/store/gis/gisActions'
 
 export default function SelectionRenderer() {
-
-  const { state } =
+  const {
+    state,
+    dispatch,
+  }
+    =
     useGIS()
+
 
   const feature =
     state.selectedFeature
@@ -12,12 +22,27 @@ export default function SelectionRenderer() {
   if (!feature) {
     return null
   }
- console.log(
-  'Selected Feature:',
-  feature
-)
+  console.log(
+    'Selected Feature:',
+    feature
+  )
   const vertexCount =
     feature.points?.length ?? 0
+  const handleDelete =
+    () => {
+
+      drawState.removeFeature(
+        feature.id
+      )
+
+      dispatch({
+        type:
+          GIS_ACTIONS
+            .SET_SELECTED_FEATURE,
+
+        payload: null,
+      })
+    }
 
   return (
 
@@ -62,6 +87,11 @@ export default function SelectionRenderer() {
         {' '}
         {vertexCount}
       </p>
+      <button
+        onClick={handleDelete}
+      >
+        Eliminar
+      </button>
 
     </div>
   )

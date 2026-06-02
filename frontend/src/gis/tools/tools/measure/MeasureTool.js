@@ -7,6 +7,7 @@ export const MeasureTool = {
   activate() {
     console.log('Measure enabled')
 
+
     measureState.setPoints([])
   },
 

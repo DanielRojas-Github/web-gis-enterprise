@@ -1,4 +1,4 @@
-const LayerDragHandle = ({
+const LayerDragHandle = ({ // Recibe la función onDragStart como prop para manejar el inicio del arrastre
   onDragStart,
 }) => {
   return (

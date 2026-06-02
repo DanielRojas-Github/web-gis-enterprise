@@ -13,4 +13,6 @@ export const selectFeature = async ({
     })
 
   return parseFeatureInfo(response)
+  
 }
+

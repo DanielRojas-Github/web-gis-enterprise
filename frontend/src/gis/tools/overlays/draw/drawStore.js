@@ -77,4 +77,16 @@ export const drawState = {
     listener => listener()
   )
 },
+   removeFeature(id) {
+
+  this.features =
+    this.features.filter(
+      feature =>
+        feature.id !== id
+    )
+
+  this.listeners.forEach(
+    listener => listener()
+  )
+},
 }
