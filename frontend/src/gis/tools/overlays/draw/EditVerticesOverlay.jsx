@@ -3,165 +3,215 @@
 // } from 'react-leaflet'
 
 import { useGIS }
-from '@/store/gis/hooks/useGIS'
+  from '@/store/gis/hooks/useGIS'
 
 import { drawState }
-from './drawStore'
+  from './drawStore'
 
 import { GIS_ACTIONS }
-from '@/store/gis/gisActions'
+  from '@/store/gis/gisActions'
 
 import {
   Marker,
 } from 'react-leaflet'
 
+import {
+  findNearestVertex,
+}
+  from '@/gis/editing/utils/snapping'
+
+import {
+  editHistoryStore,
+}
+  from '@/gis/editing/history/editHistoryStore'
+
 export default function
-EditVerticesOverlay() {
+  EditVerticesOverlay() {
 
   const {
-  state,
-  dispatch,
-}
-=
-useGIS()
+    state,
+    dispatch,
+  }
+    =
+    useGIS()
 
   const feature =
     state.editingFeature
   if (
-  !state.isEditing ||
-  !feature
-) {
-  return null
-}
- 
+    !state.isEditing ||
+    !feature
+  ) {
+    return null
+  }
 
   const handleVertexMove =
-  (
-    vertexIndex,
-    newPosition
-  ) => {
+    (
+      vertexIndex,
+      newPosition
+    ) => {
 
-    const updatedFeature = {
+      const snapCandidates =
+        drawState.features.filter(
+          item =>
+            item.id !== feature.id
+        )
 
-      ...feature,
+      const snappedPoint =
 
-      points:
-        feature.points.map(
-          (point, index) =>
-            index === vertexIndex
-              ? newPosition
-              : point
-        ),
-    }
+        findNearestVertex(
 
-    drawState.updateFeature(
-      updatedFeature
-    )
+          newPosition,
+          snapCandidates
 
-    dispatch({
 
-      type:
-        GIS_ACTIONS
-          .SET_EDITING_FEATURE,
+        )
 
-      payload:
-        updatedFeature,
-    })
 
-    dispatch({
 
-      type:
-        GIS_ACTIONS
-          .SET_SELECTED_FEATURE,
+      const finalPosition =
 
-      payload:
-        updatedFeature,
-    })
-  }
-   const handleVertexDelete =
-  vertexIndex => {
+        snappedPoint ??
+        newPosition
 
-    let updatedPoints =
-      feature.points.filter(
-        (_, index) =>
-          index !== vertexIndex
+      const updatedFeature = {
+
+        ...feature,
+
+        points:
+          feature.points.map(
+            (point, index) =>
+              index === vertexIndex
+                ? finalPosition
+                : point
+          ),
+      }
+
+      editHistoryStore.saveSnapshot(
+        drawState.features
+      )
+     console.log(
+  'History:',
+  editHistoryStore.history.length
+)
+
+
+      drawState.updateFeature(
+        updatedFeature
       )
 
-    // Polygon mínimo 3 vértices
-    if (
-      feature.type === 'polygon' &&
-      updatedPoints.length < 3
-    ) {
-      return
+      dispatch({
+
+        type:
+          GIS_ACTIONS
+            .SET_EDITING_FEATURE,
+
+        payload:
+          updatedFeature,
+      })
+
+      dispatch({
+
+        type:
+          GIS_ACTIONS
+            .SET_SELECTED_FEATURE,
+
+        payload:
+          updatedFeature,
+      })
     }
 
-    // Polyline mínimo 2 vértices
-    if (
-      feature.type === 'polyline' &&
-      updatedPoints.length < 2
-    ) {
-      return
+  const handleVertexDelete =
+    vertexIndex => {
+
+      let updatedPoints =
+        feature.points.filter(
+          (_, index) =>
+            index !== vertexIndex
+        )
+
+      // Polygon mínimo 3 vértices
+      if (
+        feature.type === 'polygon' &&
+        updatedPoints.length < 3
+      ) {
+        return
+      }
+
+      // Polyline mínimo 2 vértices
+      if (
+        feature.type === 'polyline' &&
+        updatedPoints.length < 2
+      ) {
+        return
+      }
+
+      const updatedFeature = {
+
+        ...feature,
+
+        points: updatedPoints,
+      }
+
+      editHistoryStore
+        .saveSnapshot(
+          drawState.features
+        )
+      console.log(
+        editHistoryStore.history
+      )
+
+      drawState.updateFeature(
+        updatedFeature
+      )
+
+      dispatch({
+        type:
+          GIS_ACTIONS
+            .SET_EDITING_FEATURE,
+
+        payload:
+          updatedFeature,
+      })
+
+      dispatch({
+        type:
+          GIS_ACTIONS
+            .SET_SELECTED_FEATURE,
+
+        payload:
+          updatedFeature,
+      })
+
     }
 
-    const updatedFeature = {
-
-      ...feature,
-
-      points: updatedPoints,
-    }
-
-    drawState.updateFeature(
-      updatedFeature
-    )
-
-    dispatch({
-      type:
-        GIS_ACTIONS
-          .SET_EDITING_FEATURE,
-
-      payload:
-        updatedFeature,
-    })
-
-    dispatch({
-      type:
-        GIS_ACTIONS
-          .SET_SELECTED_FEATURE,
-
-      payload:
-        updatedFeature,
-    })
-    
-  }
-  
   return (
     <>
       {feature.points.map(
         (point, index) => (
 
-         <Marker
-  key={index}
+          <Marker
+            key={index}
 
-  position={point}
+            position={point}
 
-  draggable={true}
+            draggable={true}
 
-  eventHandlers={{
-    dragend: event => {
+            eventHandlers={{
+              dragend: event => {
 
-      handleVertexMove(
-        index,
-        event.target.getLatLng()
-      )
-    },
-    dblclick: () => {
+                handleVertexMove(
+                  index,
+                  event.target.getLatLng()
+                )
+              },
+              dblclick: () => {
 
-    handleVertexDelete(
-      index
-    )
-  },
-  }}
-/>
+                handleVertexDelete(
+                  index
+                )
+              },
+            }}
+          />
         )
       )}
     </>

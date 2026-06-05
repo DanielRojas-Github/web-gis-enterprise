@@ -5,7 +5,11 @@ export const gisInitialState = {
   selectedFeature: null,
 
   selectedFeatures: [],
-
+  
+  editingFeature: null,
+  
+  isEditing: false,
+  
   mapCenter: [
     -17.7833,
     -63.1821,

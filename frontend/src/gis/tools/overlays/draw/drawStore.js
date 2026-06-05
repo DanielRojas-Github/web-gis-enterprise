@@ -8,6 +8,7 @@ export const drawState = {
 
     features: [],
 
+
     listeners: [],
 
 
@@ -23,7 +24,6 @@ export const drawState = {
             listener => listener()
         )
     },
-
 
     setFinished(value) {
 
@@ -69,38 +69,51 @@ export const drawState = {
 
     addFeature(feature) {
 
-  this.features.push(
-    feature
-  )
+        this.features.push(
+            feature
+        )
 
-  this.listeners.forEach(
-    listener => listener()
-  )
-},
-   removeFeature(id) {
+        this.listeners.forEach(
+            listener => listener()
+        )
+    },
 
-  this.features =
-    this.features.filter(
-      feature =>
-        feature.id !== id
-    )
+    removeFeature(id) {
 
-  this.listeners.forEach(
-    listener => listener()
-  )
-},
-updateFeature(updatedFeature) {
+        this.features =
+            this.features.filter(
+                feature =>
+                    feature.id !== id
+            )
 
-  this.features =
-    this.features.map(
-      feature =>
-        feature.id === updatedFeature.id
-          ? updatedFeature
-          : feature
-    )
+        this.listeners.forEach(
+            listener => listener()
+        )
+    },
 
-  this.listeners.forEach(
-    listener => listener()
-  )
-},
+    updateFeature(updatedFeature) {
+
+        this.features =
+            this.features.map(
+                feature =>
+                    feature.id === updatedFeature.id
+                        ? updatedFeature
+                        : feature
+            )
+
+        this.listeners.forEach(
+            listener => listener()
+        )
+    },
+
+    setFeatures(features) {
+
+        this.features = Array.isArray(features)
+            ? features
+            : [] 
+
+        this.listeners.forEach(
+            listener => listener()
+        )
+    },
 }

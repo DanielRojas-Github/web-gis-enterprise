@@ -28,6 +28,7 @@ export default function SelectionRenderer() {
   )
   const vertexCount =
     feature.points?.length ?? 0
+
   const handleDelete =
     () => {
 
@@ -39,6 +40,46 @@ export default function SelectionRenderer() {
         type:
           GIS_ACTIONS
             .SET_SELECTED_FEATURE,
+
+        payload: null,
+      })
+    }
+  const handleEdit =
+    () => {
+
+      dispatch({
+
+        type:
+          GIS_ACTIONS
+            .SET_EDITING,
+
+        payload: true,
+      })
+      dispatch({
+
+        type:
+          GIS_ACTIONS
+            .SET_EDITING_FEATURE,
+        payload: feature,
+      })
+    }
+  const handleStopEditing =
+    () => {
+
+      dispatch({
+
+        type:
+          GIS_ACTIONS
+            .SET_EDITING,
+
+        payload: false,
+      })
+
+      dispatch({
+
+        type:
+          GIS_ACTIONS
+            .SET_EDITING_FEATURE,
 
         payload: null,
       })
@@ -91,6 +132,17 @@ export default function SelectionRenderer() {
         onClick={handleDelete}
       >
         Eliminar
+      </button>
+
+      <button
+        onClick={handleEdit}
+      >
+        Editar
+      </button>
+      <button
+        onClick={handleStopEditing}
+      >
+        Finalizar edición
       </button>
 
     </div>

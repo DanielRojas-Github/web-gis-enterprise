@@ -114,11 +114,51 @@ const { state, dispatch } =
   <>
     {drawState.features.map(
   feature => {
+console.log(
+  'Tipo feature:',
+  feature.type,
+  'POLYLINE:',
+  DRAW_TYPES.POLYLINE
+)
+
+    if (
+  feature.type ===
+  DRAW_TYPES.POINT
+) {
+
+
+  console.log(
+  'FEATURES A RENDERIZAR:',
+  drawState.features
+)
+  return (
+
+    <Marker
+      key={feature.id}
+      position={
+        feature.points[0]
+      }
+    />
+
+  )
+}
 
     if (
       feature.type ===
       DRAW_TYPES.POLYLINE
     ) {
+      console.log(
+  'Renderizando polilínea:',
+    JSON.stringify(
+      feature.points,
+      null,
+      2
+    )
+  )
+  console.log(
+  'Cantidad de features:',
+  drawState.features.length
+)
       return (
         <Polyline
   key={feature.id}
@@ -182,6 +222,7 @@ eventHandlers={{
 /> 
       )
     }
+
 
     return null
   }

@@ -63,6 +63,18 @@ import MeasureOverlay
 import DrawOverlay
   from '@/gis/tools/overlays/draw/DrawOverlay'
 
+import EditVerticesOverlay
+from '@/gis/tools/overlays/draw/EditVerticesOverlay'
+
+import EditHistoryControls
+from '@/gis/editing/components/EditHistoryControls'
+
+import GeoJSONImportControl
+from '@/gis/editing/components/GeoJSONImportControl'
+
+import WFSLoadButton
+from '@/gis/import/components/WFSLoadButton'
+
 
 const MapInteractions = () => {
 
@@ -151,6 +163,8 @@ const MapView = () => {
 
         <DrawOverlay />
 
+        <EditVerticesOverlay />
+
         {/* <MapClickHandler /> 
       <MapClickMarker /> 
       <FeaturePopup /> */}
@@ -170,6 +184,9 @@ const MapView = () => {
       <SelectionRenderer
         feature={gisState.selectedFeature} 
       />
+      <EditHistoryControls />
+      <GeoJSONImportControl />
+      <WFSLoadButton />
       
     </>
   )

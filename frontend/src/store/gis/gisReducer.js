@@ -81,6 +81,26 @@ case GIS_ACTIONS.CLEAR_MEASUREMENTS:
 
     measurements: [], // Clear all measurement points
   }
+
+
+  case GIS_ACTIONS.SET_EDITING:
+
+  return {
+
+    ...state,
+
+    isEditing:
+      action.payload,
+  }
+  case GIS_ACTIONS.SET_EDITING_FEATURE:
+
+  return {
+
+    ...state,
+
+    editingFeature:
+      action.payload,
+  }
   
     default:
       return state
