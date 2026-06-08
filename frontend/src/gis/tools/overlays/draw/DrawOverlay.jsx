@@ -28,6 +28,10 @@ from '@/store/gis/hooks/useGIS'
 import { GIS_ACTIONS }
 from '@/store/gis/gisActions'
 
+
+
+
+
 export default function DrawOverlay() {
 
   const [, forceUpdate] =
@@ -45,15 +49,20 @@ const { state, dispatch } =
 
   useEffect(() => {
 
+ 
     return drawState.subscribe(
+      
       () => {
-
+    
+ 
         forceUpdate(
           v => v + 1
         )
+ 
       }
+      
     )
-
+  
   }, [])
 
   const isSelected =
@@ -114,12 +123,7 @@ const { state, dispatch } =
   <>
     {drawState.features.map(
   feature => {
-console.log(
-  'Tipo feature:',
-  feature.type,
-  'POLYLINE:',
-  DRAW_TYPES.POLYLINE
-)
+
 
     if (
   feature.type ===
@@ -127,10 +131,9 @@ console.log(
 ) {
 
 
-  console.log(
-  'FEATURES A RENDERIZAR:',
-  drawState.features
-)
+
+
+
   return (
 
     <Marker
@@ -147,18 +150,8 @@ console.log(
       feature.type ===
       DRAW_TYPES.POLYLINE
     ) {
-      console.log(
-  'Renderizando polilínea:',
-    JSON.stringify(
-      feature.points,
-      null,
-      2
-    )
-  )
-  console.log(
-  'Cantidad de features:',
-  drawState.features.length
-)
+
+
       return (
         <Polyline
   key={feature.id}
@@ -223,6 +216,103 @@ eventHandlers={{
       )
     }
 
+
+    return null
+  }
+)}
+{drawState.features.map(
+  feature => {
+
+ 
+
+   
+    if (
+      feature.type ===
+      DRAW_TYPES.POINT
+    ) {
+
+
+      return (
+        <Marker
+          key={feature.id}
+          position={
+            feature.points[0]
+          }
+        />
+      )
+    }
+
+    if (
+      feature.type ===
+      DRAW_TYPES.POLYLINE
+    ) {
+
+    
+      
+
+      return (
+
+        <Polyline
+          key={`${feature.id}-${feature.points.length}`}
+          positions={
+            feature.points
+          }
+
+
+          pathOptions={{
+            color: 'red',
+            weight: 8,
+          }}
+          eventHandlers={{
+            click: () =>
+              selectFeature(
+                feature
+              ),
+
+            dblclick:
+              event => {
+
+              handleAddVertex(
+                feature,
+                event.latlng
+              )
+            },
+          }}
+        />
+
+      )
+    }
+
+    if (
+      feature.type ===
+      DRAW_TYPES.POLYGON
+    ) {
+
+
+      return (
+
+        <Polygon
+          key={feature.id}
+          positions={
+            feature.points
+          }
+          pathOptions={{
+            color:
+              isSelected(feature)
+                ? '#ff5500'
+                : '#3388ff',
+
+            weight:
+              isSelected(feature)
+                ? 5
+                : 3,
+          }}
+        />
+
+      )
+    }
+
+   
 
     return null
   }

@@ -75,6 +75,14 @@ from '@/gis/editing/components/GeoJSONImportControl'
 import WFSLoadButton
 from '@/gis/import/components/WFSLoadButton'
 
+import { useEffect }
+from 'react'
+
+import {
+  initializeFeaturePersistence,
+}
+from '@/gis/services/persistence/initializeFeaturePersistence'
+
 
 const MapInteractions = () => {
 
@@ -87,6 +95,9 @@ const MapInteractions = () => {
 
 const MapView = () => {
 
+    console.log(
+    'MAPVIEW RENDERIZADO'
+  )
   const {
     state:
     layerState,
@@ -96,6 +107,15 @@ const MapView = () => {
     state:
     gisState,
   } = useGIS()
+
+   useEffect(() => {
+      console.log(
+    'EJECUTANDO PERSISTENCIA'
+  )
+
+    initializeFeaturePersistence()
+
+  }, [])
 
   const visibleLayers =
     flattenLayers(
@@ -132,10 +152,7 @@ const MapView = () => {
         )
       }
     )
-  console.log(
-    'Selected Feature:',
-    gisState.selectedFeature
-  )
+
   return (
 
     <>

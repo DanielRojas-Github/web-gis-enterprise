@@ -2,6 +2,11 @@
 import { drawState }
 from '@/gis/tools/overlays/draw/drawStore'
 
+console.log(
+  'DRAWTOOL USA DRAWSTORE',
+  drawState
+)
+
 export const DrawTool = {
 
   id: 'draw',
@@ -33,7 +38,9 @@ export const DrawTool = {
   
   },
   onDoubleClick() {
-
+   console.log(
+    'DOBLE CLICK DETECTADO'
+  )
   drawState.addFeature({
 
   id:

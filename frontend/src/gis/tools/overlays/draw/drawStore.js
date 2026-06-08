@@ -1,4 +1,11 @@
+
+import {
+  saveFeatures,
+}
+from '@/gis/services/persistence/featureStorageService'
+
 export const drawState = {
+    
 
     type: 'polyline',
 
@@ -67,53 +74,69 @@ export const drawState = {
         }
     },
 
-    addFeature(feature) {
+  addFeature(feature) {
 
-        this.features.push(
-            feature
-        )
+  
 
-        this.listeners.forEach(
-            listener => listener()
-        )
-    },
+  this.features.push(feature)
 
-    removeFeature(id) {
+  saveFeatures(
+    this.features
+  )
 
-        this.features =
-            this.features.filter(
-                feature =>
-                    feature.id !== id
-            )
+  this.listeners.forEach(
+    listener => listener()
+  )
+ 
+},
 
-        this.listeners.forEach(
-            listener => listener()
-        )
-    },
+  removeFeature(id) {
 
-    updateFeature(updatedFeature) {
+  this.features =
+    this.features.filter(
+      feature =>
+        feature.id !== id
+    )
 
-        this.features =
-            this.features.map(
-                feature =>
-                    feature.id === updatedFeature.id
-                        ? updatedFeature
-                        : feature
-            )
+  saveFeatures(
+    this.features
+  )
 
-        this.listeners.forEach(
-            listener => listener()
-        )
-    },
+  this.listeners.forEach(
+    listener => listener()
+  )
+},
 
-    setFeatures(features) {
+  updateFeature(updatedFeature) {
 
-        this.features = Array.isArray(features)
-            ? features
-            : [] 
+  this.features =
+    this.features.map(
+      feature =>
+        feature.id ===
+        updatedFeature.id
+          ? updatedFeature
+          : feature
+    )
 
-        this.listeners.forEach(
-            listener => listener()
-        )
-    },
+  saveFeatures(
+    this.features
+  )
+
+  this.listeners.forEach(
+    listener => listener()
+  )
+},
+
+  setFeatures(features) {
+
+  this.features = features
+
+  saveFeatures(
+    this.features
+  )
+
+  this.listeners.forEach(
+    listener => listener()
+  )
+},
 }
