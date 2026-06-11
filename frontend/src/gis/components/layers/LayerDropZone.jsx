@@ -1,15 +1,16 @@
 import { useLayers }
   from '@/store/layers/hooks/useLayers'
 
-import { LAYER_ACTIONS }
-  from '@/store/layers/layerActions'
+// import { LAYER_ACTIONS }
+//   from '@/store/layers/layerActions'
 
 const LayerDropZone = ({
   groupId,
 }) => {
 
-  const { dispatch } =
-    useLayers()
+ const {
+  moveNode,
+} = useLayers()
 
   const handleDrop =
     (event) => {
@@ -21,19 +22,14 @@ const LayerDropZone = ({
           'layerId'
         )
 
-      dispatch({
-        type:
-          LAYER_ACTIONS
-            .MOVE_NODE,
+     moveNode({
 
-        payload: {
-          nodeId:
-            layerId,
+  nodeId:
+    layerId,
 
-          targetGroupId:
-            groupId,
-        },
-      })
+  targetGroupId:
+    groupId,
+})
     }
 
   const handleDragOver =

@@ -12,6 +12,12 @@ import {
   insertNodeIntoGroup,
 } from '@/gis/utils/insertNodeIntoGroup'
 
+import {
+  recalculateZIndex,
+}
+from '@/gis/utils/recalculateZIndex'
+
+
 export const layerReducer = (
   state,
   action
@@ -49,80 +55,93 @@ export const layerReducer = (
       }
 
     case LAYER_ACTIONS.TOGGLE_LAYER:
-       return {
-    ...state,
+      return {
+        ...state,
 
-    layers:
-      updateLayerTree(
-        state.layers,
+        layers:
+          updateLayerTree(
+            state.layers,
 
-        action.payload,
+            action.payload,
 
-        (layer) => ({
-          ...layer,
+            (layer) => ({
+              ...layer,
 
-          visible:
-            !layer.visible,
-        })
-      ),
-  }
+              visible:
+                !layer.visible,
+            })
+          ),
+      }
 
-   case LAYER_ACTIONS.SET_LAYER_OPACITY:
-  return {
-    ...state,
+    case LAYER_ACTIONS.SET_LAYER_OPACITY:
+      return {
+        ...state,
 
-    layers:
-      updateLayerTree(
-        state.layers,
+        layers:
+          updateLayerTree(
+            state.layers,
 
-        action.payload.id,
+            action.payload.id,
 
-        (layer) => ({
-          ...layer,
+            (layer) => ({
+              ...layer,
 
-          opacity:
-            action.payload
-              .opacity,
-        })
-      ),
-  }
+              opacity:
+                action.payload
+                  .opacity,
+            })
+          ),
+      }
 
     case LAYER_ACTIONS.TOGGLE_GROUP:
-  return {
-    ...state,
+        console.log(
+    'STATE BEFORE:',
+    state.layers
+  )
 
-    layers:
-      state.layers.map(
-        (group) => {
-          if (
-            group.id !==
-            action.payload
-          ) {
-            return group
-          }
+  console.log(
+    'PAYLOAD:',
+    action.payload
+  )
+  console.log(
+  'STATE AFTER:',
+  updatedLayers
+)
+      return {
+        ...state,
 
-          const newVisibility =
-            !group.visible
+        layers:
+          state.layers.map(
+            (group) => {
+              if (
+                group.id !==
+                action.payload
+              ) {
+                return group
+              }
 
-          return {
-            ...group,
+              const newVisibility =
+                !group.visible
 
-            visible:
-              newVisibility,
+              return {
+                ...group,
 
-            children:
-              group.children.map(
-                (layer) => ({
-                  ...layer,
+                visible:
+                  newVisibility,
 
-                  visible:
-                    newVisibility,
-                })
-              ),
-          }
-        }
-      ),
-  }
+                children:
+                  group.children.map(
+                    (layer) => ({
+                      ...layer,
+
+                      visible:
+                        newVisibility,
+                    })
+                  ),
+              }
+            }
+          ),
+      }
     case LAYER_ACTIONS.SET_ACTIVE_LAYER:
       return {
         ...state,
@@ -146,11 +165,69 @@ export const layerReducer = (
         layerErrors:
           action.payload,
       }
-    
-    case
-  LAYER_ACTIONS
-    .TOGGLE_GROUP_EXPANDED:
 
+    case
+      LAYER_ACTIONS
+        .TOGGLE_GROUP_EXPANDED:
+
+      return {
+        ...state,
+
+        layers:
+          updateLayerTree(
+            state.layers,
+
+            action.payload,
+
+            (group) => ({
+              ...group,
+
+              expanded:
+                !group.expanded,
+            })
+          ),
+      }
+
+    case LAYER_ACTIONS.MOVE_NODE: {
+
+      const {
+        nodeId,
+        targetGroupId,
+      } = action.payload
+
+      const {
+        tree,
+        removedNode,
+      } =
+        removeNodeFromTree(
+          state.layers,
+
+          nodeId
+        )
+
+      if (!removedNode) {
+        return state
+      }
+
+      const updatedTree =
+        insertNodeIntoGroup(
+          tree,
+
+          targetGroupId,
+
+          removedNode
+        )
+
+      return {
+        ...state,
+
+      layers:
+    recalculateZIndex(
+      updatedTree
+    ),
+      }
+    }
+   case LAYER_ACTIONS.UPDATE_LAYER:
   return {
     ...state,
 
@@ -158,55 +235,48 @@ export const layerReducer = (
       updateLayerTree(
         state.layers,
 
-        action.payload,
+        action.payload.id,
 
-        (group) => ({
-          ...group,
+        (layer) => ({
+          ...layer,
 
-          expanded:
-            !group.expanded,
+          ...action.payload.updates,
         })
       ),
   }
-
-  case LAYER_ACTIONS.MOVE_NODE: {
-
-  const {
-    nodeId,
-    targetGroupId,
-  } = action.payload
-
-  const {
-    tree,
-    removedNode,
-  } =
-    removeNodeFromTree(
-      state.layers,
-
-      nodeId
-    )
-
-  if (!removedNode) {
-    return state
-  }
-
-  const updatedTree =
-    insertNodeIntoGroup(
-      tree,
-
-      targetGroupId,
-
-      removedNode
-    )
-
+  case LAYER_ACTIONS.ADD_LAYER_TO_GROUP:
   return {
     ...state,
+  
+    layers: state.layers.map(
+      (group) => {
+console.log(
+  'ADD_LAYER_TO_GROUP',
+  action.payload
+)
+        if (
+          group.id !==
+          action.payload.groupId
+        ) {
 
-    layers:
-      updatedTree,
+          return group
+        }
+          console.log(
+  'Group found:',
+  group.id
+)
+        return {
+          
+          ...group,
+
+          children: [
+            ...group.children,
+            action.payload.layer,
+          ],
+        }
+      }
+    ),
   }
-}
-
     default:
       return state
   }

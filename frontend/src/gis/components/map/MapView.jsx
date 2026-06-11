@@ -1,6 +1,5 @@
 import {
-  MapContainer,
-  TileLayer,
+  MapContainer
 } from 'react-leaflet'
 
 import { useLayers }
@@ -64,24 +63,24 @@ import DrawOverlay
   from '@/gis/tools/overlays/draw/DrawOverlay'
 
 import EditVerticesOverlay
-from '@/gis/tools/overlays/draw/EditVerticesOverlay'
+  from '@/gis/tools/overlays/draw/EditVerticesOverlay'
 
 import EditHistoryControls
-from '@/gis/editing/components/EditHistoryControls'
+  from '@/gis/editing/components/EditHistoryControls'
 
 import GeoJSONImportControl
-from '@/gis/editing/components/GeoJSONImportControl'
+  from '@/gis/editing/components/GeoJSONImportControl'
 
 import WFSLoadButton
-from '@/gis/import/components/WFSLoadButton'
+  from '@/gis/import/components/WFSLoadButton'
 
 import { useEffect }
-from 'react'
+  from 'react'
 
 import {
   initializeFeaturePersistence,
 }
-from '@/gis/services/persistence/initializeFeaturePersistence'
+  from '@/gis/services/persistence/initializeFeaturePersistence'
 
 
 const MapInteractions = () => {
@@ -95,12 +94,9 @@ const MapInteractions = () => {
 
 const MapView = () => {
 
-    console.log(
-    'MAPVIEW RENDERIZADO'
-  )
+
   const {
-    state:
-    layerState,
+    layers,
   } = useLayers()
 
   const {
@@ -108,10 +104,8 @@ const MapView = () => {
     gisState,
   } = useGIS()
 
-   useEffect(() => {
-      console.log(
-    'EJECUTANDO PERSISTENCIA'
-  )
+  useEffect(() => {
+
 
     initializeFeaturePersistence()
 
@@ -119,7 +113,7 @@ const MapView = () => {
 
   const visibleLayers =
     flattenLayers(
-      layerState.layers
+      layers
     ).filter(
       (layer) => {
 
@@ -166,11 +160,7 @@ const MapView = () => {
         }}
       >
 
-        {/* Capa base del mapa */}
-        <TileLayer
-          attribution='&copy; OpenStreetMap contributors'
-          url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
-        />
+
 
         <MapInteractions />
 
@@ -199,12 +189,12 @@ const MapView = () => {
       </MapContainer>
 
       <SelectionRenderer
-        feature={gisState.selectedFeature} 
+        feature={gisState.selectedFeature}
       />
       <EditHistoryControls />
       <GeoJSONImportControl />
       <WFSLoadButton />
-      
+
     </>
   )
 }

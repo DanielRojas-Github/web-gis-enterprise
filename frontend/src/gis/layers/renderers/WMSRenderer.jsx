@@ -5,12 +5,12 @@ const WMSRenderer = ({ layer }) => {
 
   return (
     <WMSTileLayer
-      url={layer.url}
-      layers={layer.layers}
+      url={layer.source.url}
+      layers={layer.source.layers}
       format="image/png"
       transparent={true}
-      opacity={layer.opacity}
-      zIndex={layer.zIndex}
+      opacity={layer.source.opacity}
+      zIndex={layer.source.zIndex}
     />
   )
 }

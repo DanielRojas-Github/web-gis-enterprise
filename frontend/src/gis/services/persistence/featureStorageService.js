@@ -3,10 +3,7 @@ const STORAGE_KEY =
 
 export function
 saveFeatures(features) {
-     console.log(
-    'GUARDANDO FEATURES:',
-    features
-  ) 
+   
 
   localStorage.setItem(
     STORAGE_KEY,

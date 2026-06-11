@@ -1,61 +1,85 @@
-import { drawState }
-from '@/gis/tools/overlays/draw/drawStore'
-
-import {
-  geoJSONCollectionToFeatures
-}
-from '@/gis/tools/overlays/draw/importGeoJSON'
-
-import {
-  validateGeoJSON,
-}
-from '@/gis/import/validators/geojsonValidator'
-
 import {
   importGeoJSONFile,
 }
 from '@/gis/import/services/geojsonImportService'
 
-export default function
-GeoJSONImportControl() {
+import {
+  useLayers,
+}
+from '@/store/layers/hooks/useLayers'
 
-const handleImport =
-  async event => {
+import {
+  createVectorLayer,
+}
+from '@/gis/layers/factories/vectorLayerFactory'
 
-    try {
+export default function GeoJSONImportControl() {
 
-      const file =
-        event.target.files[0]
+  const {
+    addLayerToGroup,
+  } = useLayers()
 
-      if (!file) {
-        return
-      }
+  const handleImport =
+    async (event) => {
 
-      const importedFeatures =
+      try {
 
-        await importGeoJSONFile(
-          file
+        const file =
+          event.target.files[0]
+          console.log('Archivo seleccionado:', file.name)
+
+        if (!file) {
+          return
+        }
+
+        const {
+          geojson,
+        } =
+          await importGeoJSONFile(
+            file
+          )
+          console.log(
+  'GeoJSON recibido:',
+  geojson
+)
+
+        const layer =
+          createVectorLayer({
+
+            id:
+              `geojson-${Date.now()}`,
+
+            name:
+              file.name,
+
+            geojson,
+          })
+        console.log(
+  'Layer creada:',
+  layer
+)
+console.log(
+  'Agregando layer al grupo imported-layers'
+)
+        addLayerToGroup({
+
+          groupId:
+            'imported-layers',
+
+          layer,
+        })
+
+      } catch (error) {
+
+        console.error(
+          error
         )
 
-      console.log(
-
-        'Features importadas:',
-
-        importedFeatures
-
-      )
-
-    } catch (error) {
-
-      console.error(
-        error.message
-      )
-
-      alert(
-        error.message
-      )
+        alert(
+          error.message
+        )
+      }
     }
-  }
 
   return (
 

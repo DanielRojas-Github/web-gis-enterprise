@@ -1,13 +1,13 @@
 import { defaultLayerMetadata } from '@/gis/layers/registry/defaultLayerMetadata'
 import { geoserverConfig } from '@/gis/services/geoserver/geoserverConfig'
+import { createLayer, LAYER_TYPES } from './layerSchema'
 export const operationalLayers = [
-
   {
     id: 'administrative',
 
     name: 'Administrative',
 
-    type: 'group',
+    type: LAYER_TYPES.GROUP,
 
     visible: true,
 
@@ -15,24 +15,25 @@ export const operationalLayers = [
 
     children: [
 
-      {
+     createLayer( {
         id: 'departments',
 
         name: 'Departments',
 
-        type: 'WMS',
+        type: LAYER_TYPES.WMS,
 
         visible: true,
 
         opacity: 1,
 
         zIndex: 100,
-
+      source: { 
         url:
           'http://localhost:8080/geoserver/wms',
 
         layers:
           `${geoserverConfig.workspace}:departments`,
+        },
 
         ...defaultLayerMetadata,
 
@@ -53,8 +54,9 @@ export const operationalLayers = [
             'boundaries',
           ],
         },
-      },
-    ],
+      
+    }),
+    ]
   },
 
   {
@@ -62,7 +64,7 @@ export const operationalLayers = [
 
     name: 'Hydrology',
 
-    type: 'group',
+    type: LAYER_TYPES.GROUP,
 
     visible: true,
 
@@ -70,24 +72,26 @@ export const operationalLayers = [
 
     children: [
 
-      {
+    createLayer( { 
         id: 'rivers',
 
         name: 'Rivers',
 
-        type: 'WMS',
+        type: LAYER_TYPES.WMS,
 
         visible: true,
 
         opacity: 1,
 
         zIndex: 2,
+        source: {
 
         url:
           'http://localhost:8080/geoserver/wms',
 
         layers:
          `${geoserverConfig.workspace}:rivers`,
+        },
 
         ...defaultLayerMetadata,
 
@@ -108,7 +112,8 @@ export const operationalLayers = [
             'water',
           ],
         },
-      },
+      
+    }),
     ],
   },
 
@@ -117,7 +122,7 @@ export const operationalLayers = [
 
     name: 'Transportation',
 
-    type: 'group',
+    type: LAYER_TYPES.GROUP,
 
     visible: true,
 
@@ -125,12 +130,14 @@ export const operationalLayers = [
 
     children: [
 
+    createLayer( 
+      
       {
         id: 'roads',
 
         name: 'Roads',
 
-        type: 'WMS',
+        type: LAYER_TYPES.WMS,
 
         visible: true,
 
@@ -138,11 +145,14 @@ export const operationalLayers = [
 
         zIndex: 3,
 
+        source: {
+
         url:
           'http://localhost:8080/geoserver/wms',
 
         layers:
           `${geoserverConfig.workspace}:roads`,
+        },
 
         ...defaultLayerMetadata,
 
@@ -163,7 +173,25 @@ export const operationalLayers = [
             'transport',
           ],
         },
+     
+      
       },
+    ), 
     ],
   },
+     {
+  id: 'imported-layers',
+
+  name: 'Imported Layers',
+
+  type: LAYER_TYPES.GROUP,
+
+  visible: true,
+
+  expanded: true,
+
+  children: [],
+}
+
+
 ]

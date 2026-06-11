@@ -1,8 +1,8 @@
 import { useLayers }
   from '@/store/layers/hooks/useLayers'
 
-import { LAYER_ACTIONS }
-  from '@/store/layers/layerActions'
+// import { LAYER_ACTIONS }
+  // from '@/store/layers/layerActions'
 
 import OpacitySlider
   from './OpacitySlider'
@@ -14,35 +14,15 @@ const LayerItem = ({
   layer,
 }) => {
 
-  const { dispatch } =
-    useLayers()
+  const { toggleLayer, setLayerOpacity } = useLayers()
 
-  const handleOpacityChange =
-    (opacity) => {
+  const handleOpacityChange = (opacity) => {
+    setLayerOpacity(layer.id, opacity)
+  }
 
-      dispatch({
-        type:
-          LAYER_ACTIONS.SET_LAYER_OPACITY,
-
-        payload: {
-          id: layer.id,
-
-          opacity,
-        },
-      })
-    }
-
-  const handleToggleLayer =
-    () => {
-
-      dispatch({
-        type:
-          LAYER_ACTIONS.TOGGLE_LAYER,
-
-        payload:
-          layer.id,
-      })
-    }
+  const handleToggleLayer = () => {
+    toggleLayer(layer.id)
+  }
 
   return (
     <div className="layer-item">

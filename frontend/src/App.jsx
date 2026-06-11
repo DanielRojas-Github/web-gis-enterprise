@@ -6,6 +6,10 @@ import {
 import { useLayers } from '@/store/layers/hooks/useLayers'
 
 import { operationalLayers } from '@/gis/layers/registry/operationalLayers'
+console.log(
+  'OPERATIONAL LAYERS IMPORT:',
+  operationalLayers
+)
 
 import { LAYER_ACTIONS } from '@/store/layers/layerActions'//frontend\src\store\layers\layerActions.js
 
@@ -32,11 +36,24 @@ import ToolBar
 
 import { toolManager } from '@/gis/tools/manager/ToolManager'
 
+import {
+  baseLayers,
+}
+from '@/gis/layers/registry/baseLayers'
+
+
 window.toolManager = toolManager
 
 function App() {
+
+  const initialLayers = [
+
+  ...baseLayers,
+
+  ...operationalLayers,
+]
   const {
-    state,
+    layers,
     dispatch,
   } = useLayers()
 
@@ -49,6 +66,15 @@ function App() {
 
     const persistedLayers =
       loadLayerState()
+    console.log(
+  'INITIAL LAYERS:',
+  initialLayers
+)
+
+     console.log(
+  'PERSISTED LAYERS:',
+  persistedLayers
+)
 
     dispatch({
       type:
@@ -56,12 +82,12 @@ function App() {
 
       payload:
         persistedLayers ||
-        operationalLayers,
+        initialLayers,
     })
 
     hydrated.current =
       true
-
+ 
   }, [dispatch])
 
 
@@ -73,15 +99,14 @@ function App() {
       return
     }
 
-    if (
-      state.layers.length
+    if (layers.length
     ) {
       saveLayerState(
-        state.layers
+        layers
       )
     }
 
-  }, [state.layers])
+  }, [layers])
 
 
   return (

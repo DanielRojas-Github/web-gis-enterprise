@@ -20,17 +20,19 @@ const DraggableLayerItem = ({ // Recibe la capa como prop para renderizar su inf
 
   return (
     <div
-      draggable
+        className="
+    draggable-layer-item
+  "
 
       onDragStart={
         handleDragStart
       }
 
-      className="
-        draggable-layer-item
-      "
+    
     >
-      <LayerDragHandle />
+      <LayerDragHandle   onDragStart={
+    handleDragStart
+  } />
 
       <LayerItem
         layer={layer}

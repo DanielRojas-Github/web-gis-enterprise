@@ -40,7 +40,10 @@ importGeoJSONFile(
 
   ])
 
-  return importedFeatures
+  return {
+  geojson,
+  importedFeatures,
+}
 }
 
 export function

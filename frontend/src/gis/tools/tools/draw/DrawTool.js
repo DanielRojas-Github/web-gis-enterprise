@@ -2,10 +2,7 @@
 import { drawState }
 from '@/gis/tools/overlays/draw/drawStore'
 
-console.log(
-  'DRAWTOOL USA DRAWSTORE',
-  drawState
-)
+
 
 export const DrawTool = {
 
@@ -13,14 +10,14 @@ export const DrawTool = {
 
   activate() {
 
-    console.log('Draw enabled')
+  
 
     drawState.clear()
   },
 
   deactivate() {
 
-    console.log('Draw disabled')
+   
 
     drawState.clear()
   },
@@ -38,9 +35,7 @@ export const DrawTool = {
   
   },
   onDoubleClick() {
-   console.log(
-    'DOBLE CLICK DETECTADO'
-  )
+ 
   drawState.addFeature({
 
   id:
@@ -53,9 +48,7 @@ export const DrawTool = {
     ...drawState.points
   ],
 })
- console.log(
-  drawState.features
-)
+
 
 
   drawState.setFinished(

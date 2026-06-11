@@ -1,17 +1,28 @@
+import {
+  createLayer,
+  LAYER_TYPES,
+}
+from './layerSchema'
+
 export const baseLayers = [
-  {
+
+  createLayer({
+
     id: 'osm',
 
     name: 'OpenStreetMap',
 
-    type: 'tile',
+    type: LAYER_TYPES.TILE,
 
     visible: true,
 
-    url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+    opacity: 1,
 
     zIndex: 1,
 
-    opacity: 1,
-  },
+    source: {
+      url:
+        'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+    },
+  }),
 ]

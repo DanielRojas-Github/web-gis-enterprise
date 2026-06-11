@@ -28,12 +28,28 @@ from '@/store/gis/hooks/useGIS'
 import { GIS_ACTIONS }
 from '@/store/gis/gisActions'
 
+// import { useMap } from 'react-leaflet'
 
 
 
 
 export default function DrawOverlay() {
+// const map = useMap()
 
+// useEffect(() => {
+  
+
+
+//   if (drawState.features.length > 0) {
+
+//     map.fitBounds(
+//       drawState.features[0].points
+//     )
+
+   
+//   }
+
+// }, [map])
   const [, forceUpdate] =
     useState(0)
 

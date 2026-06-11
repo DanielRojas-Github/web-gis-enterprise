@@ -1,5 +1,7 @@
 const STORAGE_KEY =
   'gis-layer-state'
+const STORAGE_VERSION =
+  1
 
 export const saveLayerState =
   (layers) => {
@@ -8,24 +10,63 @@ export const saveLayerState =
       STORAGE_KEY,
 
       JSON.stringify(
-        layers
+        {
+          version: STORAGE_VERSION,
+          layers,
+        }
       )
     )
   }
+   
 
 export const loadLayerState =
   () => {
 
-    const storedLayers =
+    const storedState =
       localStorage.getItem(
         STORAGE_KEY
       )
 
-    if (!storedLayers) {
+    if (!storedState) {
       return null
     }
 
-    return JSON.parse(
-      storedLayers
+    try {
+
+      const parsedState =
+        JSON.parse(
+          storedState
+        )
+
+      if (
+        parsedState.version !==
+        STORAGE_VERSION
+      ) {
+
+        console.warn(
+          'Layer state version mismatch.'
+        )
+
+        return null
+      }
+
+      return parsedState.layers
+
+    } catch (error) {
+
+      console.error(
+        'Error loading layer state:',
+        error
+      )
+
+      return null
+    }
+  }
+
+  export const clearLayerState =
+  () => {
+
+    localStorage.removeItem(
+      STORAGE_KEY
     )
   }

@@ -5,9 +5,9 @@ const TileRenderer = ({ layer }) => {
 
   return (
     <TileLayer
-      url={layer.url}
-      opacity={layer.opacity}
-      zIndex={layer.zIndex}
+      url={layer.source.url}
+      opacity={layer.source.opacity}
+      zIndex={layer.source.zIndex}
     />
   )
 }
