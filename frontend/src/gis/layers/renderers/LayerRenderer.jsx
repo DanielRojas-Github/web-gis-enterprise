@@ -12,7 +12,7 @@ import {
 } from '../registry/layerSchema'
 
 const LayerRenderer = ({
-  layer,
+  layer
 }) => {
   console.log(
   'LayerRenderer:',

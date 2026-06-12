@@ -44,14 +44,15 @@ from '@/gis/layers/registry/baseLayers'
 
 window.toolManager = toolManager
 
-function App() {
-
   const initialLayers = [
 
   ...baseLayers,
 
   ...operationalLayers,
 ]
+function App() {
+
+
   const {
     layers,
     dispatch,

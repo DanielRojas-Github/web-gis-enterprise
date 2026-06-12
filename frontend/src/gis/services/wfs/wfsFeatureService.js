@@ -1,34 +1,33 @@
+// import {
+//     importGeoJSONResponse,
+// }
+//     from '@/gis/import/services/geojsonImportService'
 import {
-    importGeoJSONResponse,
+  validateGeoJSON,
 }
-    from '@/gis/import/services/geojsonImportService'
+from '@/gis/import/validators/geojsonValidator'
 
 export async function
-    loadWFSFeatures(
-        url
-    ) {
-         console.log(
-    'loadWFSFeatures ejecutada'
-  )
+loadWFSFeatures(
+  url
+) {
 
-    const response =
-        await fetch(url)
+  const response =
+    await fetch(url)
 
-    if (!response.ok) {
+  if (!response.ok) {
 
-        throw new Error(
-            'Error consultando WFS'
-        )
-    }
+    throw new Error(
+      'Error consultando WFS'
+    )
+  }
 
-    const geojson =
-        await response.json()
-          console.log(
-    'GeoJSON recibido:',
+  const geojson =
+    await response.json()
+
+  validateGeoJSON(
     geojson
   )
 
-    return importGeoJSONResponse(
-        geojson
-    )
+  return geojson
 }

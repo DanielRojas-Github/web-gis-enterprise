@@ -1,17 +1,24 @@
 import { geoserverConfig } from '../geoserver/geoserverConfig'
 
-export const getWFSFeatures = async ({
-  layer,
-}) => {
-  const url = `${geoserverConfig.wfsUrl}?service=WFS&version=1.1.0&request=GetFeature&typeName=${layer}&outputFormat=application/json`
+export const getWFSFeatures =
+  async ({
+    layer,
+  }) => {
 
-  const response = await fetch(url)
+    const typeName =
+`${geoserverConfig.workspace}:${layer}`
 
-  if (!response.ok) {
-    throw new Error(
-      'Error fetching WFS features'
-    )
+    const url =
+`${geoserverConfig.wfsUrl}?service=WFS&version=2.0.0&request=GetFeature&typeNames=${typeName}&outputFormat=application/json`
+
+    const response =
+      await fetch(url)
+
+    if (!response.ok) {
+      throw new Error(
+        `Error loading WFS layer: ${layer}`
+      )
+    }
+
+    return response.json()
   }
-
-  return response.json()
-}

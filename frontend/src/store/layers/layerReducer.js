@@ -103,10 +103,7 @@ export const layerReducer = (
     'PAYLOAD:',
     action.payload
   )
-  console.log(
-  'STATE AFTER:',
-  updatedLayers
-)
+
       return {
         ...state,
 

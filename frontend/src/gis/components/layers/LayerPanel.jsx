@@ -18,7 +18,7 @@ const LayerPanel = () => {
   const { layers } = useLayers()
 
   return (
-    // console.log('Rendering LayerPanel with layers:', layers) ||
+    console.log('Rendering LayerPanel with layers:', layers) ||
     <div className="layer-panel">
       <h3>Layers</h3>
     {layers.map((layer) => {

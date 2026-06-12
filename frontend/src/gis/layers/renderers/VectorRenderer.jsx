@@ -3,12 +3,16 @@ import {
 } from 'react-leaflet'
 
 const VectorRenderer = ({
-  layer,
+  layer
 }) => {
   console.log(
-    'VECTOR DATA:',
-    layer.source.features
+  'VECTOR DATA:',
+  JSON.stringify(
+    layer.source.features,
+    null,
+    2
   )
+)
   if (!layer.visible) {
     return null
   }

@@ -1,17 +1,17 @@
 import {
   importGeoJSONFile,
 }
-from '@/gis/import/services/geojsonImportService'
+  from '@/gis/import/services/geojsonImportService'
 
 import {
   useLayers,
 }
-from '@/store/layers/hooks/useLayers'
+  from '@/store/layers/hooks/useLayers'
 
 import {
   createVectorLayer,
 }
-from '@/gis/layers/factories/vectorLayerFactory'
+  from '@/gis/layers/factories/vectorLayerFactory'
 
 export default function GeoJSONImportControl() {
 
@@ -26,26 +26,25 @@ export default function GeoJSONImportControl() {
 
         const file =
           event.target.files[0]
-          console.log('Archivo seleccionado:', file.name)
+        console.log('Archivo seleccionado:', file.name)
 
         if (!file) {
           return
         }
 
-        const {
-          geojson,
-        } =
+        const geojson =
           await importGeoJSONFile(
             file
           )
           console.log(
-  'GeoJSON recibido:',
+  'GEOJSON IMPORTADO:',
   geojson
 )
 
+
         const layer =
           createVectorLayer({
-
+          
             id:
               `geojson-${Date.now()}`,
 
@@ -54,13 +53,11 @@ export default function GeoJSONImportControl() {
 
             geojson,
           })
-        console.log(
-  'Layer creada:',
-  layer
-)
 console.log(
-  'Agregando layer al grupo imported-layers'
+  'createVectorLayer geojson:',
+  geojson
 )
+
         addLayerToGroup({
 
           groupId:
