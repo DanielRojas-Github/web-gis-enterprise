@@ -1,7 +1,4 @@
-// import {
-//     importGeoJSONResponse,
-// }
-//     from '@/gis/import/services/geojsonImportService'
+
 import {
   validateGeoJSON,
 }

@@ -26,7 +26,7 @@ export default function GeoJSONImportControl() {
 
         const file =
           event.target.files[0]
-        console.log('Archivo seleccionado:', file.name)
+
 
         if (!file) {
           return
@@ -36,15 +36,12 @@ export default function GeoJSONImportControl() {
           await importGeoJSONFile(
             file
           )
-          console.log(
-  'GEOJSON IMPORTADO:',
-  geojson
-)
+
 
 
         const layer =
           createVectorLayer({
-          
+
             id:
               `geojson-${Date.now()}`,
 
@@ -53,10 +50,7 @@ export default function GeoJSONImportControl() {
 
             geojson,
           })
-console.log(
-  'createVectorLayer geojson:',
-  geojson
-)
+
 
         addLayerToGroup({
 

@@ -14,11 +14,7 @@ import {
 const LayerRenderer = ({
   layer
 }) => {
-  console.log(
-  'LayerRenderer:',
-  layer.name,
-  layer.type
-)
+
 
   switch (layer.type) {
 
@@ -37,10 +33,7 @@ const LayerRenderer = ({
       )
 
     case LAYER_TYPES.VECTOR:
-        console.log(
-    'VECTOR DETECTED',
-    layer
-  )
+
       return (
         <VectorRenderer
           layer={layer}

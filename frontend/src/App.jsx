@@ -6,14 +6,11 @@ import {
 import { useLayers } from '@/store/layers/hooks/useLayers'
 
 import { operationalLayers } from '@/gis/layers/registry/operationalLayers'
-console.log(
-  'OPERATIONAL LAYERS IMPORT:',
-  operationalLayers
-)
 
-import { LAYER_ACTIONS } from '@/store/layers/layerActions'//frontend\src\store\layers\layerActions.js
 
-import MapView from '@/gis/components/map/MapView'//frontend\src\gis\components\map\MapView.jsx
+import { LAYER_ACTIONS } from '@/store/layers/layerActions'
+
+import MapView from '@/gis/components/map/MapView'
 
 import LayerPanel from '@/gis/components/layers/LayerPanel'
 
@@ -39,12 +36,25 @@ import { toolManager } from '@/gis/tools/manager/ToolManager'
 import {
   baseLayers,
 }
-from '@/gis/layers/registry/baseLayers'
+  from '@/gis/layers/registry/baseLayers'
+
+import FeatureInspector
+  from '@/gis/selection/components/FeatureInspector'
+
+import {
+  GIS_ACTIONS,
+}
+from '@/store/gis/gisActions'  
+
+import {
+  useGIS,
+}
+from '@/store/gis/hooks/useGIS'
 
 
 window.toolManager = toolManager
 
-  const initialLayers = [
+const initialLayers = [
 
   ...baseLayers,
 
@@ -61,21 +71,19 @@ function App() {
   const hydrated =
     useRef(false)
 
+  const {
+  dispatch: gisDispatch,
+} = useGIS()
+
 
 
   useEffect(() => {
 
     const persistedLayers =
       loadLayerState()
-    console.log(
-  'INITIAL LAYERS:',
-  initialLayers
-)
 
-     console.log(
-  'PERSISTED LAYERS:',
-  persistedLayers
-)
+
+
 
     dispatch({
       type:
@@ -88,7 +96,7 @@ function App() {
 
     hydrated.current =
       true
- 
+
   }, [dispatch])
 
 
@@ -110,12 +118,14 @@ function App() {
   }, [layers])
 
 
+
   return (
     <div className="app-layout">
       <LayerPanel />
       <h1>Web GIS Enterprise</h1>
 
       <SelectionControls />
+      <FeatureInspector />
       <ToolBar />
       <MapView />
       <CoordinateInspector />
