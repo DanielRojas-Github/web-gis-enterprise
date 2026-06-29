@@ -43,7 +43,9 @@ export default function
   ) {
     return null
   }
-
+  if (!feature.points) {
+  return null
+}
   const handleVertexMove =
     (
       vertexIndex,
@@ -183,6 +185,15 @@ export default function
       })
 
     }
+
+    if (!feature.points) {
+  console.warn(
+    'Feature sin points:',
+    feature
+  )
+
+  return null
+}
 
   return (
     <>

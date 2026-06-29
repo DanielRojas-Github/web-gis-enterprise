@@ -2,6 +2,7 @@ import { useLayerContext } from '@/store/layers/hooks/useLayerContext'
 import {
   LAYER_ACTIONS,
 } from '../layerActions'
+import { useCallback } from 'react'
 
 export const useLayers = () => {
   const { state, dispatch } =
@@ -43,98 +44,197 @@ export const useLayers = () => {
 
       payload: layerId,
     })
+
+  const toggleGroup = (
+    groupId
+  ) =>
+    dispatch({
+      type:
+        LAYER_ACTIONS
+          .TOGGLE_GROUP,
+
+      payload:
+        groupId,
+    })
+
+  const toggleGroupExpanded = (
+    groupId
+  ) =>
+    dispatch({
+      type:
+        LAYER_ACTIONS
+          .TOGGLE_GROUP_EXPANDED,
+
+      payload:
+        groupId,
+    })
+
+  const moveNode = ({
+    nodeId,
+    targetGroupId,
+  }) =>
+    dispatch({
+      type:
+        LAYER_ACTIONS
+          .MOVE_NODE,
+
+      payload: {
+        nodeId,
+        targetGroupId,
+      },
+    })
+
+  const setLayers = (
+    layers
+  ) =>
+    dispatch({
+      type:
+        LAYER_ACTIONS
+          .SET_LAYERS,
+
+      payload:
+        layers,
+    })
+  const addLayerToGroup = ({
+    groupId,
+    layer,
+  }) =>
+    dispatch({
+      type:
+        LAYER_ACTIONS
+          .ADD_LAYER_TO_GROUP,
+
+      payload: {
+        groupId,
+        layer,
+      },
+    })
+
+  const updateFeatureInLayer =
+    ({
+      layerId,
+      feature,
+    }) => {
+
+      console.log(
+        'UPDATE FEATURE HOOK',
+        layerId,
+        feature
+      )
+
+      dispatch({
+
+        type:
+          LAYER_ACTIONS
+            .UPDATE_FEATURE_IN_LAYER,
+
+        payload: {
+          layerId,
+          feature,
+        },
+      })
+    }
+  const markLayerDirty =
+    layerId =>{
+      dispatch({
+        type:
+          LAYER_ACTIONS
+            .MARK_LAYER_DIRTY,
+
+        payload:
+          layerId,
+      })
+     
+    }
+  const clearLayerDirty =
+    layerId =>
+      dispatch({
+        type:
+          LAYER_ACTIONS
+            .CLEAR_LAYER_DIRTY,
+
+        payload:
+          layerId,
+      })
+
+
   
-    const toggleGroup = (
-  groupId
-) =>
+  const setLayerSaving = (layerId, saving) =>
   dispatch({
-    type:
-      LAYER_ACTIONS
-        .TOGGLE_GROUP,
-
-    payload:
-      groupId,
+    type: LAYER_ACTIONS.SET_LAYER_SAVING,
+    payload: { layerId, saving },
   })
 
-const toggleGroupExpanded = (
-  groupId
-) =>
-  dispatch({
-    type:
-      LAYER_ACTIONS
-        .TOGGLE_GROUP_EXPANDED,
+const saveLayer = useCallback(
+  async (layerId) => {
+    setLayerSaving(layerId, true)
 
-    payload:
-      groupId,
-  })
+    try {
+      await new Promise(
+        res => setTimeout(res, 600)
+      )
 
-const moveNode = ({
-  nodeId,
-  targetGroupId,
-}) =>
-  dispatch({
-    type:
-      LAYER_ACTIONS
-        .MOVE_NODE,
+      dispatch({
+        type:
+          LAYER_ACTIONS.SAVE_LAYER,
+        payload:
+          layerId,
+      })
 
-    payload: {
-      nodeId,
-      targetGroupId,
-    },
-  })
+      console.log(
+        'LAYER SAVED:',
+        layerId
+      )
+    } catch (err) {
+      console.error(err)
 
-const setLayers = (
-  layers
-) =>
-  dispatch({
-    type:
-      LAYER_ACTIONS
-        .SET_LAYERS,
+      dispatch({
+        type:
+          LAYER_ACTIONS.SET_LAYER_ERROR,
+        payload: {
+          layerId,
+          error: err.message,
+        },
+      })
+    }
+  },
+  [dispatch]
+)
 
-    payload:
-      layers,
-  })
-const addLayerToGroup = ({
-  groupId,
-  layer,
-}) =>
-  dispatch({
-    type:
-      LAYER_ACTIONS
-        .ADD_LAYER_TO_GROUP,
+  return {
 
-    payload: {
-      groupId,
-      layer,
-    },
-  })
- return {
+    layers:
+      state.layers,
 
-  layers:
-    state.layers,
+    activeLayer:
+      state.activeLayer,
 
-  activeLayer:
-    state.activeLayer,
+    loadingLayers:
+      state.loadingLayers,
 
-  loadingLayers:
-    state.loadingLayers,
+    toggleLayer,
 
-  toggleLayer,
+    toggleGroup,
 
-  toggleGroup,
+    toggleGroupExpanded,
 
-  toggleGroupExpanded,
+    moveNode,
 
-  moveNode,
+    setLayers,
 
-  setLayers,
+    addLayerToGroup,
 
-  addLayerToGroup,
+    updateFeatureInLayer,
 
-  setOpacity,
+    setOpacity,
 
-  setActiveLayer,
+    setActiveLayer,
 
-  dispatch,
-}
+    dispatch,
+
+    markLayerDirty,
+
+    clearLayerDirty,
+    saveLayer,
+  }
 }

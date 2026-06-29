@@ -8,7 +8,7 @@
   position: absolute;
   top: 80px;
   left: 50px;
-  width: 220px;
+  width: 300px;
   background-color: white;
   z-index: 1000;
   padding: 15px;
@@ -60,3 +60,41 @@
 
   border-radius: 4px;
 }
+
+.layer-status-container {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.layer-sync-status {
+  font-size: 13px;
+  cursor: default;
+}
+
+.layer-last-saved {
+  color: #888;
+  font-size: 11px;
+}
+
+.toast-container {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 100000;
+}
+
+.toast {
+  padding: 12px;
+  margin-bottom: 10px;
+  border-radius: 6px;
+  background: white;
+  box-shadow:
+    0 2px 10px rgba(
+      0,
+      0,
+      0,
+      0.15
+    );
+}
+

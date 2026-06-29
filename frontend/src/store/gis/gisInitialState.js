@@ -13,7 +13,9 @@ export const gisInitialState = {
   mapCenter: [
     -17.7833,
     -63.1821,
-  ],
+  ]
+  
+  ,
 
   zoom: 6,
 
@@ -36,4 +38,6 @@ export const gisInitialState = {
   user: {
     role: 'viewer',
   },
+  autosave: true,
+autosaveInterval: 5000, // 5 segundos
 }

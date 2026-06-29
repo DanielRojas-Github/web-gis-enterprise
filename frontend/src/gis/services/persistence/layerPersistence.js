@@ -43,10 +43,7 @@ export const loadLayerState =
         STORAGE_VERSION
       ) {
 
-        console.warn(
-          'Layer state version mismatch.'
-        )
-
+   
         return null
       }
 

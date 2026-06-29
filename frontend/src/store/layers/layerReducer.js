@@ -15,13 +15,14 @@ import {
 import {
   recalculateZIndex,
 }
-from '@/gis/utils/recalculateZIndex'
+  from '@/gis/utils/recalculateZIndex'
 
 
 export const layerReducer = (
   state,
   action
 ) => {
+
   switch (action.type) {
 
     case LAYER_ACTIONS.SET_LAYERS:
@@ -92,18 +93,7 @@ export const layerReducer = (
             })
           ),
       }
-
     case LAYER_ACTIONS.TOGGLE_GROUP:
-        console.log(
-    'STATE BEFORE:',
-    state.layers
-  )
-
-  console.log(
-    'PAYLOAD:',
-    action.payload
-  )
-
       return {
         ...state,
 
@@ -146,7 +136,6 @@ export const layerReducer = (
         activeLayer:
           action.payload,
       }
-
     case LAYER_ACTIONS.SET_LOADING_LAYERS:
       return {
         ...state,
@@ -154,7 +143,6 @@ export const layerReducer = (
         loadingLayers:
           action.payload,
       }
-
     case LAYER_ACTIONS.SET_LAYER_ERROR:
       return {
         ...state,
@@ -162,7 +150,6 @@ export const layerReducer = (
         layerErrors:
           action.payload,
       }
-
     case
       LAYER_ACTIONS
         .TOGGLE_GROUP_EXPANDED:
@@ -184,7 +171,6 @@ export const layerReducer = (
             })
           ),
       }
-
     case LAYER_ACTIONS.MOVE_NODE: {
 
       const {
@@ -218,62 +204,151 @@ export const layerReducer = (
       return {
         ...state,
 
-      layers:
-    recalculateZIndex(
-      updatedTree
-    ),
+        layers:
+          recalculateZIndex(
+            updatedTree
+          ),
       }
     }
-   case LAYER_ACTIONS.UPDATE_LAYER:
-  return {
-    ...state,
+    case LAYER_ACTIONS.UPDATE_LAYER:
+      return {
+        ...state,
 
-    layers:
-      updateLayerTree(
-        state.layers,
+        layers:
+          updateLayerTree(
+            state.layers,
 
-        action.payload.id,
+            action.payload.id,
 
-        (layer) => ({
-          ...layer,
+            (layer) => ({
+              ...layer,
 
-          ...action.payload.updates,
-        })
-      ),
-  }
-  case LAYER_ACTIONS.ADD_LAYER_TO_GROUP:
-  return {
-    ...state,
-  
-    layers: state.layers.map(
-      (group) => {
-console.log(
-  'ADD_LAYER_TO_GROUP',
-  action.payload
-)
-        if (
-          group.id !==
-          action.payload.groupId
-        ) {
+              ...action.payload.updates,
+            })
+          ),
+      }
+    case LAYER_ACTIONS.ADD_LAYER_TO_GROUP:
+      return {
+        ...state,
 
-          return group
-        }
-          console.log(
-  'Group found:',
-  group.id
-)
-        return {
+        layers: state.layers.map(
+          (group) => {
+
+            if (
+              group.id !==
+              action.payload.groupId
+            ) {
+
+              return group
+            }
+
+            return {
+
+              ...group,
+
+              children: [
+                ...group.children,
+                action.payload.layer,
+              ],
+            }
+          }
+        ),
+      }
+    case LAYER_ACTIONS.UPDATE_FEATURE_IN_LAYER:
+
+      return {
+        ...state,
+
+        layers: updateLayerTree(
+          state.layers,
+          action.payload.layerId,
+          (layer) => {
           
-          ...group,
+            const updatedFeatures =
+              layer.source.features.features.map(
+                feature => {
+                  return feature.id === action.payload.feature.id
+                    ? action.payload.feature
+                    : feature
 
-          children: [
-            ...group.children,
-            action.payload.layer,
-          ],
+                }
+
+              )
+        
+
+            return {
+              ...layer,
+
+              dirty: true, 
+
+              source: {
+                ...layer.source,
+
+                features: {
+                  ...layer.source.features,
+
+                  features: updatedFeatures,
+                },
+              },
+            }
+          }
+        ),
+      }
+    case LAYER_ACTIONS.MARK_LAYER_DIRTY:
+  return {
+    ...state,
+    layers: updateLayerTree(
+      state.layers,
+      action.payload,
+      layer => {
+        return {
+          ...layer,
+          dirty: true,
         }
+        
       }
     ),
   }
+    case LAYER_ACTIONS.CLEAR_LAYER_DIRTY:
+      return {
+        ...state,
+        layers: updateLayerTree(
+          state.layers,
+          action.payload,
+          layer => ({
+            ...layer,
+            dirty: false,
+          })
+        ),
+      }
+  case LAYER_ACTIONS.SAVE_LAYER:
+  return {
+    ...state,
+    layers: updateLayerTree(
+      state.layers,
+      action.payload,
+      (layer) => ({
+        ...layer,
+        dirty: false,
+        saving: false,
+        lastSaved: Date.now(),
+        error: null,
+      })
+    ),
+  }
+   case LAYER_ACTIONS.SET_LAYER_SAVING:
+  return {
+    ...state,
+    layers: updateLayerTree(
+      state.layers,
+      action.payload.layerId,
+      (layer) => ({
+        ...layer,
+        saving: action.payload.saving,
+      })
+    ),
+  }
+
     default:
       return state
   }

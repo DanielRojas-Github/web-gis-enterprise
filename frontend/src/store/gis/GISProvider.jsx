@@ -6,6 +6,7 @@ import { gisInitialState } from '../gis/gisInitialState.js'
 
 
 
+
 const GISProvider = ({
   children,
 }) => {
@@ -14,7 +15,7 @@ const GISProvider = ({
       gisReducer,
       gisInitialState
     )
-
+  
   return (
     <GISContext.Provider
       value={{

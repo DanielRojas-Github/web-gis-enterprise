@@ -14,13 +14,10 @@ import MapView from '@/gis/components/map/MapView'
 
 import LayerPanel from '@/gis/components/layers/LayerPanel'
 
-
 import {
   loadLayerState,
   saveLayerState,
 } from '@/gis/services/persistence/layerPersistence'
-
-
 
 import SelectionControls
   from '@/gis/selection/components/SelectionControls'
@@ -41,15 +38,21 @@ import {
 import FeatureInspector
   from '@/gis/selection/components/FeatureInspector'
 
-import {
-  GIS_ACTIONS,
-}
-from '@/store/gis/gisActions'  
+// import {
+//   GIS_ACTIONS
+// }
+// from '@/store/gis/gisActions'  
 
-import {
-  useGIS,
-}
-from '@/store/gis/hooks/useGIS'
+// import {
+//   useGIS,
+// }
+// from '@/store/gis/hooks/useGIS'
+
+import EditingPanel
+  from '@/gis/selection/components/EditingPanel'
+
+import GISSystemManager
+  from '@/gis/system/GISSytemManager'//frontend\src\gis\system\GISSytemManager.jsx
 
 
 window.toolManager = toolManager
@@ -71,11 +74,9 @@ function App() {
   const hydrated =
     useRef(false)
 
-  const {
-  dispatch: gisDispatch,
-} = useGIS()
-
-
+  //   const {
+  //   dispatch: gisDispatch,
+  // } = useGIS()
 
   useEffect(() => {
 
@@ -121,12 +122,15 @@ function App() {
 
   return (
     <div className="app-layout">
+      <GISSystemManager />
+      
       <LayerPanel />
       <h1>Web GIS Enterprise</h1>
 
       <SelectionControls />
       <FeatureInspector />
       <ToolBar />
+      <EditingPanel />
       <MapView />
       <CoordinateInspector />
     </div>

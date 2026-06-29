@@ -36,6 +36,16 @@ export const createLayer = ({
   expanded ,
 
   children,
+  
+  dirty: false,
+
+  saving: false,
+
+  lastSaved: null,
+  
+  error: null,
+
+
 })
 
 export const LAYER_TYPES = {

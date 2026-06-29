@@ -15,19 +15,19 @@ import LayerItem
   from './LayerItem'
 
 const LayerPanel = () => {
+
+ 
   const { layers } = useLayers()
 
+
+
   return (
-    console.log('Rendering LayerPanel with layers:', layers) ||
+   
     <div className="layer-panel">
       <h3>Layers</h3>
     {layers.map((layer) => {
 
-  console.log(
-    'Rendering layer:',
-    layer.id,
-    layer.type
-  )
+ 
 
   if (
     layer.type ===
@@ -48,6 +48,7 @@ const LayerPanel = () => {
     />
   )
 })}
+
  
     </div>
   )

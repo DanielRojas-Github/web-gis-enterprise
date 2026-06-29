@@ -4,7 +4,12 @@
     {
       "type": "Feature",
       "id": "polygon-1",
-      "properties": {},
+      "properties": {
+        "name": "Zona Residencial",
+        "type": "Urban Area",
+        "status": "Active",
+        "population": 1200
+      },
       "geometry": {
         "type": "Polygon",
         "coordinates": [

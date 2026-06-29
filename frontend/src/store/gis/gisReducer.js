@@ -84,6 +84,7 @@ case GIS_ACTIONS.CLEAR_MEASUREMENTS:
 
 
   case GIS_ACTIONS.SET_EDITING:
+  
 
   return {
 

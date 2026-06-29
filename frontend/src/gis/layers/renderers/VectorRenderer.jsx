@@ -13,14 +13,7 @@ import {
 const VectorRenderer = ({
   layer
 }) => {
-  console.log(
-  'VECTOR DATA:',
-  JSON.stringify(
-    layer.source.features,
-    null,
-    2
-  )
-)
+  
 const {
   dispatch,
 } = useGIS()
@@ -32,10 +25,7 @@ const {
 const handleFeatureClick =
   (feature) => {
 
-    console.log(
-      'FEATURE SELECTED:',
-      feature
-    )
+   
 
     dispatch({
 
@@ -43,19 +33,27 @@ const handleFeatureClick =
         GIS_ACTIONS
           .SET_SELECTED_FEATURE,
 
-      payload:
-        feature,
+      payload: {
+
+        ...feature,
+
+        layerId:
+          layer.id,
+
+        layerName:
+          layer.name,
+      },
     })
   }
-  return (
+ const geojson =
+  layer.source?.features
 
-  <GeoJSON
+if (!geojson?.features) {
+  return null
+}
 
-    data={
-      layer.source.features
-    }
-
-    onEachFeature={
+return (
+  <GeoJSON data={geojson} onEachFeature={
 
       (
         feature,
@@ -70,9 +68,10 @@ const handleFeatureClick =
             ),
         })
       }
-    }
-  />
+    } />
 )
+  
+
 }
 
 export default VectorRenderer

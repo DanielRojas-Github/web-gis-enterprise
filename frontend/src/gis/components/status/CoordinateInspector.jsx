@@ -15,8 +15,8 @@ const CoordinateInspector = () => {
       style={{
         position: 'absolute',
 
-        bottom: 20,
-        left: 20,
+        bottom: 200,
+        left: 400,
 
         zIndex: 9999,
 
