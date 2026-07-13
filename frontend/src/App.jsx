@@ -1,6 +1,6 @@
 import {
   useEffect,
-  useRef,
+  
 } from 'react'
 
 import { useLayers } from '@/store/layers/hooks/useLayers'
@@ -16,7 +16,7 @@ import LayerPanel from '@/gis/components/layers/LayerPanel'
 
 import {
   loadLayerState,
-  saveLayerState,
+ 
 } from '@/gis/services/persistence/layerPersistence'
 
 import SelectionControls
@@ -52,7 +52,7 @@ import EditingPanel
   from '@/gis/selection/components/EditingPanel'
 
 import GISSystemManager
-  from '@/gis/system/GISSytemManager'//frontend\src\gis\system\GISSytemManager.jsx
+  from '@/gis/system/GISSytemManager'
 
 
 window.toolManager = toolManager
@@ -67,16 +67,12 @@ function App() {
 
 
   const {
-    layers,
+  
     dispatch,
   } = useLayers()
 
-  const hydrated =
-    useRef(false)
 
-  //   const {
-  //   dispatch: gisDispatch,
-  // } = useGIS()
+ 
 
   useEffect(() => {
 
@@ -95,28 +91,12 @@ function App() {
         initialLayers,
     })
 
-    hydrated.current =
-      true
+    
 
   }, [dispatch])
 
 
-  useEffect(() => {
-
-    if (
-      !hydrated.current
-    ) {
-      return
-    }
-
-    if (layers.length
-    ) {
-      saveLayerState(
-        layers
-      )
-    }
-
-  }, [layers])
+  
 
 
 

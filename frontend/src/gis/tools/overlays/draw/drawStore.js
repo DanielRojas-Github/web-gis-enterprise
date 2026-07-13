@@ -2,7 +2,7 @@
 import {
   saveFeatures,
 }
-from '@/gis/services/persistence/featureStorageService'
+from '@/gis/services/persistence/services/featureStorageService'
 
 export const drawState = {
     

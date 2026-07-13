@@ -1,0 +1,16 @@
+export const OPERATION_STATUS =
+  Object.freeze({
+
+    PENDING: 'PENDING',
+
+    PROCESSING: 'PROCESSING',
+
+    SUCCESS: 'SUCCESS',
+
+    FAILED: 'FAILED',
+
+    RETRYING: 'RETRYING',
+
+    CANCELLED: 'CANCELLED',
+
+  })

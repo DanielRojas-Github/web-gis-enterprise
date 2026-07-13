@@ -2,7 +2,7 @@ import {
   useNotifications,
 }
 from '@/store/notifications/hooks/useNotifications'
-
+import './ToastContainer.css'
 export default function ToastContainer() {
 
   const {

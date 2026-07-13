@@ -1,23 +1,25 @@
+import './ToastItem.css'
+
 const ToastItem = ({
   notification,
   onClose,
 }) => {
-  const {
-    id,
-    message,
-    type,
-  } = notification
-
   return (
     <div
-      className={`toast toast-${type}`}
+      className={`
+        toast
+        toast-${notification.type}
+      `}
     >
-      <span>
-        {message}
+      <span className="toast-message">
+        {notification.message}
       </span>
 
       <button
-        onClick={() => onClose(id)}
+        className="toast-close"
+        onClick={() =>
+          onClose(notification.id)
+        }
       >
         ✕
       </button>

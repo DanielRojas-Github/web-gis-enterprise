@@ -4,7 +4,7 @@ import { drawState }
 import {
     loadFeatures,
 }
-    from './featureStorageService'
+    from './services/featureStorageService'
 
 export function
     initializeFeaturePersistence() {

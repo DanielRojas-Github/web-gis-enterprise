@@ -15,10 +15,18 @@ import {
   flattenLayers,
 } from '@/gis/utils/flattenLayers'
 
+import {
+  createSyncOperation,
+} from '@/gis/services/persistence/syncOperation'
+
+import {
+  syncQueue,
+} from '@/gis/services/persistence/syncQueue'
+
 export const useAutosave = () => {
   const {
-    layers,
-    saveLayer,
+    layers,setLayerSaving
+
   } = useLayers()
 
   const {
@@ -35,58 +43,31 @@ export const useAutosave = () => {
   }, [layers])
 
   useEffect(() => {
-    console.log(
-      'AUTOSAVE EFFECT STARTED'
-    )
+
 
     if (!state.autosave) {
-      console.log(
-        'AUTOSAVE DISABLED'
-      )
+
       return
     }
 
-    console.log(
-      'CREATING AUTOSAVE INTERVAL:',
-      state.autosaveInterval
-    )
 
     const interval =
       setInterval(async () => {
         console.log(
           '=========================='
         )
-        console.log(
-          'CHECKING DIRTY LAYERS'
-        )
 
         const currentLayers =
           layersRef.current
 
-        console.log(
-          'ROOT LAYERS:',
-          currentLayers
-        )
+
 
         const flatLayers =
           flattenLayers(
             currentLayers
           )
 
-        console.log(
-          'FLAT LAYERS FULL:',
-          flatLayers.map(
-            layer => ({
-              id: layer.id,
-              dirty:
-                layer.dirty,
-              saving:
-                layer.saving,
-              lastSaved:
-                layer.lastSaved,
-            })
-          )
-        )
+
 
         const dirtyLayers =
           flatLayers.filter(
@@ -95,72 +76,59 @@ export const useAutosave = () => {
               !layer.saving
           )
 
-        console.log(
-          'DIRTY LAYERS:',
-          dirtyLayers.map(
-            layer => ({
-              id: layer.id,
-              dirty:
-                layer.dirty,
-            })
-          )
-        )
-
         if (
           dirtyLayers.length ===
           0
         ) {
-          console.log(
-            'NO DIRTY LAYERS'
-          )
+
           return
         }
 
-        console.log(
-          'AUTOSAVE TRIGGER:',
-          dirtyLayers.map(
-            l => l.id
-          )
-        )
-
         for (const layer of dirtyLayers) {
-          try {
-            console.log(
-              'SAVING LAYER:',
-              layer.id
-            )
 
-            await saveLayer(
-              layer.id
-            )
+          console.log(
+            'CREATING SYNC OPERATION:',
+            layer.id
+          )
 
-            console.log(
-              'LAYER SAVED:',
-              layer.id
-            )
-          } catch (error) {
-            console.error(
-              'AUTOSAVE ERROR:',
-              layer.id,
-              error
-            )
-          }
+          const operation =
+            createSyncOperation({
+
+              type: 'UPDATE',
+
+              layerId: layer.id,
+
+              featureId: null,
+
+              payload: layer,
+
+            })
+
+          syncQueue.enqueue(operation)
+          setLayerSaving(
+  layer.id,
+  true
+)
+
+          console.log(
+            'SYNC OPERATION ENQUEUED:',
+            operation.id
+          )
+
         }
       },
-      state.autosaveInterval
-    )
+        state.autosaveInterval
+      )
 
     return () => {
-      console.log(
-        'CLEARING AUTOSAVE INTERVAL'
-      )
+
 
       clearInterval(
         interval
       )
     }
   }, [
-    saveLayer,
+
     state.autosave,
     state.autosaveInterval,
   ])
