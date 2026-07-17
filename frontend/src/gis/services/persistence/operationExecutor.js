@@ -1,10 +1,15 @@
 import {
+  OPERATION_TYPES,
+} from './constants/operationTypes'
+
+import {
   persistenceService,
 } from './services/persistenceService.js'
-//frontend\src\gis\services\persistence\services\persistenceService.js
+
 export async function executeOperation(
   operation
 ) {
+
   console.log(
     'EXECUTING OPERATION:',
     operation
@@ -13,37 +18,58 @@ export async function executeOperation(
   let response
 
   switch (operation.type) {
-    case 'CREATE':
+
+    case OPERATION_TYPES.CREATE:
+
       response =
         await persistenceService.create(
           operation
         )
+
       break
 
-    case 'UPDATE':
+    case OPERATION_TYPES.UPDATE:
+
       response =
         await persistenceService.update(
           operation
         )
+
       break
 
-    case 'DELETE':
+    case OPERATION_TYPES.DELETE:
+
       response =
         await persistenceService.delete(
           operation
         )
+
       break
 
     default:
+
       throw new Error(
+
         `Unknown operation: ${operation.type}`
+
       )
+
   }
 
   return {
-    success: response.success,
-    operationId: operation.id,
-    layerId: operation.layerId,
-    timestamp: response.timestamp,
+
+    success:
+      response.success,
+
+    operationId:
+      operation.id,
+
+    layerId:
+      operation.layerId,
+
+    timestamp:
+      response.timestamp,
+
   }
+
 }

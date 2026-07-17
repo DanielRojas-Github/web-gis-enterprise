@@ -1,45 +1,78 @@
-// import {
-//   repositoryFactory,
-// } from './repositories/RepositoryFactory'
-export const persistenceService = {
-  async update(operation) {
-    console.log(
-      'PERSISTENCE SERVICE → UPDATE',
-      operation.layerId
+import {
+  adapterFactory,
+} from '../adapters/AdapterFactory'
+
+import {
+  ADAPTER_TYPES,
+} from '../constants/adapterTypes'
+
+const DEFAULT_ADAPTER =
+  ADAPTER_TYPES.LOCAL
+
+class PersistenceService {
+
+  getAdapter(operation) {
+
+    return adapterFactory.getAdapter(
+
+      operation.adapter ??
+
+      DEFAULT_ADAPTER
+
     )
 
-    // aquí irá:
-    // REST
-    // WFS-T
-    // IndexedDB
+  }
 
-    return {
-      success: true,
-      timestamp: Date.now(),
-    }
-  },
+  async execute(
+    operation,
+    action
+  ) {
 
-  async create(operation) {
     console.log(
-      'PERSISTENCE SERVICE → CREATE',
+
+      `PERSISTENCE SERVICE → ${action.toUpperCase()}`,
+
       operation.layerId
+
     )
 
-    return {
-      success: true,
-      timestamp: Date.now(),
-    }
-  },
+    const adapter =
+      this.getAdapter(operation)
 
-  async delete(operation) {
-    console.log(
-      'PERSISTENCE SERVICE → DELETE',
-      operation.layerId
+    return adapter[action](
+      operation
     )
 
-    return {
-      success: true,
-      timestamp: Date.now(),
-    }
-  },
+  }
+
+  create(operation) {
+
+    return this.execute(
+      operation,
+      'create'
+    )
+
+  }
+
+  update(operation) {
+
+    return this.execute(
+      operation,
+      'update'
+    )
+
+  }
+
+  delete(operation) {
+
+    return this.execute(
+      operation,
+      'delete'
+    )
+
+  }
+
 }
+
+export const persistenceService =
+  new PersistenceService()

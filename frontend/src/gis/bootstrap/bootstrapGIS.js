@@ -4,6 +4,10 @@ import { registerTools }
 import { registerRepositories }
   from '@/gis/services/persistence/repositories/registerRepositories'
 
+import {
+  runPersistenceDevTools,
+} from '@/gis/services/persistence/dev'
+
 let initialized = false
 
 export function bootstrapGIS() {
@@ -24,6 +28,12 @@ export function bootstrapGIS() {
   registerTools()
 
   registerRepositories()
+
+if (import.meta.env.DEV) {
+
+  runPersistenceDevTools()
+
+}
 
   initialized = true
 

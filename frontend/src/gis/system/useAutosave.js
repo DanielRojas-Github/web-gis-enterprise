@@ -17,15 +17,23 @@ import {
 
 import {
   createSyncOperation,
-} from '@/gis/services/persistence/syncOperation'
+} from '@/gis/services/persistence/models/syncOperation'
 
 import {
   syncQueue,
 } from '@/gis/services/persistence/syncQueue'
 
+import {
+  OPERATION_TYPES,
+} from '@/gis/services/persistence/constants/operationTypes'
+
+import {
+  REPOSITORY_TYPES,
+} from '@/gis/services/persistence/constants/repositoryTypes'
+
 export const useAutosave = () => {
   const {
-    layers,setLayerSaving
+    layers, setLayerSaving
 
   } = useLayers()
 
@@ -90,15 +98,17 @@ export const useAutosave = () => {
             'CREATING SYNC OPERATION:',
             layer.id
           )
-
+          // 
           const operation =
             createSyncOperation({
+              repository: REPOSITORY_TYPES.LAYER,
+              type: OPERATION_TYPES.UPDATE,
 
-              type: 'UPDATE',
+
 
               layerId: layer.id,
 
-              featureId: null,
+
 
               payload: layer,
 
@@ -106,9 +116,9 @@ export const useAutosave = () => {
 
           syncQueue.enqueue(operation)
           setLayerSaving(
-  layer.id,
-  true
-)
+            layer.id,
+            true
+          )
 
           console.log(
             'SYNC OPERATION ENQUEUED:',

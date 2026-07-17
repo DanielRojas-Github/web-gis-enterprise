@@ -1,42 +1,84 @@
-import { SyncAdapter }
-  from './SyncAdapter'
+import {
+  repositoryFactory,
+} from '../repositories/RepositoryFactory'
+
+import {
+  SyncAdapter,
+} from './SyncAdapter'
 
 export class LocalSyncAdapter
   extends SyncAdapter {
 
-  async create(operation){
+  getRepository(operation) {
+
+    return repositoryFactory.getRepository(
+      operation.repository
+    )
+
+  }
+
+  async execute(
+    operation,
+    action,
+    data
+  ) {
+
+    const repository =
+      this.getRepository(operation)
+
+    await repository[action](
+      data
+    )
 
     return {
 
-      success:true,
+      success: true,
 
-      timestamp:Date.now()
+      timestamp: Date.now(),
 
     }
 
   }
 
-  async update(operation){
+  async create(operation) {
 
-    return {
+    return this.execute(
 
-      success:true,
+      operation,
 
-      timestamp:Date.now()
+      'create',
 
-    }
+      operation.payload,
+
+    )
 
   }
 
-  async delete(operation){
+  async update(operation) {
 
-    return {
+    return this.execute(
 
-      success:true,
+      operation,
 
-      timestamp:Date.now()
+      'update',
 
-    }
+      operation.payload,
+
+    )
+
+  }
+
+  async delete(operation) {
+
+    return this.execute(
+
+      operation,
+
+      'delete',
+
+      operation.payload?.id,
+
+    )
 
   }
 

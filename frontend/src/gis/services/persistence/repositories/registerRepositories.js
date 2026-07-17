@@ -10,20 +10,32 @@ import {
   FeatureRepository,
 } from './FeatureRepository'
 
+import {
+  REPOSITORY_TYPES,
+} from '../constants/repositoryTypes'
+
 export function registerRepositories() {
 
   repositoryFactory.register(
-    'layer',
+
+    REPOSITORY_TYPES.LAYER,
+
     new LayerRepository()
+
   )
 
   repositoryFactory.register(
-    'feature',
+
+    REPOSITORY_TYPES.FEATURE,
+
     new FeatureRepository()
+
   )
 
   console.log(
+
     'ALL REPOSITORIES REGISTERED'
+
   )
 
 }

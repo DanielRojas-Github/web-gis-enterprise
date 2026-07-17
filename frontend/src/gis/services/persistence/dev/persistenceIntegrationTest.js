@@ -1,0 +1,76 @@
+import {
+  createSyncOperation,
+} from '../models/syncOperation'
+
+import {
+  OPERATION_TYPES,
+} from '../constants/operationTypes'
+
+import {
+  REPOSITORY_TYPES,
+} from '../constants/repositoryTypes'
+
+import {
+  ADAPTER_TYPES,
+} from '../constants/adapterTypes'
+
+import {
+  syncQueue,
+} from '../syncQueue'
+
+export function runPersistenceIntegrationTest() {
+
+  console.group(
+    'PERSISTENCE INTEGRATION TEST'
+  )
+
+  const operation =
+    createSyncOperation({
+
+      type:
+        OPERATION_TYPES.UPDATE,
+
+      repository:
+        REPOSITORY_TYPES.LAYER,
+
+      adapter:
+        ADAPTER_TYPES.LOCAL,
+
+      layerId:
+        'integration-test-layer',
+
+      payload: {
+
+        id:
+          'integration-test-layer',
+
+        name:
+          'Integration Test',
+
+        visible:
+          true,
+
+        opacity:
+          1,
+
+      },
+
+    })
+
+  console.log(
+    'SYNC OPERATION CREATED',
+    operation
+  )
+
+  syncQueue.enqueue(
+    operation
+  )
+
+  console.log(
+    'QUEUE SIZE:',
+    syncQueue.size()
+  )
+
+  console.groupEnd()
+
+}

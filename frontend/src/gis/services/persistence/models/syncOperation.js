@@ -2,21 +2,28 @@ import { v4 as uuid } from 'uuid'
 
 import {
   OPERATION_STATUS,
-} from './lifecycle/operationStatus'
+} from '../lifecycle/operationStatus'
+
+import {
+  ADAPTER_TYPES,
+} from '../constants/adapterTypes'
 
 export function createSyncOperation({
   type,
+  repository,
+  adapter= ADAPTER_TYPES.LOCAL,
   layerId,
-  featureId = null,
+  featureId,
   payload,
 }) {
 
  return {
 
   id: uuid(),
-
   type,
-
+  repository,
+ 
+  adapter,
   layerId,
 
   featureId,

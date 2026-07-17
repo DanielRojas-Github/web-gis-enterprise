@@ -2,18 +2,33 @@ import { BaseRepository }
   from './BaseRepository'
 
 import {
-  saveLayerState,
-  loadLayerState,
-  clearLayerState,
-} from '../layerPersistence'
+  LocalStorageProvider,
+} from '../providers/LocalStorageProvider'
+
+const STORAGE_KEY =
+  'gis-layer-state'
 
 export class LayerRepository
   extends BaseRepository {
+
+  constructor() {
+
+    super()
+
+    this.provider =
+      new LocalStorageProvider()
+
+  }
 
   async create(layer) {
 
     console.log(
       'CREATE LAYER'
+    )
+
+    await this.provider.create(
+      STORAGE_KEY,
+      layer
     )
 
     return true
@@ -26,7 +41,10 @@ export class LayerRepository
       'UPDATE LAYER'
     )
 
-    saveLayerState(layer)
+    await this.provider.update(
+      STORAGE_KEY,
+      layer
+    )
 
     return true
 
@@ -39,6 +57,10 @@ export class LayerRepository
       id
     )
 
+    return await this.provider.load(
+      STORAGE_KEY
+    )
+
   }
 
   async findAll() {
@@ -47,7 +69,9 @@ export class LayerRepository
       'LOAD LAYERS'
     )
 
-    return loadLayerState()
+    return await this.provider.load(
+      STORAGE_KEY
+    )
 
   }
 
@@ -58,7 +82,9 @@ export class LayerRepository
       id
     )
 
-    clearLayerState()
+    await this.provider.delete(
+      STORAGE_KEY
+    )
 
     return true
 

@@ -3,7 +3,7 @@ export class SyncAdapter {
   async create(operation) {
 
     throw new Error(
-      'create() not implemented'
+      `${this.constructor.name}.create() not implemented`
     )
 
   }
@@ -11,7 +11,7 @@ export class SyncAdapter {
   async update(operation) {
 
     throw new Error(
-      'update() not implemented'
+      `${this.constructor.name}.update() not implemented`
     )
 
   }
@@ -19,7 +19,7 @@ export class SyncAdapter {
   async delete(operation) {
 
     throw new Error(
-      'delete() not implemented'
+      `${this.constructor.name}.delete() not implemented`
     )
 
   }
