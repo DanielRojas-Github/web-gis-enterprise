@@ -17,51 +17,47 @@ export class RetryEngine {
 
   prepareRetry(operation) {
 
-  operation.status =
-    OPERATION_STATUS.RETRYING
+    operation.status =
+      OPERATION_STATUS.RETRYING
 
-  operation.retries += 1
+    operation.updatedAt =
+      Date.now()
 
-  operation.updatedAt =
-    Date.now()
+    operation.error = null
 
-  operation.error = null
+    operation.lastAttempt =
+      Date.now()
 
-  operation.lastAttempt =
-    Date.now()
+    return operation
 
-  return operation
-
-}
-  
+  }
 
   markPermanentFailure(
-  operation,error
-) {
-  operationLifecycle.markFailed(
-                operation,error
-              )
+    operation, error
+  ) {
 
+    return operationLifecycle.markFailed(
+      operation,
+      error
+    )
 
-  return operation
+  }
+  getDelay(operation) {
 
-}
-getDelay(operation) {
+    return Math.min(
 
-  return Math.min(
+      1000 *
 
-    1000 *
+      Math.pow(
+        2,
+        operation.retries
+      ),
 
-    Math.pow(
-      2,
-      operation.retries
-    ),
+      30000
 
-    30000
+    )
 
-  )
-
-}
+  }
 }
 export const retryEngine =
   new RetryEngine()

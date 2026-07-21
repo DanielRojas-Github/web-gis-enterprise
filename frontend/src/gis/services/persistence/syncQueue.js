@@ -3,9 +3,7 @@
 // Sync Queue
 // =======================================
 
-import {
-  OPERATION_STATUS,
-} from './lifecycle/operationStatus'
+
 
 class SyncQueue {
 
@@ -84,60 +82,7 @@ class SyncQueue {
   getItems() {
     return [...this.queue]
   }
-  markProcessing(operation) {
 
-    operation.status =
-      OPERATION_STATUS.PROCESSING
-
-    operation.updatedAt =
-      Date.now()
-
-    operation.attempts =
-      (operation.attempts ?? 0) + 1
-
-    console.log(
-      'SYNC QUEUE → PROCESSING',
-      operation.id,
-      'Attempt:',
-      operation.attempts
-    )
-
-  }
-  markSuccess(operation) {
-
-    operation.status =
-      OPERATION_STATUS.SUCCESS
-
-    operation.updatedAt =
-      Date.now()
-
-    console.log(
-      'SYNC QUEUE → SUCCESS',
-      operation.id
-    )
-
-  }
-  markFailed(
-    operation,
-    error = null
-  ) {
-
-    operation.status =
-      OPERATION_STATUS.FAILED
-
-    operation.updatedAt =
-      Date.now()
-
-    operation.error =
-      error?.message ?? null
-
-    console.log(
-      'SYNC QUEUE → FAILED',
-      operation.id,
-      operation.error
-    )
-
-  }
   remove(operationId) {
 
     this.queue =

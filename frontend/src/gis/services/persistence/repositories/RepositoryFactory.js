@@ -1,10 +1,3 @@
-import {
-  LayerRepository,
-} from './LayerRepository'
-
-import {
-  FeatureRepository,
-} from './FeatureRepository'
 
 class RepositoryFactory {
 

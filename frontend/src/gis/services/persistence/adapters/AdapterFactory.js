@@ -22,14 +22,6 @@ class AdapterFactory {
       [ADAPTER_TYPES.GEOSERVER]:
         new GeoServerSyncAdapter(),
 
-      /*
-       * Próximamente
-       *
-       * [ADAPTER_TYPES.INDEXED_DB]&#58;        *   new IndexedDBSyncAdapter(),
-       *
-       * [ADAPTER_TYPES.REST]&#58;        *   new RestSyncAdapter(),
-       *
-       */
 
     }
 

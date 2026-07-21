@@ -4,12 +4,6 @@ export const ADAPTER_TYPES = Object.freeze({
 
   GEOSERVER: 'geoserver',
 
-  /*
-   * Próximamente
-   *
-   * INDEXED_DB: 'indexeddb',
-   * REST: 'rest',
-   *
-   */
+ 
 
 })

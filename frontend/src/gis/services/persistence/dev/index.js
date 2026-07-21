@@ -1,6 +1,6 @@
 import {
   runPersistenceIntegrationTest,
-} from './persistenceIntegrationtest'
+} from './persistenceIntegrationTest'
 
 export function runPersistenceDevTools() {
 

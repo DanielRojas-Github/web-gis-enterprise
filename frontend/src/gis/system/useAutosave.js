@@ -16,20 +16,9 @@ import {
 } from '@/gis/utils/flattenLayers'
 
 import {
-  createSyncOperation,
-} from '@/gis/services/persistence/models/syncOperation'
+  saveDirtyLayers,
+} from '@/gis/services/persistence/saveDirtyLayers'
 
-import {
-  syncQueue,
-} from '@/gis/services/persistence/syncQueue'
-
-import {
-  OPERATION_TYPES,
-} from '@/gis/services/persistence/constants/operationTypes'
-
-import {
-  REPOSITORY_TYPES,
-} from '@/gis/services/persistence/constants/repositoryTypes'
 
 export const useAutosave = () => {
   const {
@@ -92,40 +81,18 @@ export const useAutosave = () => {
           return
         }
 
-        for (const layer of dirtyLayers) {
+      saveDirtyLayers(
+  dirtyLayers
+)
 
-          console.log(
-            'CREATING SYNC OPERATION:',
-            layer.id
-          )
-          // 
-          const operation =
-            createSyncOperation({
-              repository: REPOSITORY_TYPES.LAYER,
-              type: OPERATION_TYPES.UPDATE,
+for (const layer of dirtyLayers) {
 
+  setLayerSaving(
+    layer.id,
+    true
+  )
 
-
-              layerId: layer.id,
-
-
-
-              payload: layer,
-
-            })
-
-          syncQueue.enqueue(operation)
-          setLayerSaving(
-            layer.id,
-            true
-          )
-
-          console.log(
-            'SYNC OPERATION ENQUEUED:',
-            operation.id
-          )
-
-        }
+}
       },
         state.autosaveInterval
       )

@@ -1,5 +1,8 @@
 import { SyncAdapter }
   from './SyncAdapter'
+import { createPersistenceResult }
+  from '../models/PersistenceResult'
+
 
 export class GeoServerSyncAdapter
   extends SyncAdapter {
@@ -25,7 +28,7 @@ export class GeoServerSyncAdapter
 
     console.log(
       'GEOSERVER UPDATE',
-      operation.layerId
+      operation
     )
 
     return {
@@ -45,14 +48,17 @@ export class GeoServerSyncAdapter
       operation.layerId
     )
 
-    return {
+    return createPersistenceResult({
 
-      success:true,
+    success: true,
 
-      timestamp:Date.now()
+    operationId: operation.id,
 
-    }
+    repository: operation.repository,
 
+    adapter: operation.adapter,
+
+})
   }
 
 }

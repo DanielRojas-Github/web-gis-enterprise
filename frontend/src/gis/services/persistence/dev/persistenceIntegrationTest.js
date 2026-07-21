@@ -1,6 +1,6 @@
 import {
   createSyncOperation,
-} from '../models/syncOperation'
+} from '../models/SyncOperation'
 
 import {
   OPERATION_TYPES,

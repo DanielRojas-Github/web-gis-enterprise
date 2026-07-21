@@ -16,7 +16,7 @@ export class FeatureRepository
       'CREATE FEATURE'
     )
 
-    // Se implementará más adelante
+
 
     return true
 
@@ -28,8 +28,6 @@ export class FeatureRepository
       'UPDATE FEATURE'
     )
 
-    // Temporalmente reutilizamos
-    // el almacenamiento existente.
     saveFeatures(feature)
 
     return true
@@ -42,9 +40,6 @@ export class FeatureRepository
       'FIND FEATURE',
       id
     )
-
-    // Lo implementaremos
-    // cuando migremos a StorageProvider.
 
     return null
 

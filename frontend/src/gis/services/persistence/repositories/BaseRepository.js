@@ -1,21 +1,43 @@
 export class BaseRepository {
 
-  async save(data) {
+  async create(data) {
+
     throw new Error(
-      'save() not implemented'
+      'create() not implemented'
     )
+
   }
 
-  async load() {
+  async update(data) {
+
     throw new Error(
-      'load() not implemented'
+      'update() not implemented'
     )
+
+  }
+
+  async find(id) {
+
+    throw new Error(
+      'find() not implemented'
+    )
+
+  }
+
+  async findAll() {
+
+    throw new Error(
+      'findAll() not implemented'
+    )
+
   }
 
   async delete(id) {
+
     throw new Error(
       'delete() not implemented'
     )
+
   }
 
 }

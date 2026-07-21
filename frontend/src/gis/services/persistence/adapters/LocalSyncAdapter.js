@@ -6,6 +6,11 @@ import {
   SyncAdapter,
 } from './SyncAdapter'
 
+
+import {
+  createPersistenceResult,
+} from '../models/PersistenceResult'
+
 export class LocalSyncAdapter
   extends SyncAdapter {
 
@@ -30,13 +35,20 @@ export class LocalSyncAdapter
       data
     )
 
-    return {
+  return createPersistenceResult({
 
-      success: true,
+  success: true,
 
-      timestamp: Date.now(),
+  operationId:
+    operation.id,
 
-    }
+  repository:
+    operation.repository,
+
+  adapter:
+    operation.adapter,
+
+})
 
   }
 

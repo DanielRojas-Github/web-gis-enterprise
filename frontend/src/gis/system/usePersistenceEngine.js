@@ -149,12 +149,7 @@ console.log(
               .finishProcessing()
 
           }
-          /*
-           * Próximamente:
-           *
-           * saveOperation(operation)
-           *
-           */
+        
 
         }, 1000)
       const unsubscribe =

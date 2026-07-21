@@ -11,7 +11,7 @@ import {
 export function createSyncOperation({
   type,
   repository,
-  adapter= ADAPTER_TYPES.LOCAL,
+  adapter = ADAPTER_TYPES.LOCAL,
   layerId,
   featureId,
   payload,
