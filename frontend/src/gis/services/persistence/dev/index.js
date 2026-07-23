@@ -1,6 +1,8 @@
 import {
-  runPersistenceIntegrationTest,
+  runPersistenceIntegrationTest,runSynchronizationIntegrationTest,
 } from './persistenceIntegrationTest'
+
+
 
 export function runPersistenceDevTools() {
 
@@ -9,5 +11,6 @@ export function runPersistenceDevTools() {
   )
 
   runPersistenceIntegrationTest()
+  runSynchronizationIntegrationTest()
 
 }

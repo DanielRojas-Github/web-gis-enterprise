@@ -1,6 +1,6 @@
 import {
   createSyncOperation,
-} from '../models/SyncOperation'
+} from '@/gis/services/persistence/models/SyncOperation'
 
 import {
   OPERATION_TYPES,
@@ -17,6 +17,10 @@ import {
 import {
   syncQueue,
 } from '../syncQueue'
+
+import {
+  synchronizationManager,
+} from '@/gis/synchronization/SynchronizationManager'
 
 export function runPersistenceIntegrationTest() {
 
@@ -72,5 +76,28 @@ export function runPersistenceIntegrationTest() {
   )
 
   console.groupEnd()
+
+}
+
+export async function
+runSynchronizationIntegrationTest() {
+
+    console.group(
+        'SYNCHRONIZATION INTEGRATION TEST'
+    )
+
+    console.log(
+        'QUEUE SIZE BEFORE:',
+        syncQueue.size()
+    )
+
+    await synchronizationManager.syncNow()
+
+    console.log(
+        'QUEUE SIZE AFTER:',
+        syncQueue.size()
+    )
+
+    console.groupEnd()
 
 }

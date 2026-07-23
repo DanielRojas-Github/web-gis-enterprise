@@ -1,8 +1,16 @@
 import { useEffect } from 'react'
 
+// import {
+//     persistenceEngine,
+// } from '@/gis/services/persistence/PersistenceEngine'
+
 import {
-    persistenceEngine,
-} from '@/gis/services/persistence/PersistenceEngine'
+    synchronizationManager,
+} from '@/gis/synchronization/SynchronizationManager'
+
+import {
+    registerDeveloperAPI,
+} from '@/gis/services/persistence/dev/GISDeveloperAPI'
 
 export const usePersistenceEngine = () => {
 
@@ -12,11 +20,14 @@ export const usePersistenceEngine = () => {
             'Persistence Engine Hook Mounted'
         )
 
-        persistenceEngine.start()
+        // persistenceEngine.start()
+        synchronizationManager.start()
+
+        registerDeveloperAPI()
 
         return () => {
-
-            persistenceEngine.stop()
+          //  persistenceEngine.stop()
+            synchronizationManager.stop()
 
             console.log(
                 'Persistence Engine Hook Unmounted'

@@ -26,7 +26,7 @@ export class PersistenceEngine {
     constructor() {
 
         this.interval = null
-       this.unsubscribe = null
+        this.unsubscribe = null
         this.started = false
 
     }
@@ -35,116 +35,22 @@ export class PersistenceEngine {
         if (this.started) {
             return
         }
-        this.started = true
 
         if (persistenceScheduler.isRunning()) {
             return
         }
-        persistenceScheduler.start()
 
+        this.started = true
         console.log(
             'PERSISTENCE ENGINE STARTED'
         )
+        persistenceScheduler.start()
+
+
         this.interval =
-            setInterval(async () => {
-                if (!networkStatus.isOnline()) {
-                    return
-                }
+            setInterval(() => {
 
-                if (syncQueue.isEmpty()) {
-                    return
-                }
-
-                if (persistenceScheduler.isProcessing()) {
-                    return
-                }
-
-                const operation =
-                    syncQueue.dequeue()
-
-
-                if (!operation) {
-                    return
-                }
-                persistenceScheduler
-                    .startProcessing()
-                operationLifecycle.markProcessing(
-                    operation
-                )
-
-                try {
-
-                    const result =
-                        await executeOperation(
-                            operation
-                        )
-
-                    console.log(
-                        'EXECUTION RESULT:',
-                        result
-                    )
-
-                    operationLifecycle.markSuccess(
-                        operation
-                    )
-
-                }
-                catch (error) {
-
-                    if (
-                        retryEngine.canRetry(
-                            operation
-                        )
-                    ) {
-
-                        retryEngine.prepareRetry(
-                            operation
-                        )
-
-                        const delay =
-
-                            retryEngine.getDelay(
-                                operation
-                            )
-
-                        console.log(
-
-                            'NEXT RETRY IN',
-
-                            delay,
-
-                            'ms'
-
-                        )
-
-                        setTimeout(() => {
-
-                            syncQueue.enqueue(
-                                operation
-                            )
-
-                        }, delay)
-                    }
-                    else {
-
-                        retryEngine
-                            .markPermanentFailure(
-                                operation,
-                                error
-                            )
-
-                        console.error(
-                            'MAX RETRIES REACHED',
-                            operation.id
-                        )
-
-                    }
-                }
-                finally {
-
-                    persistenceScheduler
-                        .finishProcessing()
-                }
+                void this.processNextOperation()
 
             }, 1000)
         this.unsubscribe =
@@ -211,6 +117,114 @@ export class PersistenceEngine {
 
     }
 
+    async processNextOperation() {
+
+        if (!networkStatus.isOnline()) {
+            return
+        }
+
+        if (syncQueue.isEmpty()) {
+            return
+        }
+
+        if (persistenceScheduler.isProcessing()) {
+            return
+        }
+
+        const operation =
+            syncQueue.dequeue()
+
+
+        if (!operation) {
+            return
+        }
+        persistenceScheduler
+            .startProcessing()
+        operationLifecycle.markProcessing(
+            operation
+        )
+
+        try {
+
+            const result =
+                await executeOperation(
+                    operation
+                )
+
+            console.log(
+                'EXECUTION RESULT:',
+                result
+            )
+
+            operationLifecycle.markSuccess(
+                operation
+            )
+
+        }
+        catch (error) {
+
+            if (
+                retryEngine.canRetry(
+                    operation
+                )
+            ) {
+
+                retryEngine.prepareRetry(
+                    operation
+                )
+
+                const delay =
+
+                    retryEngine.getDelay(
+                        operation
+                    )
+
+                console.log(
+
+                    'NEXT RETRY IN',
+
+                    delay,
+
+                    'ms'
+
+                )
+
+                setTimeout(() => {
+
+                    syncQueue.enqueue(
+                        operation
+                    )
+
+                }, delay)
+            }
+            else {
+
+                retryEngine
+                    .markPermanentFailure(
+                        operation,
+                        error
+                    )
+
+                console.error(
+                    'MAX RETRIES REACHED',
+                    operation.id
+                )
+
+            }
+        }
+        finally {
+
+            persistenceScheduler
+                .finishProcessing()
+        }
+
+
+    }
+    hasPendingOperations() {
+
+        return !syncQueue.isEmpty()
+
+    }
 }
 
 
