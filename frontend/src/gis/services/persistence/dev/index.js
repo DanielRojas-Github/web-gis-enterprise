@@ -1,16 +1,19 @@
 import {
-  runPersistenceIntegrationTest,runSynchronizationIntegrationTest,
-} from './persistenceIntegrationTest'
+    persistenceIntegrationTest
+} from '@/gis/services/persistence/dev/persistenceIntegrationTest.js' 
 
+export const runPersistenceDevTools = () => {
 
+    if (!import.meta.env.DEV) {
 
-export function runPersistenceDevTools() {
+        return
 
-  console.log(
-    'RUNNING PERSISTENCE DEV TOOLS'
-  )
+    }
 
-  runPersistenceIntegrationTest()
-  runSynchronizationIntegrationTest()
+    console.log(
+        'RUNNING PERSISTENCE DEV TOOLS'
+    )
+
+    persistenceIntegrationTest()
 
 }

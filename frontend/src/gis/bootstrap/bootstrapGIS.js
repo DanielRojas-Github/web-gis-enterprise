@@ -1,44 +1,24 @@
-import { registerTools }
-  from '@/gis/tools/registerTools'
-
-import { registerRepositories }
-  from '@/gis/services/persistence/repositories/registerRepositories'
+import {
+    registerTools,
+} from '@/gis/tools/registerTools'
 
 import {
-  runPersistenceDevTools,
-} from '@/gis/services/persistence/dev'
+    registerRepositories,
+} from '@/gis/services/persistence/repositories/registerRepositories'
 
-let initialized = false
 
-export function bootstrapGIS() {
 
-  if (initialized) {
+export const bootstrapGIS = () => {
 
     console.log(
-      'GIS ALREADY INITIALIZED'
+        'BOOTSTRAPPING GIS...'
     )
 
-    return
-  }
+    registerTools()
 
-  console.log(
-    'BOOTSTRAPPING GIS...'
-  )
+    registerRepositories()
 
-  registerTools()
-
-  registerRepositories()
-
-if (import.meta.env.DEV) {
-
-  runPersistenceDevTools()
-
-}
-
-  initialized = true
-
-  console.log(
-    'GIS BOOTSTRAP COMPLETED'
-  )
-
+    console.log(
+        'GIS BOOTSTRAP COMPLETED'
+    )
 }

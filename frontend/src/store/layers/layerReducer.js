@@ -309,18 +309,39 @@ export const layerReducer = (
       }
     ),
   }
-    case LAYER_ACTIONS.CLEAR_LAYER_DIRTY:
-      return {
-        ...state,
-        layers: updateLayerTree(
-          state.layers,
-          action.payload,
-          layer => ({
-            ...layer,
-            dirty: false,
-          })
-        ),
-      }
+  case LAYER_ACTIONS.SET_LAYER_SYNC_ERROR:
+  return {
+    ...state,
+
+    layers:
+      updateLayerTree(
+        state.layers,
+
+        action.payload.layerId,
+
+        (layer) => ({
+          ...layer,
+
+          saving: false,
+
+          syncError:
+            action.payload.error,
+        })
+      ),
+  }
+   case LAYER_ACTIONS.CLEAR_LAYER_DIRTY:
+  return {
+    ...state,
+    layers: updateLayerTree(
+      state.layers,
+      action.payload,
+      layer => ({
+        ...layer,
+        dirty: false,
+        saving: false,
+      })
+    ),
+  }
   case LAYER_ACTIONS.SAVE_LAYER:
   return {
     ...state,

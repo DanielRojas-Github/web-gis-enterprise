@@ -28,6 +28,8 @@ export class PersistenceEngine {
         this.interval = null
         this.unsubscribe = null
         this.started = false
+        this.successListeners = []
+        this.failureListeners = []
 
     }
 
@@ -65,17 +67,7 @@ export class PersistenceEngine {
                         'NETWORK RESTORED'
                     )
 
-                    const operation =
-                        syncQueue.peek()
-
-                    if (!operation) {
-                        return
-                    }
-
-                    console.log(
-                        'PROCESSING IMMEDIATELY:',
-                        operation.id
-                    )
+                    void this.processNextOperation()
 
                 }
             )
@@ -146,10 +138,14 @@ export class PersistenceEngine {
 
         try {
 
+//            throw new Error(
+//     'TEST PERSISTENCE FAILURE'
+// )
             const result =
                 await executeOperation(
                     operation
                 )
+                
 
             console.log(
                 'EXECUTION RESULT:',
@@ -159,7 +155,7 @@ export class PersistenceEngine {
             operationLifecycle.markSuccess(
                 operation
             )
-
+            this.notifyOperationSuccess(result)
         }
         catch (error) {
 
@@ -210,6 +206,11 @@ export class PersistenceEngine {
                     operation.id
                 )
 
+                this.notifyOperationFailure({
+                    ...operation,
+                    error,
+                })
+
             }
         }
         finally {
@@ -225,6 +226,42 @@ export class PersistenceEngine {
         return !syncQueue.isEmpty()
 
     }
+
+    enqueueOperation(operation) {
+
+        syncQueue.enqueue(
+            operation
+        )
+
+    }
+    onOperationSuccess(listener) {
+
+        this.successListeners.push(listener)
+
+    }
+    onOperationFailure(listener) {
+
+    this.failureListeners.push(listener)
+
+}
+    notifyOperationSuccess(result) {
+
+        this.successListeners.forEach(listener => {
+
+            listener(result)
+
+        })
+
+    }
+    notifyOperationFailure(result) {
+
+    this.failureListeners.forEach(listener => {
+
+        listener(result)
+
+    })
+
+}
 }
 
 

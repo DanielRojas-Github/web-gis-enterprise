@@ -3,7 +3,9 @@
 // Sync Queue
 // =======================================
 
-
+import {
+  OPERATION_STATUS,
+} from './lifecycle/operationStatus'
 
 class SyncQueue {
 
@@ -11,31 +13,60 @@ class SyncQueue {
     this.queue = []
   }
 
-  enqueue(operation) {
+enqueue(operation) {
 
-    const exists =
-      this.queue.some(
-        item =>
-          item.id === operation.id
-      )
+  const existingOperation =
+    this.findPendingByLayerId(
+      operation.layerId
+    )
 
-    if (exists) {
+  if (
+    existingOperation &&
+    existingOperation.type === operation.type &&
+    operation.type === 'UPDATE'
+  ) {
 
-      console.log(
-        'SYNC QUEUE → DUPLICATE',
-        operation.id
-      )
+    existingOperation.payload =
+      operation.payload
 
-      return
-    }
-
-    this.queue.push(operation)
+    existingOperation.updatedAt =
+      operation.updatedAt
 
     console.log(
-      'SYNC QUEUE → ENQUEUE',
-      operation
+      'SYNC QUEUE → UPDATE EXISTING OPERATION',
+      existingOperation.id
     )
+
+    return existingOperation
   }
+
+  const exists =
+    this.queue.some(
+      item =>
+        item.id === operation.id
+    )
+
+  if (exists) {
+
+    console.log(
+      'SYNC QUEUE → DUPLICATE',
+      operation.id
+    )
+
+    return existingOperation
+  }
+
+  this.queue.push(
+    operation
+  )
+
+  console.log(
+    'SYNC QUEUE → ENQUEUE',
+    operation
+  )
+
+  return operation
+}
 
   dequeue() {
 
@@ -100,6 +131,40 @@ class SyncQueue {
     )
 
   }
+
+ findPendingByContext(operationData) {
+
+  return this.queue.find(
+    operation =>
+
+      operation.status ===
+        OPERATION_STATUS.PENDING &&
+
+      operation.type ===
+        operationData.type &&
+
+      operation.repository ===
+        operationData.repository &&
+
+      operation.adapter ===
+        operationData.adapter &&
+
+      operation.layerId ===
+        operationData.layerId &&
+
+      operation.featureId ===
+        operationData.featureId
+  )
+
+}
+  findPendingByLayerId(layerId) {
+
+  return this.queue.find(
+    operation =>
+      operation.layerId === layerId
+  )
+
+}
 
 }
 

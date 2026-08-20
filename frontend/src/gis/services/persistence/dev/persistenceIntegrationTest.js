@@ -22,7 +22,7 @@ import {
   synchronizationManager,
 } from '@/gis/synchronization/SynchronizationManager'
 
-export function runPersistenceIntegrationTest() {
+export function persistenceIntegrationTest() {
 
   console.group(
     'PERSISTENCE INTEGRATION TEST'

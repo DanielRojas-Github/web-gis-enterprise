@@ -4,6 +4,8 @@ import {
 } from '../layerActions'
 import { useCallback } from 'react'
 
+
+
 export const useLayers = () => {
   const { state, dispatch } =
     useLayerContext()
@@ -133,9 +135,10 @@ export const useLayers = () => {
           feature,
         },
       })
+
     }
   const markLayerDirty =
-    layerId =>{
+    layerId => {
       dispatch({
         type:
           LAYER_ACTIONS
@@ -144,7 +147,7 @@ export const useLayers = () => {
         payload:
           layerId,
       })
-     
+
     }
   const clearLayerDirty =
     layerId =>
@@ -157,49 +160,63 @@ export const useLayers = () => {
           layerId,
       })
 
+  const setLayerSyncError =
+  (
+    layerId,
+    error
+  ) =>
+    dispatch({
+      type:
+        LAYER_ACTIONS
+          .SET_LAYER_SYNC_ERROR,
 
-  
+      payload: {
+        layerId,
+        error,
+      },
+    })
+
   const setLayerSaving = (layerId, saving) =>
-  dispatch({
-    type: LAYER_ACTIONS.SET_LAYER_SAVING,
-    payload: { layerId, saving },
-  })
+    dispatch({
+      type: LAYER_ACTIONS.SET_LAYER_SAVING,
+      payload: { layerId, saving },
+    })
 
-const saveLayer = useCallback(
-  async (layerId) => {
-    setLayerSaving(layerId, true)
+  const saveLayer = useCallback(
+    async (layerId) => {
+      setLayerSaving(layerId, true)
 
-    try {
-      await new Promise(
-        res => setTimeout(res, 600)
-      )
+      try {
+        await new Promise(
+          res => setTimeout(res, 600)
+        )
 
-      dispatch({
-        type:
-          LAYER_ACTIONS.SAVE_LAYER,
-        payload:
-          layerId,
-      })
+        dispatch({
+          type:
+            LAYER_ACTIONS.SAVE_LAYER,
+          payload:
+            layerId,
+        })
 
-      console.log(
-        'LAYER SAVED:',
-        layerId
-      )
-    } catch (err) {
-      console.error(err)
+        console.log(
+          'LAYER SAVED:',
+          layerId
+        )
+      } catch (err) {
+        console.error(err)
 
-      dispatch({
-        type:
-          LAYER_ACTIONS.SET_LAYER_ERROR,
-        payload: {
-          layerId,
-          error: err.message,
-        },
-      })
-    }
-  },
-  [dispatch]
-)
+        dispatch({
+          type:
+            LAYER_ACTIONS.SET_LAYER_ERROR,
+          payload: {
+            layerId,
+            error: err.message,
+          },
+        })
+      }
+    },
+    [dispatch]
+  )
 
   return {
 
@@ -235,6 +252,11 @@ const saveLayer = useCallback(
     markLayerDirty,
 
     clearLayerDirty,
+
+    setLayerSyncError,
+
+    setLayerSaving,
+
     saveLayer,
   }
 }

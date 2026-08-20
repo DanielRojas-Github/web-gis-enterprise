@@ -11,18 +11,16 @@ import {
   useGIS,
 } from '@/store/gis/hooks/useGIS'
 
-import {
-  flattenLayers,
-} from '@/gis/utils/flattenLayers'
+
 
 import {
-  saveDirtyLayers,
-} from '@/gis/services/persistence/saveDirtyLayers'
+  synchronizationManager,
+} from '@/gis/synchronization/SynchronizationManager'
 
 
 export const useAutosave = () => {
   const {
-    layers, setLayerSaving
+    layers
 
   } = useLayers()
 
@@ -57,42 +55,12 @@ export const useAutosave = () => {
         const currentLayers =
           layersRef.current
 
+synchronizationManager
+    .processAutosave(
+        currentLayers
+    )
 
-
-        const flatLayers =
-          flattenLayers(
-            currentLayers
-          )
-
-
-
-        const dirtyLayers =
-          flatLayers.filter(
-            layer =>
-              layer.dirty &&
-              !layer.saving
-          )
-
-        if (
-          dirtyLayers.length ===
-          0
-        ) {
-
-          return
-        }
-
-      saveDirtyLayers(
-  dirtyLayers
-)
-
-for (const layer of dirtyLayers) {
-
-  setLayerSaving(
-    layer.id,
-    true
-  )
-
-}
+     
       },
         state.autosaveInterval
       )

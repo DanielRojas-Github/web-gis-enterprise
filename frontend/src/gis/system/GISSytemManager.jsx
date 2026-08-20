@@ -15,6 +15,9 @@ import { usePersistenceEngine }
 // import { useVersioningEngine }
 //   from './useVersioningEngine'
 
+import { useLayerSynchronization }
+from '@/gis/synchronization/hooks/useLayerSynchronization'
+
 export default function GISSystemManager() {
 
   useEffect(() => {
@@ -30,6 +33,8 @@ export default function GISSystemManager() {
   useAutosave()
 
    usePersistenceEngine()
+
+   useLayerSynchronization()
 
   // useSyncEngine()
 
