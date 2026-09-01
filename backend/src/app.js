@@ -1,63 +1,94 @@
-import express from "express";
-import cors from "cors";
-import dotenv from "dotenv";
-import helmet from "helmet";
-import morgan from "morgan";
-import wfsRoutes
-from "./routes/wfs.routes.js";
+import express
+  from "express";
 
-dotenv.config();
+import cors
+  from "cors";
 
-const app = express();
+import helmet
+  from "helmet";
 
-app.use(cors());
-app.use(helmet());
-app.use(morgan("dev"));
-app.use(express.json());
+import morgan
+  from "morgan";
 
-// app.use(
-//   "/api/wfs",
-//   wfsRoutes
-// );
+import apiRoutes
+  from "./routes/apiRoutes.js";
 
-app.get("/", (req, res) => {
-  res.json({
-    message: "GIS Backend Running",
-  });
-});
+import {
+  errorHandler,
+} from "./middleware/errorHandler.js";
+
+import {
+  requestId,
+} from "./middleware/requestId.js";
+
+import {
+  notFoundHandler,
+} from "./middleware/notFoundHandler.js";
+
+
+const app =
+  express();
+
+
+morgan.token(
+  "request-id",
+  (request) =>
+    request.requestId
+);
+
+
+app.use(
+  cors()
+);
+
+app.use(
+  helmet()
+);
+
+app.use(
+  requestId
+);
+
+app.use(
+  morgan(
+    ":request-id :method :url :status :response-time ms"
+  )
+);
+
+app.use(
+  express.json()
+);
+
 
 app.get(
-  "/api/wfs/roads",
-  (req, res) => {
+  "/",
+  (
+    request,
+    response
+  ) => {
 
-    res.json({
-      type: "FeatureCollection",
-      features: [
-        {
-          type: "Feature",
+    response.json({
+      message:
+        "GIS Backend Running",
+    });
 
-          properties: {
-            name: "Road 1",
-          },
-
-          geometry: {
-            type: "LineString",
-
-            coordinates: [
-             [-64.7296, -21.5355],
-             [-64.7196, -21.5255]
-            ],
-          },
-        },
-      ],
-    })
   }
-)
-
-const PORT = process.env.PORT || 3000;
-
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
+);
 
 
+app.use(
+  "/api",
+  apiRoutes
+);
+
+
+app.use(
+  notFoundHandler
+);
+
+app.use(
+  errorHandler
+);
+
+
+export default app;

@@ -1,15 +1,21 @@
 import {
-  sampleGeoJSON,
-}
-from '../data/sampleGeoJSON.js'
+  getFeatures as getFeaturesService,
+} from "../services/featureService.js";
 
-export function
-getFeatures(
+import {
+  successResponse,
+} from "../utils/apiResponse.js";
+
+export function getFeatures(
   request,
   response
 ) {
 
-  response.json(
-    sampleGeoJSON
-  )
+  const features =
+    getFeaturesService();
+
+  return successResponse(
+  response,
+  features
+);
 }
