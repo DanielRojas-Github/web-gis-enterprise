@@ -159,13 +159,39 @@ const getRequiredEnv = (
 };
 
 
+const geoserverUser =
+  getRequiredEnv(
+    "GEOSERVER_USER",
+    undefined,
+    CONFIG_ERRORS.INVALID_GEOSERVER_USER
+  );
+
+
+const geoserverPassword =
+  getRequiredEnv(
+    "GEOSERVER_PASSWORD",
+    undefined,
+    CONFIG_ERRORS.INVALID_GEOSERVER_PASSWORD
+  );
+
+
 export const env = {
 
   port:
     getPort(),
 
-  geoserverUrl:
-    getGeoServerUrl(),
+  geoserver: {
+
+    url:
+      getGeoServerUrl(),
+
+    user:
+      geoserverUser,
+
+    password:
+      geoserverPassword,
+
+  },
 
   db: {
 

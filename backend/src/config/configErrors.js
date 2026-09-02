@@ -20,5 +20,10 @@ export const CONFIG_ERRORS = {
 
   INVALID_DB_PASSWORD:
     "DB_PASSWORD must not be empty",
+  INVALID_GEOSERVER_USER:
+  "GEOSERVER_USER must be a non-empty string",
+
+INVALID_GEOSERVER_PASSWORD:
+  "GEOSERVER_PASSWORD must be a non-empty string",
 
 };

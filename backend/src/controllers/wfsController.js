@@ -1,5 +1,6 @@
 import {
   getRoads as getRoadsService,
+  getBuildings as getBuildingsService,
 } from "../services/wfsService.js";
 
 import {
@@ -21,6 +22,31 @@ export async function getRoads(
     return successResponse(
       response,
       roads
+    );
+
+  } catch (error) {
+
+    next(error);
+
+  }
+
+}
+
+
+export async function getBuildings(
+  request,
+  response,
+  next
+) {
+
+  try {
+
+    const buildings =
+      await getBuildingsService();
+
+    return successResponse(
+      response,
+      buildings
     );
 
   } catch (error) {

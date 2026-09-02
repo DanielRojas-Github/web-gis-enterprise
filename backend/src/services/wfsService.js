@@ -2,6 +2,10 @@ import {
   RepositoryFactory,
 } from "../repositories/RepositoryFactory.js";
 
+import {
+  geoserverService,
+} from "./geoserverService.js";
+
 
 const roadRepository =
   RepositoryFactory.getRepository(
@@ -11,45 +15,202 @@ const roadRepository =
 
 export async function getRoads() {
 
-  const roads =
-    await roadRepository.findAll();
+  const [
+    data,
+    roads,
+  ] =
+    await Promise.all([
+      geoserverService
+        .getFeatures(
+          "roads"
+        ),
+
+      roadRepository
+        .findAll(),
+    ]);
+
+
+  const roadsById =
+    new Map(
+      roads.map(
+        (road) => [
+          Number(
+            road.id
+          ),
+          road,
+        ]
+      )
+    );
+
 
   return {
     type:
       "FeatureCollection",
 
     features:
-      roads.map(
-        (road) => ({
+      data.features.map(
+        (feature) => {
 
-          type:
-            "Feature",
+          const rawId =
+            feature.id;
 
-          id:
-            road.id,
+          const id =
+            Number(
+              String(rawId)
+                .split(".")
+                .pop()
+            );
 
-          properties: {
 
-            id:
-              road.id,
+          const road =
+            roadsById.get(
+              id
+            );
 
-            name:
-              road.name,
 
-            description:
-              road.description,
+          return {
 
-            lengthMeters:
-              Number(
-                road.lengthMeters
-              ),
+            type:
+              "Feature",
 
-          },
+            id,
 
-          geometry:
-            road.geometry,
+            properties: {
 
-        })
+              id,
+
+              name:
+                feature.properties
+                  ?.name ?? null,
+
+              description:
+                feature.properties
+                  ?.description ?? null,
+
+              lengthMeters:
+                road
+                  ? Number(
+                    road.lengthMeters
+                  )
+                  : null,
+
+            },
+
+            geometry:
+              feature.geometry,
+
+          };
+
+        }
+      ),
+
+  };
+
+}
+
+
+export async function getBuildings() {
+
+  const buildingRepository =
+    RepositoryFactory.getRepository(
+      "building"
+    );
+
+
+  const [
+    data,
+    buildings,
+  ] =
+    await Promise.all([
+      geoserverService
+        .getFeatures(
+          "buildings"
+        ),
+
+      buildingRepository
+        .findAll(),
+    ]);
+
+
+  const buildingsById =
+    new Map(
+      buildings.map(
+        (building) => [
+          Number(
+            building.id
+          ),
+          building,
+        ]
+      )
+    );
+
+
+  return {
+    type:
+      "FeatureCollection",
+
+    features:
+      data.features.map(
+        (feature) => {
+
+          const rawId =
+            feature.id;
+
+          const id =
+            Number(
+              String(rawId)
+                .split(".")
+                .pop()
+            );
+
+
+          const building =
+            buildingsById.get(
+              id
+            );
+
+
+          return {
+
+            type:
+              "Feature",
+
+            id,
+
+            properties: {
+
+              id,
+
+              name:
+                feature.properties
+                  ?.name ?? null,
+
+              description:
+                feature.properties
+                  ?.description ?? null,
+
+              areaSquareMeters:
+                building
+                  ? Number(
+                    building.areaSquareMeters
+                  )
+                  : null,
+
+              perimeterMeters:
+                building
+                  ? Number(
+                    building.perimeterMeters
+                  )
+                  : null,
+
+            },
+
+            geometry:
+              feature.geometry,
+
+          };
+
+        }
       ),
 
   };
