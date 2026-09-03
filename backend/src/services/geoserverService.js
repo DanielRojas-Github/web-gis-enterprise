@@ -2,6 +2,9 @@ import {
   env,
 } from "../config/env.js";
 
+import {
+  GeoServerError,
+} from "../errors/GeoServerError.js";
 
 const GEOSERVER_WORKSPACE =
   "webgis";
@@ -307,7 +310,8 @@ class GeoServerService {
 
 
   async getFeatures(
-    typeName
+    typeName,
+    options = {}
   ) {
 
     const params =
@@ -326,26 +330,189 @@ class GeoServerService {
 
         outputFormat:
           "application/json",
+
+        srsName:
+          GEOSERVER_SRS,
       });
 
-    const url =
-      `${env.geoserver.url}/${GEOSERVER_WORKSPACE}/ows?${params.toString()}`;
 
-    const response =
-      await fetch(url);
+    if (
+      options.bbox
+    ) {
 
-    if (!response.ok) {
-
-      throw new Error(
-        `GeoServer WFS request failed: ${response.status}`
+      params.set(
+        "bbox",
+        `${options.bbox},${GEOSERVER_SRS}`
       );
 
     }
 
+
+    if (
+      options.count !== undefined
+    ) {
+
+      params.set(
+        "count",
+        String(
+          options.count
+        )
+      );
+
+    }
+
+
+    if (
+      options.startIndex !== undefined
+    ) {
+
+      params.set(
+        "startIndex",
+        String(
+          options.startIndex
+        )
+      );
+
+    }
+
+
+    if (
+      options.sortBy
+    ) {
+
+      params.set(
+        "sortBy",
+        options.sortBy
+      );
+
+    }
+
+
+    if (
+      options.propertyName
+    ) {
+
+      params.set(
+        "propertyName",
+        options.propertyName
+      );
+
+    }
+
+    if (
+      options.cqlFilter
+    ) {
+
+      params.set(
+        "CQL_FILTER",
+        options.cqlFilter
+      );
+
+    }
+
+
+    const url =
+      `${env.geoserver.url}/${GEOSERVER_WORKSPACE}/ows?${params.toString()}`;
+
+   const controller =
+  new AbortController();
+
+const timeout =
+  setTimeout(
+    () => {
+
+      controller.abort();
+
+    },
+    env.geoserver.timeout
+  );
+
+
+    let response;
+
+
+    try {
+
+      response =
+        await fetch(
+          url,
+          {
+            signal:
+              controller.signal,
+          }
+        );
+
+    } catch (error) {
+
+      if (
+        error.name ===
+        "AbortError"
+      ) {
+
+        throw new GeoServerError({
+          message:
+            "GeoServer request timed out",
+          statusCode:
+            504,
+          code:
+            "GEOSERVER_TIMEOUT",
+        });
+
+      }
+
+
+      throw new GeoServerError({
+        message:
+          "GeoServer is unavailable",
+        statusCode:
+          503,
+        code:
+          "GEOSERVER_UNAVAILABLE",
+      });
+
+    } finally {
+
+      clearTimeout(
+        timeout
+      );
+
+    }
+
+    if (!response.ok) {
+
+      throw new GeoServerError({
+        message:
+          `GeoServer WFS request failed: ${response.status}`,
+        statusCode:
+          502,
+        code:
+          "GEOSERVER_WFS_ERROR",
+      });
+
+    }
+
+
+    try {
+
+      return await response.json();
+
+    } catch (error) {
+
+      throw new GeoServerError({
+        message:
+          "GeoServer returned an invalid WFS response",
+        statusCode:
+          502,
+        code:
+          "GEOSERVER_INVALID_RESPONSE",
+      });
+
+    }
+
+
     return response.json();
 
   }
-
 }
 
 

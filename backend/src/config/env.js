@@ -174,6 +174,35 @@ const geoserverPassword =
     CONFIG_ERRORS.INVALID_GEOSERVER_PASSWORD
   );
 
+function getGeoServerTimeout() {
+
+  const value =
+    process.env
+      .GEOSERVER_TIMEOUT ??
+    "5000";
+
+  const timeout =
+    Number(value);
+
+
+  if (
+    !Number.isInteger(
+      timeout
+    ) ||
+    timeout <= 0
+  ) {
+
+    throw new Error(
+      CONFIG_ERRORS
+        .INVALID_GEOSERVER_TIMEOUT
+    );
+
+  }
+
+
+  return timeout;
+
+}
 
 export const env = {
 
@@ -190,7 +219,8 @@ export const env = {
 
     password:
       geoserverPassword,
-
+    timeout:
+      getGeoServerTimeout(),
   },
 
   db: {

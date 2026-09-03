@@ -26,4 +26,7 @@ export const CONFIG_ERRORS = {
 INVALID_GEOSERVER_PASSWORD:
   "GEOSERVER_PASSWORD must be a non-empty string",
 
+INVALID_GEOSERVER_TIMEOUT:
+  "GEOSERVER_TIMEOUT must be an integer greater than 0",
+
 };

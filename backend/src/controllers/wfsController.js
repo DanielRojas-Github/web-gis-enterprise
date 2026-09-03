@@ -17,7 +17,9 @@ export async function getRoads(
   try {
 
     const roads =
-      await getRoadsService();
+      await getRoadsService(
+        request.query
+      );
 
     return successResponse(
       response,
@@ -42,7 +44,9 @@ export async function getBuildings(
   try {
 
     const buildings =
-      await getBuildingsService();
+      await getBuildingsService(
+        request.query
+      );
 
     return successResponse(
       response,

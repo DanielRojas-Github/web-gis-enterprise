@@ -6,6 +6,11 @@ import {
   geoserverService,
 } from "./geoserverService.js";
 
+import {
+  buildGeoServerQuery,
+  parsePropertyNames,
+} from "../utils/wfsQuery.js";
+
 
 const roadRepository =
   RepositoryFactory.getRepository(
@@ -13,8 +18,66 @@ const roadRepository =
   );
 
 
-export async function getRoads() {
+export async function getRoads(
+  query = {}
+) {
+ const requestedProperties =
+  parsePropertyNames(
+    query.propertyName
+  );
 
+
+const geoserverQuery =
+  buildGeoServerQuery(
+    query,
+    [
+      "id",
+      "name",
+      "description",
+    ],
+    [
+      "id",
+      "name",
+      "description",
+    ]
+  );
+
+
+  if (
+    requestedProperties
+  ) {
+
+    const geoserverProperties =
+      requestedProperties
+        .filter(
+          (property) =>
+            [
+              "id",
+              "name",
+              "description",
+            ].includes(
+              property
+            )
+        );
+
+
+    if (
+      !geoserverProperties.includes(
+        "geom"
+      )
+    ) {
+
+      geoserverProperties.push(
+        "geom"
+      );
+
+    }
+
+
+    geoserverQuery.propertyName =
+      geoserverProperties.join(",");
+
+  }
   const [
     data,
     roads,
@@ -22,7 +85,8 @@ export async function getRoads() {
     await Promise.all([
       geoserverService
         .getFeatures(
-          "roads"
+          "roads",
+          geoserverQuery
         ),
 
       roadRepository
@@ -77,24 +141,60 @@ export async function getRoads() {
 
             properties: {
 
-              id,
+  ...(
+    !requestedProperties ||
+    requestedProperties.includes(
+      "id"
+    )
+      ? {
+          id,
+        }
+      : {}
+  ),
 
-              name:
-                feature.properties
-                  ?.name ?? null,
+  ...(
+    !requestedProperties ||
+    requestedProperties.includes(
+      "name"
+    )
+      ? {
+          name:
+            feature.properties
+              ?.name ?? null,
+        }
+      : {}
+  ),
 
-              description:
-                feature.properties
-                  ?.description ?? null,
+  ...(
+    !requestedProperties ||
+    requestedProperties.includes(
+      "description"
+    )
+      ? {
+          description:
+            feature.properties
+              ?.description ?? null,
+        }
+      : {}
+  ),
 
-              lengthMeters:
-                road
-                  ? Number(
-                    road.lengthMeters
-                  )
-                  : null,
+  ...(
+    !requestedProperties ||
+    requestedProperties.includes(
+      "lengthMeters"
+    )
+      ? {
+          lengthMeters:
+            road
+              ? Number(
+                road.lengthMeters
+              )
+              : null,
+        }
+      : {}
+  ),
 
-            },
+},
 
             geometry:
               feature.geometry,
@@ -109,8 +209,29 @@ export async function getRoads() {
 }
 
 
-export async function getBuildings() {
+export async function getBuildings(
+  query = {}
+) {
+const requestedProperties =
+  parsePropertyNames(
+    query.propertyName
+  );
 
+
+const geoserverQuery =
+  buildGeoServerQuery(
+    query,
+    [
+      "id",
+      "name",
+      "description",
+    ],
+    [
+      "id",
+      "name",
+      "description",
+    ]
+  );
   const buildingRepository =
     RepositoryFactory.getRepository(
       "building"
@@ -124,7 +245,8 @@ export async function getBuildings() {
     await Promise.all([
       geoserverService
         .getFeatures(
-          "buildings"
+          "buildings",
+          geoserverQuery
         ),
 
       buildingRepository
@@ -177,33 +299,78 @@ export async function getBuildings() {
 
             id,
 
-            properties: {
+           properties: {
 
-              id,
+  ...(
+    !requestedProperties ||
+    requestedProperties.includes(
+      "id"
+    )
+      ? {
+          id,
+        }
+      : {}
+  ),
 
-              name:
-                feature.properties
-                  ?.name ?? null,
+  ...(
+    !requestedProperties ||
+    requestedProperties.includes(
+      "name"
+    )
+      ? {
+          name:
+            feature.properties
+              ?.name ?? null,
+        }
+      : {}
+  ),
 
-              description:
-                feature.properties
-                  ?.description ?? null,
+  ...(
+    !requestedProperties ||
+    requestedProperties.includes(
+      "description"
+    )
+      ? {
+          description:
+            feature.properties
+              ?.description ?? null,
+        }
+      : {}
+  ),
 
-              areaSquareMeters:
-                building
-                  ? Number(
-                    building.areaSquareMeters
-                  )
-                  : null,
+  ...(
+    !requestedProperties ||
+    requestedProperties.includes(
+      "areaSquareMeters"
+    )
+      ? {
+          areaSquareMeters:
+            building
+              ? Number(
+                  building.areaSquareMeters
+                )
+              : null,
+        }
+      : {}
+  ),
 
-              perimeterMeters:
-                building
-                  ? Number(
-                    building.perimeterMeters
-                  )
-                  : null,
+  ...(
+    !requestedProperties ||
+    requestedProperties.includes(
+      "perimeterMeters"
+    )
+      ? {
+          perimeterMeters:
+            building
+              ? Number(
+                  building.perimeterMeters
+                )
+              : null,
+        }
+      : {}
+  ),
 
-            },
+},
 
             geometry:
               feature.geometry,
