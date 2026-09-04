@@ -1,24 +1,45 @@
-import { geoserverConfig } from '../geoserver/geoserverConfig'
+import {
+  getWFSFeatures,
+} from './wfsApi'
 
-export const getWFSFeatures =
+const isFeatureCollection = (
+  value
+) => {
+
+  return (
+    value?.type ===
+      'FeatureCollection' &&
+    Array.isArray(
+      value.features
+    )
+  )
+}
+
+export const loadWFSFeatures =
   async ({
-    layer,
+    typeName,
+    params = {},
+    signal,
   }) => {
 
-    const typeName =
-`${geoserverConfig.workspace}:${layer}`
-
-    const url =
-`${geoserverConfig.wfsUrl}?service=WFS&version=2.0.0&request=GetFeature&typeNames=${typeName}&outputFormat=application/json`
-
     const response =
-      await fetch(url)
+      await getWFSFeatures({
+        typeName,
+        params,
+        signal,
+      })
 
-    if (!response.ok) {
+    if (
+      !response?.success ||
+      !isFeatureCollection(
+        response.data
+      )
+    ) {
+
       throw new Error(
-        `Error loading WFS layer: ${layer}`
+        'Invalid WFS response'
       )
     }
 
-    return response.json()
+    return response.data
   }

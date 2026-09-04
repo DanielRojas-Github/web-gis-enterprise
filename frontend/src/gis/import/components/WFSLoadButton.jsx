@@ -1,12 +1,7 @@
 import {
-  loadWFSFeatures,
+  loadWFSLayer,
 }
-  from '@/gis/services/wfs/wfsFeatureService'
-
-import {
-  createVectorLayer,
-}
-  from '@/gis/layers/factories/vectorLayerFactory'
+  from '@/gis/layers/loaders/wfsLayerLoader'
 
 import {
   useLayers,
@@ -15,32 +10,20 @@ import {
 
 export default function
   WFSLoadButton() {
+
   const {
     addLayerToGroup,
   } = useLayers()
+
   const handleClick =
     async () => {
 
       try {
 
-        const geojson =
-          await loadWFSFeatures(
-            'http://localhost:3000/api/wfs/roads'
-          )
-        console.log(
-  'WFS RESULT:',
-  geojson
-)
         const layer =
-          createVectorLayer({
-
-            id:
-              `wfs-${Date.now()}`,
-
-            name:
+          await loadWFSLayer({
+            layerName:
               'roads',
-
-            geojson,
           })
 
         addLayerToGroup({
@@ -53,7 +36,9 @@ export default function
 
       } catch (error) {
 
-        console.error(error)
+        console.error(
+          error
+        )
       }
     }
 

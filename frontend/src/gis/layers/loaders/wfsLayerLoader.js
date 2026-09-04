@@ -1,7 +1,7 @@
 import {
-  getWFSFeatures,
+  loadWFSFeatures,
 }
-from '@/gis/services/geoserver/getWFSFeatures'
+from '@/gis/services/wfs/wfsService'
 
 import {
   createVectorLayer,
@@ -14,8 +14,8 @@ export const loadWFSLayer =
   }) => {
 
     const geojson =
-      await getWFSFeatures({
-        layer:
+      await loadWFSFeatures({
+        typeName:
           layerName,
       })
 
