@@ -1,8 +1,7 @@
 import { useLayers }
   from '@/store/layers/hooks/useLayers'
 
-// import { LAYER_ACTIONS }
-  // from '@/store/layers/layerActions'
+
 
 import OpacitySlider
   from './OpacitySlider'
@@ -15,9 +14,10 @@ const LayerItem = ({
 }) => {
 
   const {
-  toggleLayer,
-  setOpacity,
-} = useLayers()
+    toggleLayer,
+    setOpacity,
+    
+  } = useLayers()
 
   const handleOpacityChange = (opacity) => {
     setOpacity(layer.id, opacity)
@@ -26,11 +26,18 @@ const LayerItem = ({
   const handleToggleLayer = () => {
     toggleLayer(layer.id)
   }
-const getLayerStatus = () => {
+ const getLayerStatus = () => {
   if (layer.error) {
     return {
       icon: '⚠',
       title: layer.error,
+    }
+  }
+
+  if (layer.loading) {
+    return {
+      icon: '⟳',
+      title: 'Loading layer...',
     }
   }
 
@@ -51,14 +58,14 @@ const getLayerStatus = () => {
   if (layer.lastSaved) {
     return {
       icon: '✓',
-      title: `Saved`
+      title: 'Saved',
     }
   }
 
   return null
 }
-const status =
-  getLayerStatus()
+  const status =
+    getLayerStatus()
   return (
     <div className="layer-item">
 
@@ -74,35 +81,37 @@ const status =
           }
         />
 
-      <div className="layer-status-container">
+        <div className="layer-status-container">
 
-  <span>
-    {layer.name}
-  </span>
+          <span>
+            {layer.name}
+          </span>
 
-  {status && (
-    <span
-      title={status.title}
-      className="layer-sync-status"
-    >
-      {status.icon}
-    </span>
-  )}
+          {status && (
+            <span
+              title={status.title}
+              className="layer-sync-status"
+            >
+              {status.icon}
+        
+            </span>
+          )}
 
-  {layer.lastSaved &&
-    !layer.dirty &&
-    !layer.saving && (
-      <small
-        className="layer-last-saved"
-      >
-        {new Date(
-          layer.lastSaved
-        ).toLocaleTimeString()
-        }
-      </small>
-  )}
+          {layer.lastSaved &&
+            !layer.dirty &&
+            !layer.saving &&
+             !layer.loading && (
+              <small
+                className="layer-last-saved"
+              >
+                {new Date(
+                  layer.lastSaved
+                ).toLocaleTimeString()
+                }
+              </small>
+            )}
 
-</div>
+        </div>
 
       </div>
 
@@ -121,7 +130,7 @@ const status =
         }
       />
     </div>
-    
+
   )
 }
 

@@ -9,24 +9,38 @@ import {
 from '../factories/vectorLayerFactory'
 
 export const loadWFSLayer =
-  async ({
-    layerName,
-  }) => {
+  async (layer) => {
+
+    const {
+      id,
+      name,
+      source,
+      visible,
+      opacity,
+      zIndex,
+      metadata,
+    } = layer
 
     const geojson =
       await loadWFSFeatures({
         typeName:
-          layerName,
+          source.layerName,
       })
 
     return createVectorLayer({
 
-      id:
-        `wfs-${layerName}-${Date.now()}`,
+      id,
 
-      name:
-        layerName,
+      name,
 
       geojson,
+
+      visible,
+
+      opacity,
+
+      zIndex,
+
+      metadata,
     })
   }

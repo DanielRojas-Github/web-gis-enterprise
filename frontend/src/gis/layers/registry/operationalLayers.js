@@ -56,6 +56,44 @@ export const operationalLayers = [
         },
       
     }),
+    createLayer({
+  id: 'buildings-wfs',
+
+  name: 'Buildings',
+
+  type: LAYER_TYPES.WFS,
+
+  visible: false,
+
+  opacity: 1,
+
+  zIndex: 101,
+
+  source: {
+    layerName: 'buildings',
+  },
+
+  ...defaultLayerMetadata,
+
+  metadata: {
+    attribution:
+      'Buildings Dataset',
+
+    geometryType:
+      'Polygon',
+
+    crs:
+      'EPSG:4326',
+
+    category:
+      'administrative',
+
+    keywords: [
+      'buildings',
+      'structures',
+    ],
+  },
+}),
     ]
   },
 
@@ -177,6 +215,45 @@ export const operationalLayers = [
       
       },
     ), 
+    createLayer({
+  id: 'roads-wfs',
+
+  name: 'Roads WFS',
+
+  type: LAYER_TYPES.WFS,
+
+  visible: false,
+
+  opacity: 1,
+
+  zIndex: 4,
+
+  source: {
+    layerName: 'roads',
+  },
+
+  ...defaultLayerMetadata,
+
+  metadata: {
+    attribution:
+      'Transportation Dataset',
+
+    geometryType:
+      'LineString',
+
+    crs:
+      'EPSG:4326',
+
+    category:
+      'transportation',
+
+    keywords: [
+      'roads',
+      'transport',
+      'wfs',
+    ],
+  },
+}),
     ],
   },
      {

@@ -3,22 +3,124 @@ import {
   LAYER_ACTIONS,
 } from '../layerActions'
 import { useCallback } from 'react'
+import {
+  LAYER_TYPES,
+} from '@/gis/layers/registry/layerSchema'
 
+import {
+  findLayerById,
+} from '@/gis/utils/findLayerById'
+
+import {
+  loadWFSLayer,
+} from '@/gis/layers/loaders/wfsLayerLoader'
 
 
 export const useLayers = () => {
   const { state, dispatch } =
     useLayerContext()
-  const toggleLayer = (
-    layerId
-  ) =>
-    dispatch({
-      type:
-        LAYER_ACTIONS
-          .TOGGLE_LAYER,
+  const toggleLayer =
+    async (layerId) => {
 
-      payload: layerId,
-    })
+      const layer =
+        findLayerById(
+          state.layers,
+          layerId
+        )
+
+      if (!layer) {
+        return
+      }
+
+      if (
+        layer.type ===
+        LAYER_TYPES.WFS &&
+        !layer.visible
+      ) {
+
+        try {
+
+          dispatch({
+            type:
+              LAYER_ACTIONS
+                .UPDATE_LAYER,
+
+            payload: {
+              id:
+                layer.id,
+
+              updates: {
+                loading: true,
+                error: null,
+              },
+            },
+          })
+
+          const loadedLayer =
+            await loadWFSLayer(
+              layer
+            )
+
+          dispatch({
+            type:
+              LAYER_ACTIONS
+                .UPDATE_LAYER,
+
+            payload: {
+              id:
+                layer.id,
+
+              updates: {
+                ...loadedLayer,
+
+                visible: true,
+                loading: false,
+                error: null,
+              },
+            },
+          })
+
+          return
+
+        } catch (error) {
+
+          console.error(
+            'WFS layer loading failed:',
+            error
+          )
+
+          dispatch({
+            type:
+              LAYER_ACTIONS
+                .UPDATE_LAYER,
+
+            payload: {
+              id:
+                layer.id,
+
+              updates: {
+                loading: false,
+
+                error:
+                  error.message ||
+                  'Failed to load WFS layer',
+              },
+            },
+          })
+
+          return
+        }
+      }
+
+      dispatch({
+        type:
+          LAYER_ACTIONS
+            .TOGGLE_LAYER,
+
+        payload:
+          layerId,
+      })
+    }
 
   const setOpacity = (
     layerId,
@@ -47,17 +149,152 @@ export const useLayers = () => {
       payload: layerId,
     })
 
-  const toggleGroup = (
-    groupId
-  ) =>
+const toggleGroup =
+  async (groupId) => {
+
+    const group =
+      findLayerById(
+        state.layers,
+        groupId
+      )
+
+    if (!group) {
+      return
+    }
+
+    const newVisibility =
+      !group.visible
+
+    // Apagar un grupo no necesita
+    // ninguna carga remota.
+    if (!newVisibility) {
+
+      dispatch({
+        type:
+          LAYER_ACTIONS
+            .TOGGLE_GROUP,
+
+        payload:
+          groupId,
+      })
+
+      return
+    }
+
+    // Al encender el grupo,
+    // cargamos primero las WFS
+    // todavía no cargadas.
+    for (const layer of group.children) {
+
+      if (
+        layer.type ===
+        LAYER_TYPES.WFS
+      ) {
+
+        try {
+
+          dispatch({
+            type:
+              LAYER_ACTIONS
+                .UPDATE_LAYER,
+
+            payload: {
+              id:
+                layer.id,
+
+              updates: {
+                loading: true,
+                error: null,
+              },
+            },
+          })
+
+          const loadedLayer =
+            await loadWFSLayer(
+              layer
+            )
+
+          dispatch({
+            type:
+              LAYER_ACTIONS
+                .UPDATE_LAYER,
+
+            payload: {
+              id:
+                layer.id,
+
+              updates: {
+                ...loadedLayer,
+
+                visible: true,
+                loading: false,
+                error: null,
+              },
+            },
+          })
+
+        } catch (error) {
+
+          console.error(
+            'WFS layer loading failed:',
+            layer.id,
+            error
+          )
+
+          dispatch({
+            type:
+              LAYER_ACTIONS
+                .UPDATE_LAYER,
+
+            payload: {
+              id:
+                layer.id,
+
+              updates: {
+                loading: false,
+
+                error:
+                  error.message ||
+                  'Failed to load WFS layer',
+              },
+            },
+          })
+        }
+
+        continue
+      }
+
+      dispatch({
+        type:
+          LAYER_ACTIONS
+            .UPDATE_LAYER,
+
+        payload: {
+          id:
+            layer.id,
+
+          updates: {
+            visible: true,
+          },
+        },
+      })
+    }
+
     dispatch({
       type:
         LAYER_ACTIONS
-          .TOGGLE_GROUP,
+          .UPDATE_LAYER,
 
-      payload:
-        groupId,
+      payload: {
+        id:
+          group.id,
+
+        updates: {
+          visible: true,
+        },
+      },
     })
+  }
 
   const toggleGroupExpanded = (
     groupId
@@ -161,20 +398,20 @@ export const useLayers = () => {
       })
 
   const setLayerSyncError =
-  (
-    layerId,
-    error
-  ) =>
-    dispatch({
-      type:
-        LAYER_ACTIONS
-          .SET_LAYER_SYNC_ERROR,
+    (
+      layerId,
+      error
+    ) =>
+      dispatch({
+        type:
+          LAYER_ACTIONS
+            .SET_LAYER_SYNC_ERROR,
 
-      payload: {
-        layerId,
-        error,
-      },
-    })
+        payload: {
+          layerId,
+          error,
+        },
+      })
 
   const setLayerSaving = (layerId, saving) =>
     dispatch({
@@ -217,7 +454,21 @@ export const useLayers = () => {
     },
     [dispatch]
   )
+  const updateLayer = (
+    layerId,
+    updates
+  ) =>
+    dispatch({
+      type:
+        LAYER_ACTIONS
+          .UPDATE_LAYER,
 
+      payload: {
+        id: layerId,
+
+        updates,
+      },
+    })
   return {
 
     layers:
@@ -241,6 +492,8 @@ export const useLayers = () => {
 
     addLayerToGroup,
 
+    updateLayer,
+
     updateFeatureInLayer,
 
     setOpacity,
@@ -258,5 +511,7 @@ export const useLayers = () => {
     setLayerSaving,
 
     saveLayer,
+
+
   }
 }

@@ -39,11 +39,15 @@ export const createLayer = ({
   
   dirty: false,
 
+  loading: false,
+
   saving: false,
 
   lastSaved: null,
   
   error: null,
+
+  
 
 
 })

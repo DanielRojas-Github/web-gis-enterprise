@@ -7,6 +7,10 @@ export const createVectorLayer = ({
   id,
   name,
   geojson,
+  visible = true,
+  opacity = 1,
+  zIndex = 1000,
+  metadata = {},
 }) => {
 
   return createLayer({
@@ -18,11 +22,13 @@ export const createVectorLayer = ({
     type:
       LAYER_TYPES.VECTOR,
 
-    visible: true,
+    visible,
 
-    opacity: 1,
+    opacity,
 
-    zIndex: 1000,
+    zIndex,
+
+    metadata,
 
     source: {
       features: geojson,
