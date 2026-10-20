@@ -1,13 +1,28 @@
-import { TileLayer } from 'react-leaflet'
+import {
+  TileLayer,
+} from 'react-leaflet'
 
-const TileRenderer = ({ layer }) => {
-  if (!layer.visible) return null
+const TileRenderer = ({
+  layer,
+}) => {
+
+  if (!layer.visible) {
+    return null
+  }
 
   return (
     <TileLayer
-      url={layer.source.url}
-      opacity={layer.source.opacity}
-      zIndex={layer.source.zIndex}
+      url={
+        layer.source.url
+      }
+
+      opacity={
+        layer.opacity
+      }
+
+      zIndex={
+        layer.zIndex
+      }
     />
   )
 }

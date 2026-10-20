@@ -1,6 +1,6 @@
 import {
   useEffect,
-  
+
 } from 'react'
 
 import { useLayers } from '@/store/layers/hooks/useLayers'
@@ -16,7 +16,7 @@ import LayerPanel from '@/gis/components/layers/LayerPanel'
 
 import {
   loadLayerState,
- 
+
 } from '@/gis/services/persistence/layerPersistence'
 
 import SelectionControls
@@ -38,16 +38,6 @@ import {
 import FeatureInspector
   from '@/gis/selection/components/FeatureInspector'
 
-// import {
-//   GIS_ACTIONS
-// }
-// from '@/store/gis/gisActions'  
-
-// import {
-//   useGIS,
-// }
-// from '@/store/gis/hooks/useGIS'
-
 import EditingPanel
   from '@/gis/selection/components/EditingPanel'
 
@@ -67,12 +57,12 @@ function App() {
 
 
   const {
-  
+
     dispatch,
   } = useLayers()
 
 
- 
+
 
   useEffect(() => {
 
@@ -91,19 +81,19 @@ function App() {
         initialLayers,
     })
 
-    
+
 
   }, [dispatch])
 
 
-  
+
 
 
 
   return (
     <div className="app-layout">
       <GISSystemManager />
-      
+
       <LayerPanel />
       <h1>Web GIS Enterprise</h1>
 

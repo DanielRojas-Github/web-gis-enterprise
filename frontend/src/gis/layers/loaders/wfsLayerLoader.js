@@ -8,6 +8,11 @@ import {
 }
 from '../factories/vectorLayerFactory'
 
+import {
+  SOURCE_TYPES,
+}
+from '../registry/sourceTypes'
+
 export const loadWFSLayer =
   async (layer) => {
 
@@ -34,6 +39,12 @@ export const loadWFSLayer =
       name,
 
       geojson,
+
+      source: {
+        ...source,
+        type:
+          SOURCE_TYPES.WFS,
+      },
 
       visible,
 

@@ -5,5 +5,4 @@ export const layerInitialState = {
 
   loadingLayers: false,
 
-  layerErrors: null,
 }

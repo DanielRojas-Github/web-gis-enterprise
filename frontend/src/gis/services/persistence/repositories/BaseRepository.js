@@ -2,6 +2,8 @@ export class BaseRepository {
 
   async create(data) {
 
+    void data
+
     throw new Error(
       'create() not implemented'
     )
@@ -10,6 +12,8 @@ export class BaseRepository {
 
   async update(data) {
 
+    void data
+
     throw new Error(
       'update() not implemented'
     )
@@ -17,6 +21,8 @@ export class BaseRepository {
   }
 
   async find(id) {
+
+    void id
 
     throw new Error(
       'find() not implemented'
@@ -33,6 +39,8 @@ export class BaseRepository {
   }
 
   async delete(id) {
+
+    void id
 
     throw new Error(
       'delete() not implemented'

@@ -3,9 +3,7 @@ import {
   LAYER_ACTIONS,
 } from '../layerActions'
 import { useCallback } from 'react'
-import {
-  LAYER_TYPES,
-} from '@/gis/layers/registry/layerSchema'
+
 
 import {
   findLayerById,
@@ -15,10 +13,95 @@ import {
   loadWFSLayer,
 } from '@/gis/layers/loaders/wfsLayerLoader'
 
+import {
+  SOURCE_TYPES,
+}
+  from '@/gis/layers/registry/sourceTypes'
+
+const isUnloadedWFSLayer =
+  layer =>
+    layer?.source?.type ===
+    SOURCE_TYPES.WFS &&
+    !layer?.source?.features
 
 export const useLayers = () => {
   const { state, dispatch } =
     useLayerContext()
+
+  const loadWFSIntoStore =
+    async (layer) => {
+
+      try {
+
+        dispatch({
+          type:
+            LAYER_ACTIONS.UPDATE_LAYER,
+
+          payload: {
+            id:
+              layer.id,
+
+            updates: {
+              loading: true,
+              error: null,
+            },
+          },
+        })
+
+        const loadedLayer =
+          await loadWFSLayer(
+            layer
+          )
+
+        dispatch({
+          type:
+            LAYER_ACTIONS.UPDATE_LAYER,
+
+          payload: {
+            id:
+              layer.id,
+
+            updates: {
+              ...loadedLayer,
+
+              visible: true,
+              loading: false,
+              error: null,
+            },
+          },
+        })
+
+        return true
+
+      } catch (error) {
+
+        console.error(
+          'WFS layer loading failed:',
+          layer.id,
+          error
+        )
+
+        dispatch({
+          type:
+            LAYER_ACTIONS.UPDATE_LAYER,
+
+          payload: {
+            id:
+              layer.id,
+
+            updates: {
+              loading: false,
+
+              error:
+                error.message ||
+                'Failed to load WFS layer',
+            },
+          },
+        })
+
+        return false
+      }
+    }
   const toggleLayer =
     async (layerId) => {
 
@@ -33,83 +116,15 @@ export const useLayers = () => {
       }
 
       if (
-        layer.type ===
-        LAYER_TYPES.WFS &&
+        isUnloadedWFSLayer(layer) &&
         !layer.visible
       ) {
 
-        try {
+        await loadWFSIntoStore(
+          layer
+        )
 
-          dispatch({
-            type:
-              LAYER_ACTIONS
-                .UPDATE_LAYER,
-
-            payload: {
-              id:
-                layer.id,
-
-              updates: {
-                loading: true,
-                error: null,
-              },
-            },
-          })
-
-          const loadedLayer =
-            await loadWFSLayer(
-              layer
-            )
-
-          dispatch({
-            type:
-              LAYER_ACTIONS
-                .UPDATE_LAYER,
-
-            payload: {
-              id:
-                layer.id,
-
-              updates: {
-                ...loadedLayer,
-
-                visible: true,
-                loading: false,
-                error: null,
-              },
-            },
-          })
-
-          return
-
-        } catch (error) {
-
-          console.error(
-            'WFS layer loading failed:',
-            error
-          )
-
-          dispatch({
-            type:
-              LAYER_ACTIONS
-                .UPDATE_LAYER,
-
-            payload: {
-              id:
-                layer.id,
-
-              updates: {
-                loading: false,
-
-                error:
-                  error.message ||
-                  'Failed to load WFS layer',
-              },
-            },
-          })
-
-          return
-        }
+        return
       }
 
       dispatch({
@@ -149,25 +164,40 @@ export const useLayers = () => {
       payload: layerId,
     })
 
-const toggleGroup =
-  async (groupId) => {
+  const toggleGroup =
+    async (groupId) => {
 
-    const group =
-      findLayerById(
-        state.layers,
-        groupId
-      )
+      const group =
+        findLayerById(
+          state.layers,
+          groupId
+        )
 
-    if (!group) {
-      return
-    }
+      if (!group) {
+        return
+      }
 
-    const newVisibility =
-      !group.visible
+      const newVisibility =
+        !group.visible
 
-    // Apagar un grupo no necesita
-    // ninguna carga remota.
-    if (!newVisibility) {
+      if (newVisibility) {
+
+        for (
+          const layer
+          of group.children || []
+        ) {
+
+          if (
+            layer.visible &&
+            isUnloadedWFSLayer(layer)
+          ) {
+
+            await loadWFSIntoStore(
+              layer
+            )
+          }
+        }
+      }
 
       dispatch({
         type:
@@ -177,124 +207,7 @@ const toggleGroup =
         payload:
           groupId,
       })
-
-      return
     }
-
-    // Al encender el grupo,
-    // cargamos primero las WFS
-    // todavía no cargadas.
-    for (const layer of group.children) {
-
-      if (
-        layer.type ===
-        LAYER_TYPES.WFS
-      ) {
-
-        try {
-
-          dispatch({
-            type:
-              LAYER_ACTIONS
-                .UPDATE_LAYER,
-
-            payload: {
-              id:
-                layer.id,
-
-              updates: {
-                loading: true,
-                error: null,
-              },
-            },
-          })
-
-          const loadedLayer =
-            await loadWFSLayer(
-              layer
-            )
-
-          dispatch({
-            type:
-              LAYER_ACTIONS
-                .UPDATE_LAYER,
-
-            payload: {
-              id:
-                layer.id,
-
-              updates: {
-                ...loadedLayer,
-
-                visible: true,
-                loading: false,
-                error: null,
-              },
-            },
-          })
-
-        } catch (error) {
-
-          console.error(
-            'WFS layer loading failed:',
-            layer.id,
-            error
-          )
-
-          dispatch({
-            type:
-              LAYER_ACTIONS
-                .UPDATE_LAYER,
-
-            payload: {
-              id:
-                layer.id,
-
-              updates: {
-                loading: false,
-
-                error:
-                  error.message ||
-                  'Failed to load WFS layer',
-              },
-            },
-          })
-        }
-
-        continue
-      }
-
-      dispatch({
-        type:
-          LAYER_ACTIONS
-            .UPDATE_LAYER,
-
-        payload: {
-          id:
-            layer.id,
-
-          updates: {
-            visible: true,
-          },
-        },
-      })
-    }
-
-    dispatch({
-      type:
-        LAYER_ACTIONS
-          .UPDATE_LAYER,
-
-      payload: {
-        id:
-          group.id,
-
-        updates: {
-          visible: true,
-        },
-      },
-    })
-  }
 
   const toggleGroupExpanded = (
     groupId
@@ -397,63 +310,79 @@ const toggleGroup =
           layerId,
       })
 
-  const setLayerSyncError =
-    (
-      layerId,
-      error
-    ) =>
+
+
+  const setLayerSyncError = useCallback(
+  (
+    layerId,
+    error
+  ) =>
+    dispatch({
+      type:
+        LAYER_ACTIONS.SET_LAYER_SYNC_ERROR,
+
+      payload: {
+        layerId,
+        error,
+      },
+    }),
+  [dispatch]
+)
+
+const setLayerSaving = useCallback(
+  (layerId, saving) =>
+    dispatch({
+      type:
+        LAYER_ACTIONS.SET_LAYER_SAVING,
+      payload: {
+        layerId,
+        saving,
+      },
+    }),
+  [dispatch]
+)
+
+const saveLayer = useCallback(
+  async (layerId) => {
+    setLayerSaving(layerId, true)
+
+    try {
+      await new Promise(
+        res => setTimeout(res, 600)
+      )
+
       dispatch({
         type:
-          LAYER_ACTIONS
-            .SET_LAYER_SYNC_ERROR,
-
-        payload: {
+          LAYER_ACTIONS.SAVE_LAYER,
+        payload:
           layerId,
-          error,
-        },
       })
 
-  const setLayerSaving = (layerId, saving) =>
-    dispatch({
-      type: LAYER_ACTIONS.SET_LAYER_SAVING,
-      payload: { layerId, saving },
-    })
+      console.log(
+        'LAYER SAVED:',
+        layerId
+      )
+    } catch (err) {
 
-  const saveLayer = useCallback(
-    async (layerId) => {
-      setLayerSaving(layerId, true)
+      console.error(
+        'LAYER SAVE FAILED:',
+        layerId,
+        err
+      )
 
-      try {
-        await new Promise(
-          res => setTimeout(res, 600)
-        )
-
-        dispatch({
-          type:
-            LAYER_ACTIONS.SAVE_LAYER,
-          payload:
-            layerId,
-        })
-
-        console.log(
-          'LAYER SAVED:',
-          layerId
-        )
-      } catch (err) {
-        console.error(err)
-
-        dispatch({
-          type:
-            LAYER_ACTIONS.SET_LAYER_ERROR,
-          payload: {
-            layerId,
-            error: err.message,
-          },
-        })
-      }
-    },
-    [dispatch]
-  )
+      setLayerSyncError(
+        layerId,
+        err.message ||
+        'Failed to save layer'
+      )
+    }
+  },
+  [
+    dispatch,
+    setLayerSaving,
+    setLayerSyncError,
+  ]
+)
   const updateLayer = (
     layerId,
     updates

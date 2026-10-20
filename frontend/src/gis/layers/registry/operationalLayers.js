@@ -1,41 +1,71 @@
-import { defaultLayerMetadata } from '@/gis/layers/registry/defaultLayerMetadata'
-import { geoserverConfig } from '@/gis/services/geoserver/geoserverConfig'
-import { createLayer, LAYER_TYPES } from './layerSchema'
+import {
+  geoserverConfig,
+}
+  from '@/gis/services/geoserver/geoserverConfig'
+
+import {
+  createLayer,
+  LAYER_TYPES,
+}
+  from './layerSchema'
+
+import {
+  createLayerGroup,
+}
+  from '../factories/layerGroupFactory'
+
+import {
+  SOURCE_TYPES,
+}
+from './sourceTypes'
+
 export const operationalLayers = [
-  {
-    id: 'administrative',
 
-    name: 'Administrative',
 
-    type: LAYER_TYPES.GROUP,
+  createLayerGroup({
 
-    visible: true,
+    id:
+      'administrative',
 
-    expanded: true,
+    name:
+      'Administrative',
+
+    visible:
+      true,
+
+    expanded:
+      true,
 
     children: [
 
-     createLayer( {
-        id: 'departments',
+      createLayer({
 
-        name: 'Departments',
+        id:
+          'departments',
 
-        type: LAYER_TYPES.WMS,
+        name:
+          'Departments',
 
-        visible: true,
+        type:
+          LAYER_TYPES.WMS,
 
-        opacity: 1,
+        visible:
+          true,
 
-        zIndex: 100,
-      source: { 
-        url:
-          'http://localhost:8080/geoserver/wms',
+        opacity:
+          1,
 
-        layers:
-          `${geoserverConfig.workspace}:departments`,
+        zIndex:
+          100,
+
+        source: {
+
+          url:
+            geoserverConfig.wmsUrl,
+
+          layers:
+            `${geoserverConfig.workspace}:departments`,
         },
-
-        ...defaultLayerMetadata,
 
         metadata: {
 
@@ -45,93 +75,116 @@ export const operationalLayers = [
           geometryType:
             'Polygon',
 
-          crs: 'EPSG:4326',
+          crs:
+            'EPSG:4326',
 
-          category: 'administrative',
+          category:
+            'administrative',
 
           keywords: [
             'administrative',
             'boundaries',
           ],
         },
-      
-    }),
-    createLayer({
-  id: 'buildings-wfs',
+      }),
 
-  name: 'Buildings',
+      createLayer({
 
-  type: LAYER_TYPES.WFS,
+        id:
+          'buildings-wfs',
 
-  visible: false,
+        name:
+          'Buildings',
 
-  opacity: 1,
+        type:
+          LAYER_TYPES.VECTOR,
 
-  zIndex: 101,
+        visible:
+          false,
 
-  source: {
-    layerName: 'buildings',
-  },
+        opacity:
+          1,
 
-  ...defaultLayerMetadata,
+        zIndex:
+          101,
 
-  metadata: {
-    attribution:
-      'Buildings Dataset',
+        source: {
 
-    geometryType:
-      'Polygon',
+          type:
+            SOURCE_TYPES.WFS,
 
-    crs:
-      'EPSG:4326',
+          layerName:
+            'buildings',
+        },
 
-    category:
-      'administrative',
+        metadata: {
 
-    keywords: [
-      'buildings',
-      'structures',
+          attribution:
+            'Buildings Dataset',
+
+          geometryType:
+            'Polygon',
+
+          crs:
+            'EPSG:4326',
+
+          category:
+            'administrative',
+
+          keywords: [
+            'buildings',
+            'structures',
+          ],
+        },
+      }),
     ],
-  },
-}),
-    ]
-  },
+  }),
 
-  {
-    id: 'hydrology',
+  createLayerGroup({
 
-    name: 'Hydrology',
+    id:
+      'hydrology',
 
-    type: LAYER_TYPES.GROUP,
+    name:
+      'Hydrology',
 
-    visible: true,
 
-    expanded: true,
+    visible:
+      true,
+
+    expanded:
+      true,
 
     children: [
 
-    createLayer( { 
-        id: 'rivers',
+      createLayer({
 
-        name: 'Rivers',
+        id:
+          'rivers',
 
-        type: LAYER_TYPES.WMS,
+        name:
+          'Rivers',
 
-        visible: true,
+        type:
+          LAYER_TYPES.WMS,
 
-        opacity: 1,
+        visible:
+          true,
 
-        zIndex: 2,
+        opacity:
+          1,
+
+        zIndex:
+          2,
+
         source: {
 
-        url:
-          'http://localhost:8080/geoserver/wms',
+          url:
+            geoserverConfig.wmsUrl,
 
-        layers:
-         `${geoserverConfig.workspace}:rivers`,
+          layers:
+            `${geoserverConfig.workspace}:rivers`,
         },
-
-        ...defaultLayerMetadata,
 
         metadata: {
 
@@ -141,58 +194,65 @@ export const operationalLayers = [
           geometryType:
             'LineString',
 
-          crs: 'EPSG:4326',
+          crs:
+            'EPSG:4326',
 
-          category: 'hydrology',
+          category:
+            'hydrology',
 
           keywords: [
             'hydrology',
             'water',
           ],
         },
-      
-    }),
+      }),
     ],
-  },
+  }),
 
-  {
-    id: 'transportation',
+  createLayerGroup({
+    id:
+      'transportation',
 
-    name: 'Transportation',
+    name:
+      'Transportation',
 
-    type: LAYER_TYPES.GROUP,
 
-    visible: true,
+    visible:
+      true,
 
-    expanded: true,
+    expanded:
+      true,
 
     children: [
 
-    createLayer( 
-      
-      {
-        id: 'roads',
+      createLayer({
 
-        name: 'Roads',
+        id:
+          'roads',
 
-        type: LAYER_TYPES.WMS,
+        name:
+          'Roads',
 
-        visible: true,
+        type:
+          LAYER_TYPES.WMS,
 
-        opacity: 1,
+        visible:
+          true,
 
-        zIndex: 3,
+        opacity:
+          1,
+
+        zIndex:
+          3,
 
         source: {
 
-        url:
-          'http://localhost:8080/geoserver/wms',
+          url:
+            geoserverConfig.wmsUrl,
 
-        layers:
-          `${geoserverConfig.workspace}:roads`,
+          layers:
+            `${geoserverConfig.workspace}:roads`,
         },
-
-        ...defaultLayerMetadata,
 
         metadata: {
 
@@ -202,73 +262,86 @@ export const operationalLayers = [
           geometryType:
             'LineString',
 
-          crs: 'EPSG:4326',
+          crs:
+            'EPSG:4326',
 
-          category: 'transportation',
+          category:
+            'transportation',
 
           keywords: [
             'roads',
             'transport',
           ],
         },
-     
-      
-      },
-    ), 
-    createLayer({
-  id: 'roads-wfs',
+      }),
 
-  name: 'Roads WFS',
+      createLayer({
 
-  type: LAYER_TYPES.WFS,
+        id:
+          'roads-wfs',
 
-  visible: false,
+        name:
+          'Roads WFS',
 
-  opacity: 1,
+        type:
+          LAYER_TYPES.VECTOR,
 
-  zIndex: 4,
+        visible:
+          false,
 
-  source: {
-    layerName: 'roads',
-  },
+        opacity:
+          1,
 
-  ...defaultLayerMetadata,
+        zIndex:
+          4,
 
-  metadata: {
-    attribution:
-      'Transportation Dataset',
+        source: {
 
-    geometryType:
-      'LineString',
+          type:
+            SOURCE_TYPES.WFS,
 
-    crs:
-      'EPSG:4326',
+          layerName:
+            'roads',
+        },
 
-    category:
-      'transportation',
+        metadata: {
 
-    keywords: [
-      'roads',
-      'transport',
-      'wfs',
+          attribution:
+            'Transportation Dataset',
+
+          geometryType:
+            'LineString',
+
+          crs:
+            'EPSG:4326',
+
+          category:
+            'transportation',
+
+          keywords: [
+            'roads',
+            'transport',
+            'wfs',
+          ],
+        },
+      }),
     ],
-  },
-}),
-    ],
-  },
-     {
-  id: 'imported-layers',
+  }),
 
-  name: 'Imported Layers',
+  createLayerGroup({
+    id:
+      'imported-layers',
 
-  type: LAYER_TYPES.GROUP,
-
-  visible: true,
-
-  expanded: true,
-
-  children: [],
-}
+    name:
+      'Imported Layers',
 
 
-]
+    visible:
+      true,
+
+    expanded:
+      true,
+
+    children: [],
+  }),
+];

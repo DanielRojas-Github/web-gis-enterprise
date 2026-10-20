@@ -17,7 +17,7 @@ export const insertNodeIntoGroup =
             ...item,
 
             children: [
-              ...item.children,
+              ...(item.children || []),
 
               node,
             ],
@@ -35,7 +35,7 @@ export const insertNodeIntoGroup =
             children:
               insertNodeIntoGroup(
                 item.children ||
-                  [],
+                [],
 
                 targetGroupId,
 

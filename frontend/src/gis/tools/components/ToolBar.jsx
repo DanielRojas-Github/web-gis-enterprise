@@ -24,7 +24,8 @@ import {
     from
     '@/gis/tools/overlays/draw/drawGeoJSON'
 
-
+import { measureState }
+    from '@/gis/tools/overlays/measure/measureStore'
 
 
 
@@ -64,7 +65,11 @@ const ToolBar = () => {
                 null,
         })
     }
-    const clearMeasurements = () => { dispatch({ type: GIS_ACTIONS.CLEAR_MEASUREMENTS, }) }
+    const clearMeasurements = () => {
+
+    measureState.setPoints([])
+
+}
     const exportGeoJSON = () => {
 
         const geojson =

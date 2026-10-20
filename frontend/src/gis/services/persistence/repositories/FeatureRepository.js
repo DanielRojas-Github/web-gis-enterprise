@@ -12,15 +12,15 @@ export class FeatureRepository
 
   async create(feature) {
 
-    console.log(
-      'CREATE FEATURE'
-    )
+  void feature
 
+  console.log(
+    'CREATE FEATURE'
+  )
 
+  return true
 
-    return true
-
-  }
+}
 
   async update(feature) {
 

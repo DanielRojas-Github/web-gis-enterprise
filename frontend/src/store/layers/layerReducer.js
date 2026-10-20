@@ -43,17 +43,28 @@ export const layerReducer = (
         ],
       }
 
-    case LAYER_ACTIONS.REMOVE_LAYER:
+    case LAYER_ACTIONS.REMOVE_LAYER: {
+
+      const {
+        tree,
+        removedNode,
+      } =
+        removeNodeFromTree(
+          state.layers,
+          action.payload
+        )
+
+      if (!removedNode) {
+        return state
+      }
+
       return {
         ...state,
 
         layers:
-          state.layers.filter(
-            (layer) =>
-              layer.id !==
-              action.payload
-          ),
+          tree,
       }
+    }
 
     case LAYER_ACTIONS.TOGGLE_LAYER:
       return {
@@ -98,35 +109,17 @@ export const layerReducer = (
         ...state,
 
         layers:
-          state.layers.map(
-            (group) => {
-              if (
-                group.id !==
-                action.payload
-              ) {
-                return group
-              }
+          updateLayerTree(
+            state.layers,
 
-              const newVisibility =
-                !group.visible
+            action.payload,
 
-              return {
-                ...group,
+            (group) => ({
+              ...group,
 
-                visible:
-                  newVisibility,
-
-                children:
-                  group.children.map(
-                    (layer) => ({
-                      ...layer,
-
-                      visible:
-                        newVisibility,
-                    })
-                  ),
-              }
-            }
+              visible:
+                !group.visible,
+            })
           ),
       }
     case LAYER_ACTIONS.SET_ACTIVE_LAYER:
@@ -141,13 +134,6 @@ export const layerReducer = (
         ...state,
 
         loadingLayers:
-          action.payload,
-      }
-    case LAYER_ACTIONS.SET_LAYER_ERROR:
-      return {
-        ...state,
-
-        layerErrors:
           action.payload,
       }
     case
@@ -231,28 +217,14 @@ export const layerReducer = (
       return {
         ...state,
 
-        layers: state.layers.map(
-          (group) => {
+        layers:
+          insertNodeIntoGroup(
+            state.layers,
 
-            if (
-              group.id !==
-              action.payload.groupId
-            ) {
+            action.payload.groupId,
 
-              return group
-            }
-
-            return {
-
-              ...group,
-
-              children: [
-                ...group.children,
-                action.payload.layer,
-              ],
-            }
-          }
-        ),
+            action.payload.layer
+          ),
       }
     case LAYER_ACTIONS.UPDATE_FEATURE_IN_LAYER:
 
@@ -263,7 +235,7 @@ export const layerReducer = (
           state.layers,
           action.payload.layerId,
           (layer) => {
-          
+
             const updatedFeatures =
               layer.source.features.features.map(
                 feature => {
@@ -274,12 +246,12 @@ export const layerReducer = (
                 }
 
               )
-        
+
 
             return {
               ...layer,
 
-              dirty: true, 
+              dirty: true,
 
               source: {
                 ...layer.source,
@@ -295,80 +267,104 @@ export const layerReducer = (
         ),
       }
     case LAYER_ACTIONS.MARK_LAYER_DIRTY:
-  return {
-    ...state,
-    layers: updateLayerTree(
-      state.layers,
-      action.payload,
-      layer => {
-        return {
-          ...layer,
-          dirty: true,
-        }
-        
+      return {
+        ...state,
+        layers: updateLayerTree(
+          state.layers,
+          action.payload,
+          layer => {
+            return {
+              ...layer,
+              dirty: true,
+            }
+
+          }
+        ),
       }
-    ),
-  }
-  case LAYER_ACTIONS.SET_LAYER_SYNC_ERROR:
-  return {
-    ...state,
+    case LAYER_ACTIONS.SET_LAYER_SYNC_ERROR:
+      return {
+        ...state,
 
-    layers:
-      updateLayerTree(
-        state.layers,
+        layers:
+          updateLayerTree(
+            state.layers,
 
-        action.payload.layerId,
+            action.payload.layerId,
 
-        (layer) => ({
-          ...layer,
+            (layer) => ({
+              ...layer,
 
-          saving: false,
+              saving: false,
 
-          syncError:
-            action.payload.error,
-        })
-      ),
-  }
-   case LAYER_ACTIONS.CLEAR_LAYER_DIRTY:
-  return {
-    ...state,
-    layers: updateLayerTree(
-      state.layers,
-      action.payload,
-      layer => ({
-        ...layer,
-        dirty: false,
-        saving: false,
-      })
-    ),
-  }
-  case LAYER_ACTIONS.SAVE_LAYER:
-  return {
-    ...state,
-    layers: updateLayerTree(
-      state.layers,
-      action.payload,
-      (layer) => ({
-        ...layer,
-        dirty: false,
-        saving: false,
-        lastSaved: Date.now(),
-        error: null,
-      })
-    ),
-  }
-   case LAYER_ACTIONS.SET_LAYER_SAVING:
-  return {
-    ...state,
-    layers: updateLayerTree(
-      state.layers,
-      action.payload.layerId,
-      (layer) => ({
-        ...layer,
-        saving: action.payload.saving,
-      })
-    ),
-  }
+              syncError:
+                action.payload.error,
+            })
+          ),
+      }
+    case LAYER_ACTIONS.CLEAR_LAYER_DIRTY:
+      return {
+        ...state,
+        layers: updateLayerTree(
+          state.layers,
+          action.payload,
+          layer => ({
+            ...layer,
+            dirty: false,
+            saving: false,
+          })
+        ),
+      }
+    case LAYER_ACTIONS.SAVE_LAYER:
+
+      return {
+        ...state,
+
+        layers:
+          updateLayerTree(
+            state.layers,
+
+            action.payload,
+
+            (layer) => ({
+              ...layer,
+
+              dirty:
+                false,
+
+              saving:
+                false,
+
+              lastSaved:
+                Date.now(),
+
+              syncError:
+                null,
+            })
+          ),
+      }
+    case LAYER_ACTIONS.SET_LAYER_SAVING:
+      return {
+        ...state,
+
+        layers:
+          updateLayerTree(
+            state.layers,
+
+            action.payload.layerId,
+
+            (layer) => ({
+              ...layer,
+
+              saving:
+                action.payload.saving,
+
+              syncError:
+                action.payload.saving
+                  ? null
+                  : layer.syncError,
+            })
+          ),
+      }
 
     default:
       return state

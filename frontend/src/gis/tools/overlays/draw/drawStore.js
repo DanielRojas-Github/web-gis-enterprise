@@ -1,142 +1,89 @@
 
-import {
-  saveFeatures,
+import { saveFeatures } from '@/gis/services/persistence/services/featureStorageService'
+
+const notifyListeners = (listeners) => {
+  listeners.forEach((listener) => listener())
 }
-from '@/gis/services/persistence/services/featureStorageService'
 
 export const drawState = {
-    
+  type: 'polyline',
+  finished: false,
+  points: [],
+  features: [],
+  listeners: [],
 
-    type: 'polyline',
+  setType(type) {
+    this.type = type
+    this.points = []
+    this.finished = false
 
-    finished: false,
+    notifyListeners(this.listeners)
+  },
 
-    points: [],
+  setFinished(value) {
+    this.finished = value
 
-    features: [],
+    notifyListeners(this.listeners)
+  },
 
+  setPoints(points) {
+    this.points = points
 
-    listeners: [],
+    notifyListeners(this.listeners)
+  },
 
+  clear() {
+    this.points = []
+    this.finished = false
 
-    setType(type) {
+    notifyListeners(this.listeners)
+  },
 
-        this.type = type
+  subscribe(listener) {
+    this.listeners.push(listener)
 
-        this.points = []
-
-        this.finished = false
-
-        this.listeners.forEach(
-            listener => listener()
-        )
-    },
-
-    setFinished(value) {
-
-        this.finished = value
-
-        this.listeners.forEach(
-            listener => listener()
-        )
-    },
-
-    setPoints(points) {
-
-        this.points = points
-
-        this.listeners.forEach(
-            listener => listener()
-        )
-    },
-
-    clear() {
-
-        this.points = []
-
-        this.finished = false
-
-        this.listeners.forEach(
-            listener => listener()
-        )
-    },
-
-    subscribe(listener) {
-
-        this.listeners.push(listener)
-
-        return () => {
-
-            this.listeners =
-                this.listeners.filter(
-                    l => l !== listener
-                )
-        }
-    },
+    return () => {
+      this.listeners = this.listeners.filter(
+        (currentListener) => currentListener !== listener
+      )
+    }
+  },
 
   addFeature(feature) {
+    this.features = [...this.features, feature]
 
-  
+    saveFeatures(this.features)
 
-  this.features.push(feature)
-
-  saveFeatures(
-    this.features
-  )
-
-  this.listeners.forEach(
-    listener => listener()
-  )
- 
-},
+    notifyListeners(this.listeners)
+  },
 
   removeFeature(id) {
-
-  this.features =
-    this.features.filter(
-      feature =>
-        feature.id !== id
+    this.features = this.features.filter(
+      (feature) => feature.id !== id
     )
 
-  saveFeatures(
-    this.features
-  )
+    saveFeatures(this.features)
 
-  this.listeners.forEach(
-    listener => listener()
-  )
-},
+    notifyListeners(this.listeners)
+  },
 
   updateFeature(updatedFeature) {
-
-  this.features =
-    this.features.map(
-      feature =>
-        feature.id ===
-        updatedFeature.id
-          ? updatedFeature
-          : feature
+    this.features = this.features.map((feature) =>
+      feature.id === updatedFeature.id
+        ? updatedFeature
+        : feature
     )
 
-  saveFeatures(
-    this.features
-  )
+    saveFeatures(this.features)
 
-  this.listeners.forEach(
-    listener => listener()
-  )
-},
+    notifyListeners(this.listeners)
+  },
 
   setFeatures(features) {
+    this.features = features
 
-  this.features = features
+    saveFeatures(this.features)
 
-  saveFeatures(
-    this.features
-  )
-
-  this.listeners.forEach(
-    listener => listener()
-  )
-},
+    notifyListeners(this.listeners)
+  },
 }

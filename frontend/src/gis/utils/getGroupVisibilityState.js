@@ -1,8 +1,7 @@
 export const getGroupVisibilityState =
   (group) => {
 
-    const visibility =
-      []
+    const visibility = []
 
     const collectVisibility =
       (items) => {
@@ -16,8 +15,7 @@ export const getGroupVisibilityState =
             ) {
 
               collectVisibility(
-                item.children ||
-                  []
+                item.children || []
               )
 
             } else {
@@ -34,6 +32,21 @@ export const getGroupVisibilityState =
       group.children || []
     )
 
+    if (
+      visibility.length === 0
+    ) {
+
+      return {
+        checked:
+          Boolean(
+            group.visible
+          ),
+
+        indeterminate:
+          false,
+      }
+    }
+
     const allVisible =
       visibility.every(
         Boolean
@@ -41,15 +54,24 @@ export const getGroupVisibilityState =
 
     const noneVisible =
       visibility.every(
-        (v) => !v
+        (visible) =>
+          !visible
       )
+
+    const mixedVisibility =
+      !allVisible &&
+      !noneVisible
 
     return {
       checked:
-        allVisible,
+        Boolean(
+          group.visible
+        ),
 
       indeterminate:
-        !allVisible &&
-        !noneVisible,
+        Boolean(
+          group.visible
+        ) &&
+        mixedVisibility,
     }
   }

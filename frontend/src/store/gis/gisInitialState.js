@@ -5,16 +5,16 @@ export const gisInitialState = {
   selectedFeature: null,
 
   selectedFeatures: [],
-  
+
   editingFeature: null,
-  
+
   isEditing: false,
-  
+
   mapCenter: [
     -17.7833,
     -63.1821,
   ]
-  
+
   ,
 
   zoom: 6,
@@ -29,8 +29,6 @@ export const gisInitialState = {
 
   drawMode: false,
 
-  measurements: [],
-
   filters: {},
 
   visibleLayers: [],
@@ -39,5 +37,5 @@ export const gisInitialState = {
     role: 'viewer',
   },
   autosave: true,
-autosaveInterval: 5000, // 5 segundos
+  autosaveInterval: 5000, // 5 segundos
 }

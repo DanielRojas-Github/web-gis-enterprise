@@ -1,6 +1,9 @@
 export class BaseStorageProvider {
 
-  async create(_key, _data) {
+  async create(key, data) {
+
+    void key
+    void data
 
     throw new Error(
       'create() not implemented'
@@ -8,7 +11,10 @@ export class BaseStorageProvider {
 
   }
 
-  async update(_key, _data) {
+  async update(key, data) {
+
+    void key
+    void data
 
     throw new Error(
       'update() not implemented'
@@ -16,7 +22,9 @@ export class BaseStorageProvider {
 
   }
 
-  async delete(_key) {
+  async delete(key) {
+
+    void key
 
     throw new Error(
       'delete() not implemented'
@@ -24,7 +32,9 @@ export class BaseStorageProvider {
 
   }
 
-  async load(_key) {
+  async load(key) {
+
+    void key
 
     throw new Error(
       'load() not implemented'

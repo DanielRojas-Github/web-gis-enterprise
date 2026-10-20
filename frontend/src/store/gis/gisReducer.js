@@ -56,53 +56,32 @@ export const gisReducer = (state, action) => {
         visibleLayers: action.payload,
       }
     case GIS_ACTIONS.SET_FILTERS:
-  return {
-    ...state,
+      return {
+        ...state,
 
-    filters:
-      action.payload,
-  }
-
-  case GIS_ACTIONS.ADD_MEASUREMENT_POINT:
-  return {
-    ...state,
-
-    measurements: [
-      ...state.measurements,// Keep existing points
-
-      action.payload, //
-    ],
-  }
-
-case GIS_ACTIONS.CLEAR_MEASUREMENTS:
-
-  return {
-    ...state,
-
-    measurements: [], // Clear all measurement points
-  }
+        filters:
+          action.payload,
+      }
+    case GIS_ACTIONS.SET_EDITING:
 
 
-  case GIS_ACTIONS.SET_EDITING:
-  
+      return {
 
-  return {
+        ...state,
 
-    ...state,
+        isEditing:
+          action.payload,
+      }
+    case GIS_ACTIONS.SET_EDITING_FEATURE:
 
-    isEditing:
-      action.payload,
-  }
-  case GIS_ACTIONS.SET_EDITING_FEATURE:
+      return {
 
-  return {
+        ...state,
 
-    ...state,
+        editingFeature:
+          action.payload,
+      }
 
-    editingFeature:
-      action.payload,
-  }
-  
     default:
       return state
   }

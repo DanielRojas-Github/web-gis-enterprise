@@ -7,9 +7,6 @@ import {
   useLayers,
 } from '@/store/layers/hooks/useLayers'
 
-// import {
-//   LAYER_ACTIONS,
-// } from '@/store/layers/layerActions'
 
 import {
   getGroupVisibilityState,
@@ -60,100 +57,100 @@ const LayerGroup = ({
       if (group.id) {
         checkboxRef.current.indeterminate = visibilityState.indeterminate
       }
-    } 
-  }, [visibilityState .indeterminate])   
+    }
+  }, [group.id, visibilityState.indeterminate])
 
-return (
-  <div className="layer-group">
+  return (
+    <div className="layer-group">
 
-    <div className="layer-group-header">
+      <div className="layer-group-header">
 
-      <div
-        className="
+        <div
+          className="
             layer-group-title
           "
 
-        onClick={() =>
-          toggleGroupExpanded(
-            group.id
-          )
-        }
-      >
-        {group.expanded
-          ? '▼'
-          : '▶'}{' '}
+          onClick={() =>
+            toggleGroupExpanded(
+              group.id
+            )
+          }
+        >
+          {group.expanded
+            ? '▼'
+            : '▶'}{' '}
 
-        {group.name}
+          {group.name}
+        </div>
+
+        <input
+          ref={checkboxRef}
+
+          type="checkbox"
+
+          checked={
+            visibilityState.checked
+          }
+
+          onChange={
+            handleToggleGroup
+          }
+        />
+
       </div>
 
-      <input
-        ref={checkboxRef}
-
-        type="checkbox"
-
-        checked={
-          visibilityState.checked
-        }
-
-        onChange={
-          handleToggleGroup
-        }
+      <LayerDropZone
+        groupId={group.id}
       />
 
-    </div>
+      {group.expanded && (
 
-    <LayerDropZone
-      groupId={group.id}
-    />
-
-    {group.expanded && (
-
-      <div
-        className="
+        <div
+          className="
             layer-group-children
           "
-      >
+        >
 
-        {group.children.map(
-          (child) => {
+          {group.children.map(
+            (child) => {
 
-            if (
-              child.type ===
-              LAYER_TYPES.GROUP
-            ) {
+              if (
+                child.type ===
+                LAYER_TYPES.GROUP
+              ) {
+
+                return (
+                  <LayerGroup
+                    key={
+                      child.id
+                    }
+
+                    group={
+                      child
+                    }
+                  />
+                )
+              }
 
               return (
-                <LayerGroup
+                <DraggableLayerItem
                   key={
                     child.id
                   }
 
-                  group={
+                  layer={
                     child
                   }
                 />
               )
             }
+          )}
 
-            return (
-              <DraggableLayerItem
-                key={
-                  child.id
-                }
+        </div>
+      )}
 
-                layer={
-                  child
-                }
-              />
-            )
-          }
-        )}
-
-      </div>
-    )}
-
-  </div>
-)
+    </div>
+  )
 }
 
 export default LayerGroup

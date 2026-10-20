@@ -11,8 +11,6 @@ import LayerRenderer
 import { useMapInteractions }
   from '@/gis/interactions/hooks/useMapInteractions'
 
-// import FeaturePopup
-// from '@/gis/popups/FeaturePopup'
 
 import { flattenLayers }
   from '@/gis/utils/flattenLayers'
@@ -39,22 +37,6 @@ import {
 
 import SelectionRenderer
   from '@/gis/selection/renderers/SelectionRenderer'
-
-//import MapClickHandler
-//from '@/gis/interactions/components/MapClickHandler'
-
-// import MapClickMarker
-//   from '@/gis/interactions/renderers/MapClickMarker'
-
-// import MeasurementRenderer
-// from '@/gis/measurements/renderers/MeasurementRenderer'
-
-// import {
-//   TOOL_TYPES,
-// } from '@/gis/tools/toolTypes'
-
-import MapEventHandler
-  from '@/gis/interactions/events/MapEventHandler'
 
 import MeasureOverlay
   from '@/gis/tools/overlays/measure/MeasureOverlay'
@@ -117,6 +99,7 @@ const MapView = () => {
     ).filter(
       (layer) => {
 
+
         const inScale =
           isLayerInScale(
             layer,
@@ -164,7 +147,6 @@ const MapView = () => {
 
         <MapInteractions />
 
-        <MapEventHandler />
 
         <MeasureOverlay />
 
@@ -172,14 +154,6 @@ const MapView = () => {
 
         <EditVerticesOverlay />
 
-        {/* <MapClickHandler /> 
-      <MapClickMarker /> 
-      <FeaturePopup /> */}
-
-
-
-
-        {/* <MeasurementRenderer /> */}
         {visibleLayers.map((layer) => (
           <LayerRenderer
             key={layer.id}
@@ -188,9 +162,7 @@ const MapView = () => {
         ))}
       </MapContainer>
 
-      <SelectionRenderer
-        feature={gisState.selectedFeature}
-      />
+      <SelectionRenderer />
       <EditHistoryControls />
       <GeoJSONImportControl />
       <WFSLoadButton />
