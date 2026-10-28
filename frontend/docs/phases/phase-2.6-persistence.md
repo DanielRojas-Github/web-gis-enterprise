@@ -514,9 +514,10 @@ La Fase 2.6 establece la infraestructura arquitectónica del motor de persistenc
 
 ### Funcionalidades y validaciones pendientes
 
-- [ ] Completar y verificar las operaciones CRUD individuales de `LayerRepository` y `FeatureRepository`.
+- [x] CRUD local de `LayerRepository` implementado por id y con validación de duplicados/entidades inexistentes en el commit `fb669fd`; falta cobertura automatizada.
+- [ ] Completar y verificar las operaciones CRUD individuales de `FeatureRepository`.
 - [ ] Comprobar que los adaptadores informen del resultado real de la persistencia.
-- [ ] Implementar y probar la sincronización remota real en `GeoServerSyncAdapter`.
+- [ ] Implementar y probar la sincronización remota real en `GeoServerSyncAdapter` (el adaptador ahora falla explícitamente en lugar de simular éxito; cambio pendiente de commit).
 - [ ] Añadir pruebas automatizadas con aserciones para persistencia, errores y reintentos.
 - [ ] Validar el ciclo de inicio y detención del motor, incluidos los escenarios de reinicialización.
 - [ ] Verificar el comportamiento del procesamiento de la cola en condiciones de error y recuperación de conexión.
@@ -525,11 +526,11 @@ Las casillas de componentes existentes documentan la presencia de la infraestruc
 
 ## 16. Resultado
 
-La Fase 2.6 proporciona una base arquitectónica desacoplada para gestionar operaciones de persistencia mediante una cola, un motor de ejecución, adaptadores, repositorios y providers.
+La Fase 2.6 proporciona una base arquitectónica desacoplada para gestionar operaciones de persistencia mediante una cola, un motor de ejecución, adaptadores, repositorios y providers. El commit `fb669fd` posterior a esta documentación completa el CRUD local de capas, pero no demuestra persistencia remota ni cubre por sí mismo las operaciones de features.
 
 El almacenamiento local del estado de capas está conectado mediante `LayerRepository` y `LocalStorageProvider`. No obstante, las limitaciones descritas en esta documentación impiden considerar completas todas las operaciones CRUD o la sincronización remota.
 
-Esta infraestructura debe entenderse como una base funcional en evolución. La siguiente mejora de persistencia debe priorizar la integridad de las operaciones, la validación de resultados y las pruebas automatizadas, sin confundir estas tareas con las integraciones GIS que ya existen en otras partes del proyecto.
+Esta infraestructura debe entenderse como una base funcional en evolución. La siguiente mejora de persistencia debe priorizar la verificación automatizada, la durabilidad de la cola y el contrato de escritura remota, sin confundir estas tareas con las integraciones GIS de lectura WFS que ya existen en otras partes del proyecto.
 
 ## 17. Continuidad y trabajo pendiente
 

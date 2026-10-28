@@ -13,6 +13,25 @@ import morgan
 import apiRoutes
   from "./routes/apiRoutes.js";
 
+import authRoutes
+  from "./routes/authRoutes.js";
+
+import {
+  createAuthSessionMiddleware,
+} from "./middleware/authSession.js";
+
+import {
+  requireAuthentication,
+} from "./middleware/requireAuthentication.js";
+
+import {
+  requireGISReadRole,
+} from "./middleware/requireGISReadRole.js";
+
+import {
+  env,
+} from "./config/env.js";
+
 import {
   errorHandler,
 } from "./middleware/errorHandler.js";
@@ -36,10 +55,28 @@ morgan.token(
     request.requestId
 );
 
-
-app.use(
-  cors()
+morgan.token(
+  "safe-url",
+  (request) =>
+    request.originalUrl.split("?")[0]
 );
+
+
+app.set("trust proxy", env.trustProxy);
+
+app.use(cors({
+  origin(origin, callback) {
+    if (
+      !origin ||
+      env.corsAllowedOrigins.includes(origin)
+    ) {
+      return callback(null, true);
+    }
+
+    return callback(null, false);
+  },
+  credentials: true,
+}));
 
 app.use(
   helmet()
@@ -51,12 +88,16 @@ app.use(
 
 app.use(
   morgan(
-    ":request-id :method :url :status :response-time ms"
+    ":request-id :method :safe-url :status :response-time ms"
   )
 );
 
 app.use(
   express.json()
+);
+
+app.use(
+  createAuthSessionMiddleware()
 );
 
 
@@ -77,7 +118,14 @@ app.get(
 
 
 app.use(
+  "/api/auth",
+  authRoutes
+);
+
+app.use(
   "/api",
+  requireAuthentication,
+  requireGISReadRole,
   apiRoutes
 );
 

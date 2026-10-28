@@ -1,7 +1,7 @@
-import { Outlet } from 'react-rouFr-dom'
+import { Outlet } from 'react-router-dom'
 
-import Sidebar from '@components/layout/Sidebar/Sidebar'
-import Navbar from '@components/layout/Navbar/Navbar'
+import Sidebar from '../gis/components/layout/Sidebar/Sidebar'
+import Navbar from '../gis/components/layout/Navbar/Navbar'
 
 function DashboardLayout() {
   return (

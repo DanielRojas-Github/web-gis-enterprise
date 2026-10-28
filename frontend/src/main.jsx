@@ -12,7 +12,7 @@ import LayerProvider from '@/store/layers/LayerProvider'
 
 import { registerTools } from '@/gis/tools/registerTools'
 
-import App from './App'
+import AppRouter from './app/router/AppRouter'
 
 registerTools()
 
@@ -20,7 +20,7 @@ createRoot(document.getElementById('root')).render(
   <StrictMode>
     <GISProvider>
       <LayerProvider>
-        <App />
+        <AppRouter />
       </LayerProvider>
     </GISProvider>
   </StrictMode>

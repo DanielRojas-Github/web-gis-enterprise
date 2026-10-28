@@ -1,0 +1,109 @@
+{
+  "realm": "web-gis",
+  "enabled": true,
+  "displayName": "Web GIS Enterprise Demo",
+  "registrationAllowed": false,
+  "loginWithEmailAllowed": true,
+  "duplicateEmailsAllowed": false,
+  "roles": {
+    "realm": [
+      {
+        "name": "gis-reader",
+        "description": "Can view GIS data"
+      },
+      {
+        "name": "gis-editor",
+        "description": "Can view GIS data and edit when editing endpoints are enabled"
+      },
+      {
+        "name": "gis-admin",
+        "description": "Can view GIS data and administer the application"
+      }
+    ]
+  },
+  "clients": [
+    {
+      "clientId": "web-gis-backend",
+      "name": "Web GIS Enterprise local backend",
+      "enabled": true,
+      "protocol": "openid-connect",
+      "publicClient": false,
+      "clientAuthenticatorType": "client-secret",
+      "secret": "${WEBGIS_OIDC_CLIENT_SECRET}",
+      "standardFlowEnabled": true,
+      "implicitFlowEnabled": false,
+      "directAccessGrantsEnabled": false,
+      "serviceAccountsEnabled": false,
+      "redirectUris": [
+        "http://localhost:3000/api/auth/callback"
+      ],
+      "webOrigins": [
+        "http://localhost:5173"
+      ],
+      "defaultClientScopes": [
+        "web-origins",
+        "profile",
+        "email",
+        "roles"
+      ],
+      "protocolMappers": [
+        {
+          "name": "GIS realm roles in ID token",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-usermodel-realm-role-mapper",
+          "consentRequired": false,
+          "config": {
+            "multivalued": "true",
+            "userinfo.token.claim": "true",
+            "id.token.claim": "true",
+            "access.token.claim": "true",
+            "claim.name": "realm_access.roles",
+            "jsonType.label": "String"
+          }
+        }
+      ],
+      "attributes": {
+        "pkce.code.challenge.method": "S256",
+        "post.logout.redirect.uris": "http://localhost:5173/login?logged_out=1"
+      }
+    }
+  ],
+  "users": [
+    {
+      "username": "demo-viewer",
+      "enabled": true,
+      "email": "demo-viewer@example.local",
+      "emailVerified": true,
+      "firstName": "Demo",
+      "lastName": "Viewer",
+      "credentials": [
+        {
+          "type": "password",
+          "value": "viewer-demo-only",
+          "temporary": false
+        }
+      ],
+      "realmRoles": [
+        "gis-reader"
+      ]
+    },
+    {
+      "username": "demo-editor",
+      "enabled": true,
+      "email": "demo-editor@example.local",
+      "emailVerified": true,
+      "firstName": "Demo",
+      "lastName": "Editor",
+      "credentials": [
+        {
+          "type": "password",
+          "value": "editor-demo-only",
+          "temporary": false
+        }
+      ],
+      "realmRoles": [
+        "gis-editor"
+      ]
+    }
+  ]
+}

@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
 
-import { ROUTES } from '@constants/routes'
+import { ROUTES } from '@/shared/constants/routes'
 
 function Sidebar() {
   return (

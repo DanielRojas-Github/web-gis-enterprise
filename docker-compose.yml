@@ -1,5 +1,20 @@
 services:
 
+  keycloak:
+    image: quay.io/keycloak/keycloak:26.8.1
+    container_name: gis_keycloak
+    command:
+      - start-dev
+      - --import-realm
+    environment:
+      KC_BOOTSTRAP_ADMIN_USERNAME: ${KEYCLOAK_ADMIN_USERNAME:-admin}
+      KC_BOOTSTRAP_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD:-local-only-admin-password}
+      WEBGIS_OIDC_CLIENT_SECRET: ${WEBGIS_OIDC_CLIENT_SECRET:-webgis-local-client-secret}
+    ports:
+      - "127.0.0.1:8081:8080"
+    volumes:
+      - ./docker/keycloak/realm:/opt/keycloak/data/import:ro
+
   postgres:
     image: postgis/postgis:16-3.4
     container_name: gis_postgres

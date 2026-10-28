@@ -1,6 +1,6 @@
 # Phase 3.11 — Layer/WFS Hardening & Technical Debt
 
-**Status:** Validation completed; scope reviewed
+**Status:** Historical phase record; final completion status requires reconciliation with subsequent commits and validation evidence
 **Area:** Frontend GIS architecture, layer management, drawing, interactions and persistence
 
 ## 1. Objective
@@ -91,6 +91,6 @@ The phase may be marked complete once:
 
 ## 7. Git record
 
-**Commit:** To be recorded after the final staging review.
+At the time this note was written, final staging and commit verification were pending. Subsequent project history includes commits `a08fa03` and `fb669fd`; the latter changes persistence and layer state behavior. This document is retained as a historical scope note and must not be used as the current completion status for those later changes.
 
-**Final status:** Pending commit and scope verification.
+**Current phase status:** Requires reconciliation against the relevant commits and validation evidence. The production-readiness roadmap is maintained in [`docs/plan-recuperacion-rectificacion-produccion.md`](../../../docs/plan-recuperacion-rectificacion-produccion.md).

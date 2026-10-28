@@ -29,4 +29,25 @@ INVALID_GEOSERVER_PASSWORD:
 INVALID_GEOSERVER_TIMEOUT:
   "GEOSERVER_TIMEOUT must be an integer greater than 0",
 
+  INVALID_OIDC_CONFIGURATION:
+    "OIDC_ISSUER, OIDC_CLIENT_ID, OIDC_CLIENT_SECRET, OIDC_REDIRECT_URI, and SESSION_SECRET must be configured together",
+
+  INVALID_OIDC_ISSUER:
+    "OIDC_ISSUER must be a valid HTTPS URL",
+
+  INVALID_OIDC_REDIRECT_URI:
+    "OIDC_REDIRECT_URI must be a valid HTTPS URL",
+
+  INVALID_SESSION_SECRET:
+    "SESSION_SECRET must contain at least 32 characters",
+
+  INVALID_CORS_ORIGINS:
+    "CORS_ALLOWED_ORIGINS must contain one or more valid origins in production",
+
+  INVALID_COOKIE_SAME_SITE:
+    "SESSION_COOKIE_SAME_SITE must be lax, strict, or none",
+
+  INVALID_RUN_MIGRATIONS_ON_START:
+    "RUN_MIGRATIONS_ON_START must be true or false",
+
 };

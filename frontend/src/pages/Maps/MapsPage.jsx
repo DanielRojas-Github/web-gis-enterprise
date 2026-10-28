@@ -1,4 +1,4 @@
-import MapView from '@components/map/MapView/MapView'
+import MapView from '@/gis/components/map/MapView'
 
 function MapsPage() {
   return (
