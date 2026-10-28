@@ -1,5 +1,6 @@
 import {
   useEffect,
+  useRef,
 
 } from 'react'
 
@@ -42,6 +43,14 @@ import {
   mergeLayerTrees,
 } from '@/gis/utils/mergeLayerTrees'
 
+import {
+  findLayerById,
+} from '@/gis/utils/findLayerById'
+
+import {
+  loadApiLayer,
+} from '@/gis/layers/loaders/apiLayerLoader'
+
 import EditingPanel
   from '@/gis/selection/components/EditingPanel'
 
@@ -62,7 +71,10 @@ function App() {
   const {
 
     dispatch,
+    layers,
   } = useLayers()
+
+  const publicFacilitiesLoadStarted = useRef(false)
 
 
 
@@ -91,6 +103,60 @@ function App() {
 
 
   }, [dispatch])
+
+  useEffect(() => {
+    const publicFacilitiesLayer = findLayerById(
+      layers,
+      'public-facilities'
+    )
+
+    if (!publicFacilitiesLayer || publicFacilitiesLoadStarted.current) {
+      return
+    }
+
+    publicFacilitiesLoadStarted.current = true
+
+    dispatch({
+      type: LAYER_ACTIONS.UPDATE_LAYER,
+      payload: {
+        id: 'public-facilities',
+        updates: {
+          visible: true,
+          loading: true,
+          error: null,
+        },
+      },
+    })
+
+    loadApiLayer(publicFacilitiesLayer)
+      .then((loadedLayer) => {
+        dispatch({
+          type: LAYER_ACTIONS.UPDATE_LAYER,
+          payload: {
+            id: 'public-facilities',
+            updates: {
+              ...loadedLayer,
+              visible: true,
+              loading: false,
+              error: null,
+            },
+          },
+        })
+      })
+      .catch((error) => {
+        dispatch({
+          type: LAYER_ACTIONS.UPDATE_LAYER,
+          payload: {
+            id: 'public-facilities',
+            updates: {
+              visible: true,
+              loading: false,
+              error: error.message || 'Failed to load public facilities',
+            },
+          },
+        })
+      })
+  }, [dispatch, layers])
 
 
 

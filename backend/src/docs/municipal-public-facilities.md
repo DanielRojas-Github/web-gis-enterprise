@@ -17,8 +17,8 @@ La migración `007_create_public_facilities.sql` crea la tabla. La capa no se in
 - `GET /api/public-facilities` devuelve una colección GeoJSON y requiere la sesión OIDC y un rol GIS de lectura, como las demás rutas `/api`.
 - `POST /api/public-facilities` crea un punto; `PUT /api/public-facilities/:id` reemplaza sus atributos y geometría; `DELETE /api/public-facilities/:id` lo elimina.
 - Las escrituras exigen `GIS_WRITE_ROLES` (por defecto `gis-editor,gis-admin`) y un encabezado `Origin` permitido por `CORS_ALLOWED_ORIGINS`. El cuerpo acepta `name`, `facilityType`, `status`, `managingDepartment` y una geometría `Point` GeoJSON con coordenadas `[longitud, latitud]` en EPSG:4326.
-- El grupo `Municipal Services` del panel carga la capa al activarla y conserva la configuración de usuario aunque ya exista un árbol de capas guardado localmente.
-- El formulario municipal permite ubicar un equipamiento en el mapa, actualizar sus atributos y eliminarlo. Solo muestra acciones de escritura cuando `/api/auth/me` informa `permissions.canWrite`; el backend sigue aplicando la autorización en cada operación.
+- Al abrir el mapa, la capa municipal se carga desde la API y queda visible, incluso si el navegador conserva un árbol de capas local anterior.
+- El formulario municipal permite ubicar un equipamiento en el mapa, actualizar sus atributos y eliminarlo. Los cambios de la colección GeoJSON reconstruyen la capa Leaflet para reflejar altas, ediciones y eliminaciones al instante. Solo muestra acciones de escritura cuando `/api/auth/me` informa `permissions.canWrite`; el backend sigue aplicando la autorización en cada operación.
 - La API valida los dominios y límites de coordenadas antes de escribir; PostGIS impone el tipo `Point`, el SRID y las restricciones de categoría y estado.
 
 La tabla comienza vacía si no se cargan datos municipales; no se insertan ubicaciones de ejemplo en las migraciones. El editor genérico de dibujo sigue siendo local; solo el formulario de equipamientos escribe en esta tabla.
@@ -29,4 +29,4 @@ La tabla comienza vacía si no se cargan datos municipales; no se insertan ubica
 - No hay control de versión para actualizaciones concurrentes: si dos editores guardan el mismo equipamiento, prevalece la última escritura. Resolver conflictos se abordará en una etapa de colaboración multiusuario.
 - La creación no usa clave de idempotencia. Añadirla y decidir el comportamiento de reintentos se abordará junto con una etapa offline o de conectividad intermitente.
 - La cola offline existente sigue en memoria; el formulario municipal requiere conexión. No se promete edición offline en el alcance actual.
-- Falta una prueba automatizada que cubra la interacción del formulario y el mapa en navegador.
+- La prueba manual en navegador confirmó crear, editar y eliminar desde el mapa, además de persistencia tras recargar. Falta automatizar este flujo de extremo a extremo.

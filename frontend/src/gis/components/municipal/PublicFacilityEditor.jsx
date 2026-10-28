@@ -113,6 +113,7 @@ export default function PublicFacilityEditor() {
     }
 
     updateLayer('public-facilities', {
+      featureRevision: (layer.featureRevision || 0) + 1,
       source: {
         ...layer.source,
         features: {

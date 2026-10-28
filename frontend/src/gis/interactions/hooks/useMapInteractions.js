@@ -42,6 +42,7 @@ export const useMapInteractions = () => {
 
       const currentFeatures = layer.source?.features?.features || []
       updateLayer('public-facilities', {
+        featureRevision: (layer.featureRevision || 0) + 1,
         source: {
           ...layer.source,
           features: {

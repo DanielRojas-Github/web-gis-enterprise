@@ -53,7 +53,7 @@ if (!geojson?.features) {
 }
 
 return (
-  <GeoJSON data={geojson} onEachFeature={
+  <GeoJSON key={`${layer.id}:${layer.featureRevision || 0}`} data={geojson} onEachFeature={
 
       (
         feature,
