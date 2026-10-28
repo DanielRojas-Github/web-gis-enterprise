@@ -22,3 +22,11 @@ La migración `007_create_public_facilities.sql` crea la tabla. La capa no se in
 - La API valida los dominios y límites de coordenadas antes de escribir; PostGIS impone el tipo `Point`, el SRID y las restricciones de categoría y estado.
 
 La tabla comienza vacía si no se cargan datos municipales; no se insertan ubicaciones de ejemplo en las migraciones. El editor genérico de dibujo sigue siendo local; solo el formulario de equipamientos escribe en esta tabla.
+
+## Casos diferidos
+
+- La prueba automatizada de PostGIS se ejecuta solo con `GIS_ALLOW_DB_TESTS=true`; por defecto, `npm test` usa un repositorio en memoria para no escribir en la base local.
+- No hay control de versión para actualizaciones concurrentes: si dos editores guardan el mismo equipamiento, prevalece la última escritura. Resolver conflictos se abordará en una etapa de colaboración multiusuario.
+- La creación no usa clave de idempotencia. Añadirla y decidir el comportamiento de reintentos se abordará junto con una etapa offline o de conectividad intermitente.
+- La cola offline existente sigue en memoria; el formulario municipal requiere conexión. No se promete edición offline en el alcance actual.
+- Falta una prueba automatizada que cubra la interacción del formulario y el mapa en navegador.

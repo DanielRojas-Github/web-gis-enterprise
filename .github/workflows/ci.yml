@@ -1,0 +1,93 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  backend:
+    name: Backend tests with PostGIS
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgis/postgis:16-3.4
+        env:
+          POSTGRES_DB: gisdb
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres -d gisdb"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    defaults:
+      run:
+        working-directory: backend
+    env:
+      DB_HOST: 127.0.0.1
+      DB_PORT: 5432
+      DB_NAME: gisdb
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+      GEOSERVER_USER: ci-user
+      GEOSERVER_PASSWORD: ci-password
+      OIDC_ISSUER: https://identity.test/realms/web-gis
+      OIDC_CLIENT_ID: web-gis-ci
+      OIDC_CLIENT_SECRET: ci-client-secret
+      OIDC_REDIRECT_URI: https://frontend.test/api/auth/callback
+      OIDC_ROLES_CLAIM: realm_access.roles
+      SESSION_SECRET: ci-session-secret-with-at-least-32-characters
+      FRONTEND_URL: http://test.local
+      CORS_ALLOWED_ORIGINS: http://test.local
+      GIS_READ_ROLES: gis-reader,gis-editor,gis-admin
+      GIS_WRITE_ROLES: gis-editor,gis-admin
+      RUN_MIGRATIONS_ON_START: "false"
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: backend/package-lock.json
+      - name: Install backend dependencies
+        run: npm ci
+      - name: Enable PostGIS and create schema
+        run: |
+          node --input-type=module -e 'import pg from "pg"; const client = new pg.Client({ host: process.env.DB_HOST, port: Number(process.env.DB_PORT), database: process.env.DB_NAME, user: process.env.DB_USER, password: process.env.DB_PASSWORD }); await client.connect(); await client.query("CREATE EXTENSION IF NOT EXISTS postgis"); await client.end();'
+          npm run migrate
+      - name: Run backend and PostGIS integration tests
+        env:
+          GIS_ALLOW_DB_TESTS: "true"
+        run: npm test
+
+  frontend:
+    name: Frontend lint and build
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - name: Install frontend dependencies
+        run: npm ci
+      - name: Lint frontend
+        run: npm run lint
+      - name: Build frontend
+        run: npm run build
