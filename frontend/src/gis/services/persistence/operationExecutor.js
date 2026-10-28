@@ -63,6 +63,14 @@ export async function executeOperation(
 
     operationId:
       operation.id,
+    type:
+      operation.type,
+
+    repository:
+      operation.repository,
+
+    adapter:
+      operation.adapter,
 
     layerId:
       operation.layerId,

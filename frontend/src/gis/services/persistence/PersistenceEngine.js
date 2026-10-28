@@ -138,14 +138,24 @@ export class PersistenceEngine {
 
         try {
 
-//            throw new Error(
-//     'TEST PERSISTENCE FAILURE'
-// )
+            //            throw new Error(
+            //     'TEST PERSISTENCE FAILURE'
+            // )
             const result =
                 await executeOperation(
                     operation
                 )
-                
+
+            if (result?.success !== true) {
+                const message =
+                    typeof result?.error === 'string'
+                        ? result.error
+                        : result?.error?.message ??
+                        result?.message ??
+                        `Persistence operation "${operation.id}" did not succeed.`
+
+                throw new Error(message)
+            }
 
             console.log(
                 'EXECUTION RESULT:',
@@ -241,9 +251,9 @@ export class PersistenceEngine {
     }
     onOperationFailure(listener) {
 
-    this.failureListeners.push(listener)
+        this.failureListeners.push(listener)
 
-}
+    }
     notifyOperationSuccess(result) {
 
         this.successListeners.forEach(listener => {
@@ -255,13 +265,13 @@ export class PersistenceEngine {
     }
     notifyOperationFailure(result) {
 
-    this.failureListeners.forEach(listener => {
+        this.failureListeners.forEach(listener => {
 
-        listener(result)
+            listener(result)
 
-    })
+        })
 
-}
+    }
 }
 
 

@@ -29,59 +29,67 @@ export class LayerSynchronizationService {
 
     synchronizationManager.onOperationSuccess(
       result => {
-
+        if (
+          result?.repository !== REPOSITORY_TYPES.LAYER ||
+          result?.adapter !== ADAPTER_TYPES.LOCAL
+        ) {
+          return
+        }
         this.notifyLayerSynchronized(
           result
         )
 
       }
     )
-  synchronizationManager.onOperationFailure(
-    result => {
+    synchronizationManager.onOperationFailure(
+      result => {
+        if (
+          result?.repository !== REPOSITORY_TYPES.LAYER ||
+          result?.adapter !== ADAPTER_TYPES.LOCAL
+        ) {
+          return
+        }
 
-      this.notifyLayerSynchronizationFailed(
-        result
-      )
-
-    }
-  )
+        this.notifyLayerSynchronizationFailed(result)
+      }
+    )
   }
 
-onLayerSynchronized(listener) {
+  onLayerSynchronized(listener) {
 
     this.successListeners.push(
-        listener
+      listener
     )
 
     return () => {
 
-        this.successListeners =
-            this.successListeners.filter(
-                currentListener =>
-                    currentListener !== listener
-            )
+      this.successListeners =
+        this.successListeners.filter(
+          currentListener =>
+            currentListener !== listener
+        )
 
     }
 
-}
-
-onLayerSynchronizationFailed(listener) {
-
-  this.failureListeners.push(
-    listener
-  )
-
-  return () => {
-
-    this.failureListeners =
-      this.failureListeners.filter(
-        currentListener =>
-          currentListener !== listener
-      )
-
   }
 
-}
+  onLayerSynchronizationFailed(listener) {
+
+    this.failureListeners.push(
+      listener
+    )
+
+    return () => {
+
+      this.failureListeners =
+        this.failureListeners.filter(
+          currentListener =>
+            currentListener !== listener
+        )
+
+    }
+
+  }
 
   notifyLayerSynchronized(result) {
 
@@ -96,15 +104,15 @@ onLayerSynchronizationFailed(listener) {
   }
   notifyLayerSynchronizationFailed(result) {
 
-  this.failureListeners.forEach(
-    listener => {
+    this.failureListeners.forEach(
+      listener => {
 
-      listener(result)
+        listener(result)
 
-    }
-  )
+      }
+    )
 
-}
+  }
   queueLayerUpdate(layer) {
 
     synchronizationManager

@@ -314,6 +314,22 @@ export const layerReducer = (
           })
         ),
       }
+
+    case LAYER_ACTIONS.LAYER_PERSISTENCE_SUCCESS:
+      return {
+        ...state,
+        layers: updateLayerTree(
+          state.layers,
+          action.payload,
+          layer => ({
+            ...layer,
+            dirty: false,
+            saving: false,
+            lastSaved: Date.now(),
+            syncError: null,
+          })
+        ),
+      }
     case LAYER_ACTIONS.SAVE_LAYER:
 
       return {

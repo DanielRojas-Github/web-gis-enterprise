@@ -11,70 +11,68 @@ import {
 export const useLayerSynchronization = () => {
 
   const {
-    clearLayerDirty,
+    markLayerPersistenceSuccess,
     setLayerSyncError,
   } = useLayers()
 
-useEffect(() => {
+  useEffect(() => {
 
-  const unsubscribeSuccess =
-    layerSynchronizationService
-      .onLayerSynchronized(
-        result => {
+    const unsubscribeSuccess =
+      layerSynchronizationService
+        .onLayerSynchronized(
+          result => {
 
-          if (
-            !result?.layerId
-          ) {
-            return
+            if (
+              !result?.layerId
+            ) {
+              return
+            }
+
+            console.log(
+              'LAYER SYNCHRONIZED:',
+              result.layerId
+            )
+
+
+            markLayerPersistenceSuccess(result.layerId)
           }
+        )
 
-          console.log(
-            'LAYER SYNCHRONIZED:',
-            result.layerId
-          )
+    const unsubscribeFailure =
+      layerSynchronizationService
+        .onLayerSynchronizationFailed(
+          result => {
 
-          clearLayerDirty(
-            result.layerId
-          )
+            if (
+              !result?.layerId
+            ) {
+              return
+            }
 
-        }
-      )
+            console.error(
+              'LAYER SYNCHRONIZATION FAILED:',
+              result.layerId,
+              result.error
+            )
 
-  const unsubscribeFailure =
-    layerSynchronizationService
-      .onLayerSynchronizationFailed(
-        result => {
+            setLayerSyncError(
+              result.layerId,
+              result.error
+            )
 
-          if (
-            !result?.layerId
-          ) {
-            return
           }
+        )
 
-          console.error(
-            'LAYER SYNCHRONIZATION FAILED:',
-            result.layerId,
-            result.error
-          )
+    return () => {
 
-          setLayerSyncError(
-            result.layerId,
-            result.error
-          )
+      unsubscribeSuccess()
+      unsubscribeFailure()
 
-        }
-      )
+    }
 
-  return () => {
-
-    unsubscribeSuccess()
-    unsubscribeFailure()
-
-  }
-
-}, [
-  clearLayerDirty,
-  setLayerSyncError,
-])
+  }, [
+    markLayerPersistenceSuccess,
+    setLayerSyncError,
+  ])
 
 }

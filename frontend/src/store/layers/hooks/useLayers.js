@@ -310,79 +310,88 @@ export const useLayers = () => {
           layerId,
       })
 
+  const markLayerPersistenceSuccess = useCallback(
+    layerId =>
+      dispatch({
+        type: LAYER_ACTIONS.LAYER_PERSISTENCE_SUCCESS,
+        payload: layerId,
+      }),
+    [dispatch]
+  )
+
 
 
   const setLayerSyncError = useCallback(
-  (
-    layerId,
-    error
-  ) =>
-    dispatch({
-      type:
-        LAYER_ACTIONS.SET_LAYER_SYNC_ERROR,
-
-      payload: {
-        layerId,
-        error,
-      },
-    }),
-  [dispatch]
-)
-
-const setLayerSaving = useCallback(
-  (layerId, saving) =>
-    dispatch({
-      type:
-        LAYER_ACTIONS.SET_LAYER_SAVING,
-      payload: {
-        layerId,
-        saving,
-      },
-    }),
-  [dispatch]
-)
-
-const saveLayer = useCallback(
-  async (layerId) => {
-    setLayerSaving(layerId, true)
-
-    try {
-      await new Promise(
-        res => setTimeout(res, 600)
-      )
-
+    (
+      layerId,
+      error
+    ) =>
       dispatch({
         type:
-          LAYER_ACTIONS.SAVE_LAYER,
-        payload:
+          LAYER_ACTIONS.SET_LAYER_SYNC_ERROR,
+
+        payload: {
           layerId,
-      })
+          error,
+        },
+      }),
+    [dispatch]
+  )
 
-      console.log(
-        'LAYER SAVED:',
-        layerId
-      )
-    } catch (err) {
+  const setLayerSaving = useCallback(
+    (layerId, saving) =>
+      dispatch({
+        type:
+          LAYER_ACTIONS.SET_LAYER_SAVING,
+        payload: {
+          layerId,
+          saving,
+        },
+      }),
+    [dispatch]
+  )
 
-      console.error(
-        'LAYER SAVE FAILED:',
-        layerId,
-        err
-      )
+  const saveLayer = useCallback(
+    async (layerId) => {
+      setLayerSaving(layerId, true)
 
-      setLayerSyncError(
-        layerId,
-        err.message ||
-        'Failed to save layer'
-      )
-    }
-  },
-  [
-    dispatch,
-    setLayerSaving,
-    setLayerSyncError,
-  ]
-)
+      try {
+        await new Promise(
+          res => setTimeout(res, 600)
+        )
+
+        dispatch({
+          type:
+            LAYER_ACTIONS.SAVE_LAYER,
+          payload:
+            layerId,
+        })
+
+        console.log(
+          'LAYER SAVED:',
+          layerId
+        )
+      } catch (err) {
+
+        console.error(
+          'LAYER SAVE FAILED:',
+          layerId,
+          err
+        )
+
+        setLayerSyncError(
+          layerId,
+          err.message ||
+          'Failed to save layer'
+        )
+      }
+    },
+    [
+      dispatch,
+      setLayerSaving,
+      setLayerSyncError,
+    ]
+  )
   const updateLayer = (
     layerId,
     updates
@@ -435,6 +444,7 @@ const saveLayer = useCallback(
 
     clearLayerDirty,
 
+    markLayerPersistenceSuccess,
     setLayerSyncError,
 
     setLayerSaving,
