@@ -1,8 +1,3 @@
-import { useEffect } from 'react'
-
-import { bootstrapGIS }
-  from '@/gis/bootstrap/bootstrapGIS'
-
 import { useAutosave }
   from './useAutosave'
 
@@ -19,17 +14,6 @@ import { useLayerSynchronization }
 from '@/gis/synchronization/hooks/useLayerSynchronization'
 
 export default function GISSystemManager() {
-
-  useEffect(() => {
-
-    console.log(
-      'GIS SYSTEM STARTED'
-    )
-
-    bootstrapGIS()
-
-  }, [])
-
   useAutosave()
 
    usePersistenceEngine()

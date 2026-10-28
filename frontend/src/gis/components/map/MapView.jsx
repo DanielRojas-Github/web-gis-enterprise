@@ -131,14 +131,12 @@ const MapView = () => {
     )
 
   return (
-
-    <>
-
+    <div className="gis-map-view">
       <MapContainer
         center={[-21.5355, -64.7296]}
         zoom={13}
         style={{
-          height: '100vh',
+          height: '100%',
           width: '100%',
         }}
       >
@@ -166,8 +164,7 @@ const MapView = () => {
       <EditHistoryControls />
       <GeoJSONImportControl />
       <WFSLoadButton />
-
-    </>
+    </div>
   )
 }
 

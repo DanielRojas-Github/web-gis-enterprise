@@ -29,7 +29,8 @@ Replace the local Keycloak values with the public HTTPS issuer, client ID, clien
 - The local Keycloak client has an explicit realm-role protocol mapper that includes `realm_access.roles` in the validated ID token. This lets the backend build the session role list from the provider's signed identity claims.
 - The session is stored in PostgreSQL. The browser receives only an `HttpOnly` session cookie; ID tokens remain server-side for logout and are not exposed to frontend JavaScript.
 - `GIS_READ_ROLES` defaults to `gis-reader`, `gis-editor`, and `gis-admin`. All three roles currently grant the same API read access.
-- The GIS API currently has read routes only. `gis-editor` and `gis-admin` do not yet grant edit or application-administration capabilities; future write and administration endpoints must enforce those roles individually.
+- `GIS_WRITE_ROLES` defaults to `gis-editor` and `gis-admin`. The public-facilities write endpoints enforce this role list and a trusted `Origin`; other GIS routes remain read-only until they add explicit write authorization.
+- `gis-admin` currently shares the public-facilities edit capability. Application-wide administration is not implemented.
 - The frontend GIS state still uses its local `viewer` role and does not yet hydrate role-specific controls from `/api/auth/me`. Frontend controls must remain a usability feature; authorization is enforced by the backend.
 
 The current API endpoints are read-only. This change authenticates users but does not yet map provider groups or claims to GIS roles. Define and enforce those permissions before adding write routes or treating authorization by role as complete.

@@ -11,6 +11,9 @@ import wfsRoutes
 import buildingRoutes
   from "./buildingRoutes.js";
 
+import publicFacilityRoutes
+  from "./publicFacilityRoutes.js";
+
 
 const router =
   Router();
@@ -26,6 +29,10 @@ router.use(
 router.use(
   "/buildings",
   buildingRoutes
+);
+router.use(
+  "/public-facilities",
+  publicFacilityRoutes
 );
 
 export default router;

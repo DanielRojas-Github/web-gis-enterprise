@@ -204,7 +204,18 @@ router.get("/me", (request, response) => {
 
   return response.json({
     success: true,
-    user: request.session.user,
+    user: {
+      ...request.session.user,
+      permissions: {
+        canRead: [
+          ...env.auth.readRoles,
+          ...env.auth.writeRoles,
+        ].some((role) => request.session.user.roles.includes(role)),
+        canWrite: env.auth.writeRoles.some(
+          (role) => request.session.user.roles.includes(role)
+        ),
+      },
+    },
   });
 });
 

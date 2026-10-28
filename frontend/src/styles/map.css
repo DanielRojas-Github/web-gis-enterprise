@@ -5,10 +5,15 @@
 }
 
 .layer-panel {
-  position: absolute;
-  top: 80px;
-  left: 50px;
-  width: 300px;
+  position: relative;
+  top: auto;
+  left: auto;
+  grid-column: 1;
+  grid-row: 1;
+  width: 320px;
+  min-height: 0;
+  box-sizing: border-box;
+  overflow-y: auto;
   background-color: white;
   z-index: 1000;
   padding: 15px;

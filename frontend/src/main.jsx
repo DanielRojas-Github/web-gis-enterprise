@@ -10,11 +10,11 @@ import '@styles/map.css'
 import GISProvider from '@/store/gis/GISProvider'
 import LayerProvider from '@/store/layers/LayerProvider'
 
-import { registerTools } from '@/gis/tools/registerTools'
+import { bootstrapGIS } from '@/gis/bootstrap/bootstrapGIS'
 
 import AppRouter from './app/router/AppRouter'
 
-registerTools()
+bootstrapGIS()
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>

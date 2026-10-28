@@ -2,29 +2,23 @@ import { drawState }
     from '@/gis/tools/overlays/draw/drawStore'
 
 import {
-    loadFeatures,
-}
-    from './services/featureStorageService'
+    repositoryFactory,
+} from './repositories/RepositoryFactory'
+
+import {
+    REPOSITORY_TYPES,
+} from './constants/repositoryTypes'
 
 export function
     initializeFeaturePersistence() {
 
 
-    const features =
-        loadFeatures()
-
-
-
-    if (
-        features.length > 0
-    ) {
-
-
-
-        drawState.setFeatures(
-            features
+    const featureRepository =
+        repositoryFactory.getRepository(
+            REPOSITORY_TYPES.FEATURE
         )
 
-
-    }
+    drawState.setFeatures(
+        featureRepository.findAll()
+    )
 }

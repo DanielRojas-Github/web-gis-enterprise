@@ -10,6 +10,10 @@ import {
   BuildingRepository,
 } from "./buildingRepository.js";
 
+import {
+  PublicFacilityRepository,
+} from "./publicFacilityRepository.js";
+
 const repositories = {
 
   feature:
@@ -20,6 +24,9 @@ const repositories = {
   
   building:
     new BuildingRepository(),
+
+  publicFacility:
+    new PublicFacilityRepository(),
 
 };
 

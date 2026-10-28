@@ -14,14 +14,19 @@ import {
 } from '@/gis/layers/loaders/wfsLayerLoader'
 
 import {
+  loadApiLayer,
+} from '@/gis/layers/loaders/apiLayerLoader'
+
+import {
   SOURCE_TYPES,
 }
   from '@/gis/layers/registry/sourceTypes'
 
-const isUnloadedWFSLayer =
+const isUnloadedRemoteLayer =
   layer =>
-    layer?.source?.type ===
-    SOURCE_TYPES.WFS &&
+    [SOURCE_TYPES.WFS, SOURCE_TYPES.API].includes(
+      layer?.source?.type
+    ) &&
     !layer?.source?.features
 
 export const useLayers = () => {
@@ -48,10 +53,9 @@ export const useLayers = () => {
           },
         })
 
-        const loadedLayer =
-          await loadWFSLayer(
-            layer
-          )
+        const loadedLayer = layer.source.type === SOURCE_TYPES.API
+          ? await loadApiLayer(layer)
+          : await loadWFSLayer(layer)
 
         dispatch({
           type:
@@ -116,7 +120,7 @@ export const useLayers = () => {
       }
 
       if (
-        isUnloadedWFSLayer(layer) &&
+        isUnloadedRemoteLayer(layer) &&
         !layer.visible
       ) {
 
@@ -189,7 +193,7 @@ export const useLayers = () => {
 
           if (
             layer.visible &&
-            isUnloadedWFSLayer(layer)
+            isUnloadedRemoteLayer(layer)
           ) {
 
             await loadWFSIntoStore(

@@ -1,0 +1,13 @@
+process.env.NODE_ENV = "test";
+process.env.GEOSERVER_USER = "test-user";
+process.env.GEOSERVER_PASSWORD = "test-password";
+process.env.OIDC_ISSUER = "https://identity.test/realms/web-gis";
+process.env.OIDC_CLIENT_ID = "web-gis-test";
+process.env.OIDC_CLIENT_SECRET = "test-client-secret";
+process.env.OIDC_REDIRECT_URI = "https://frontend.test/api/auth/callback";
+process.env.OIDC_ROLES_CLAIM = "realm_access.roles";
+process.env.SESSION_SECRET = "test-session-secret-with-at-least-32-characters";
+process.env.FRONTEND_URL = "http://test.local";
+process.env.CORS_ALLOWED_ORIGINS = "http://test.local";
+process.env.GIS_READ_ROLES = "gis-reader,gis-editor,gis-admin";
+process.env.GIS_WRITE_ROLES = "gis-editor,gis-admin";

@@ -46,8 +46,94 @@
 
 .dashboard-main {
   flex: 1;
+  min-height: 0;
   padding: 0;
   overflow: hidden;
+  display: flex;
+}
+
+.gis-workspace {
+  display: flex;
+  flex: 1;
+  min-width: 0;
+  min-height: 0;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.gis-workspace-heading {
+  flex: 0 0 auto;
+  margin: 0;
+  padding: 0.5rem 1rem;
+  background: white;
+  font-size: 1.25rem;
+}
+
+.gis-workspace-tools {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 0.5rem;
+  background: #f8fafc;
+  overflow-x: auto;
+}
+
+.municipal-facility-editor {
+  flex: 0 0 280px;
+  max-height: 240px;
+  overflow-y: auto;
+  padding: 0.75rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 0.5rem;
+  background: white;
+}
+
+.municipal-facility-editor h3,
+.municipal-facility-editor p {
+  margin: 0 0 0.5rem;
+}
+
+.municipal-facility-editor form {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.municipal-facility-editor label {
+  display: grid;
+  gap: 0.2rem;
+  font-size: 0.85rem;
+}
+
+.municipal-facility-editor input,
+.municipal-facility-editor select {
+  min-width: 0;
+  padding: 0.35rem;
+}
+
+.municipal-facility-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.municipal-facility-editor .error {
+  color: #b91c1c;
+}
+
+.gis-map-area {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.gis-map-view {
+  position: absolute;
+  inset: 0;
+  min-width: 0;
+  min-height: 0;
 }
 
 .layer-order-controls {

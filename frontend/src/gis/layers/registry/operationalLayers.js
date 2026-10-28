@@ -210,6 +210,75 @@ export const operationalLayers = [
   }),
 
   createLayerGroup({
+
+    id:
+      'municipal-services',
+
+    name:
+      'Municipal Services',
+
+    visible:
+      true,
+
+    expanded:
+      true,
+
+    children: [
+
+      createLayer({
+
+        id:
+          'public-facilities',
+
+        name:
+          'Public Facilities',
+
+        type:
+          LAYER_TYPES.VECTOR,
+
+        visible:
+          false,
+
+        opacity:
+          1,
+
+        zIndex:
+          200,
+
+        source: {
+
+          type:
+            SOURCE_TYPES.API,
+
+          endpoint:
+            '/public-facilities',
+        },
+
+        metadata: {
+
+          attribution:
+            'Municipal Public Facilities',
+
+          geometryType:
+            'Point',
+
+          crs:
+            'EPSG:4326',
+
+          category:
+            'municipal',
+
+          keywords: [
+            'municipal',
+            'public facilities',
+            'services',
+          ],
+        },
+      }),
+    ],
+  }),
+
+  createLayerGroup({
     id:
       'transportation',
 

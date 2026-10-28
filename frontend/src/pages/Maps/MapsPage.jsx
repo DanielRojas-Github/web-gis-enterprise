@@ -1,10 +1,8 @@
-import MapView from '@/gis/components/map/MapView'
+import App from '@/App'
 
 function MapsPage() {
   return (
-    <div style={{ width: '100%', height: '100%' }}>
-      <MapView />
-    </div>
+    <App />
   )
 }
 

@@ -2,14 +2,87 @@
 import { useEffect, useRef } from 'react'
 import { useMapEvents } from 'react-leaflet'
 import { toolManager } from '@/gis/tools/manager/ToolManager'
+import { useLayers } from '@/store/layers/hooks/useLayers'
+import { useGIS } from '@/store/gis/hooks/useGIS'
+import { findLayerById } from '@/gis/utils/findLayerById'
+import {
+  createPublicFacility,
+  getPublicFacilityError,
+} from '@/gis/services/publicFacilities/publicFacilitiesApi'
+import { publicFacilityEditorState, publicFacilityEditorStore } from '@/gis/services/publicFacilities/publicFacilityEditorStore'
 
 const DOUBLE_CLICK_DELAY = 250
 
 export const useMapInteractions = () => {
   const clickTimeoutRef = useRef(null)
+  const { layers, updateLayer } = useLayers()
+  const { setSelectedFeature } = useGIS()
+
+  const handleFacilityPlacement = async (event) => {
+    if (!publicFacilityEditorState.placing || publicFacilityEditorState.saving) {
+      return false
+    }
+
+    const { draft } = publicFacilityEditorState
+    publicFacilityEditorStore.setState({ saving: true, feedback: '', error: false })
+
+    try {
+      const feature = await createPublicFacility({
+        ...draft,
+        geometry: {
+          type: 'Point',
+          coordinates: [event.latlng.lng, event.latlng.lat],
+        },
+      })
+      const layer = findLayerById(layers, 'public-facilities')
+
+      if (!layer) {
+        throw new Error('La capa de equipamientos no está disponible.')
+      }
+
+      const currentFeatures = layer.source?.features?.features || []
+      updateLayer('public-facilities', {
+        source: {
+          ...layer.source,
+          features: {
+            type: 'FeatureCollection',
+            features: [...currentFeatures, feature],
+          },
+        },
+        visible: true,
+        loading: false,
+        error: null,
+      })
+      setSelectedFeature({
+        ...feature,
+        layerId: 'public-facilities',
+        layerName: 'Public Facilities',
+      })
+      publicFacilityEditorStore.setState({
+        placing: false,
+        saving: false,
+        feedback: 'Equipamiento guardado en PostGIS.',
+        error: false,
+      })
+    } catch (error) {
+      publicFacilityEditorStore.setState({
+        placing: false,
+        saving: false,
+        feedback: getPublicFacilityError(error),
+        error: true,
+      })
+    }
+
+    return true
+  }
 
   const map = useMapEvents({
-    click(event) {
+    async click(event) {
+      if (publicFacilityEditorState.placing) {
+        await handleFacilityPlacement(event)
+        return
+      }
+
       const activeTool = toolManager.getActiveTool()
 
       if (!activeTool?.onMapClick) {

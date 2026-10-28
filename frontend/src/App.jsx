@@ -38,12 +38,15 @@ import {
 import FeatureInspector
   from '@/gis/selection/components/FeatureInspector'
 
+import {
+  mergeLayerTrees,
+} from '@/gis/utils/mergeLayerTrees'
+
 import EditingPanel
   from '@/gis/selection/components/EditingPanel'
 
-import GISSystemManager
-  from '@/gis/system/GISSytemManager'
-
+import PublicFacilityEditor
+  from '@/gis/components/municipal/PublicFacilityEditor'
 
 window.toolManager = toolManager
 
@@ -77,8 +80,12 @@ function App() {
         LAYER_ACTIONS.SET_LAYERS,
 
       payload:
-        persistedLayers ||
-        initialLayers,
+        persistedLayers
+          ? mergeLayerTrees(
+            persistedLayers,
+            initialLayers
+          )
+          : initialLayers,
     })
 
 
@@ -92,17 +99,21 @@ function App() {
 
   return (
     <div className="app-layout">
-      <GISSystemManager />
-
       <LayerPanel />
-      <h1>Web GIS Enterprise</h1>
-
-      <SelectionControls />
-      <FeatureInspector />
-      <ToolBar />
-      <EditingPanel />
-      <MapView />
-      <CoordinateInspector />
+      <section className="gis-workspace">
+        <h1 className="gis-workspace-heading">Web GIS Enterprise</h1>
+        <div className="gis-workspace-tools">
+          <SelectionControls />
+          <FeatureInspector />
+          <EditingPanel />
+          <PublicFacilityEditor />
+        </div>
+        <div className="gis-map-area">
+          <ToolBar />
+          <MapView />
+          <CoordinateInspector />
+        </div>
+      </section>
     </div>
   )
 }

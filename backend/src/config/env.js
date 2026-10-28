@@ -407,6 +407,15 @@ const gisReadRoles =
     .map((role) => role.trim())
     .filter(Boolean);
 
+const gisWriteRoles =
+  getEnv(
+    "GIS_WRITE_ROLES",
+    "gis-editor,gis-admin"
+  )
+    .split(",")
+    .map((role) => role.trim())
+    .filter(Boolean);
+
 if (cookieSameSite === "none" && !isProduction) {
   throw new Error(
     "SESSION_COOKIE_SAME_SITE=none is only allowed in production, where cookies are secure"
@@ -483,6 +492,7 @@ export const env = {
       oidcIssuer.protocol === "http:",
     rolesClaim: oidcRolesClaim,
     readRoles: gisReadRoles,
+    writeRoles: gisWriteRoles,
     frontendLogoutUri:
       new URL("/login?logged_out=1", frontendUrl).toString(),
   },

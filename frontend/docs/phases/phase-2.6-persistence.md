@@ -515,9 +515,10 @@ La Fase 2.6 establece la infraestructura arquitectónica del motor de persistenc
 ### Funcionalidades y validaciones pendientes
 
 - [x] CRUD local de `LayerRepository` implementado por id y con validación de duplicados/entidades inexistentes en el commit `fb669fd`; falta cobertura automatizada.
-- [ ] Completar y verificar las operaciones CRUD individuales de `FeatureRepository`.
+- [x] CRUD local de `FeatureRepository` implementado por id, con validación de duplicados/entidades inexistentes y borrado limitado a la entidad solicitada. La integración con dibujo, edición, carga y undo/redo se verificó manualmente en el navegador; falta cobertura automatizada.
 - [ ] Comprobar que los adaptadores informen del resultado real de la persistencia.
-- [ ] Implementar y probar la sincronización remota real en `GeoServerSyncAdapter` (el adaptador ahora falla explícitamente en lugar de simular éxito; cambio pendiente de commit).
+- [x] `GeoServerSyncAdapter` ya no simula éxito: devuelve el error explícito de adaptador no implementado hasta que exista escritura remota real (commit `609a372`).
+- [ ] Implementar y probar la sincronización remota real en `GeoServerSyncAdapter` cuando se acuerden el contrato y el destino de escritura.
 - [ ] Añadir pruebas automatizadas con aserciones para persistencia, errores y reintentos.
 - [ ] Validar el ciclo de inicio y detención del motor, incluidos los escenarios de reinicialización.
 - [ ] Verificar el comportamiento del procesamiento de la cola en condiciones de error y recuperación de conexión.

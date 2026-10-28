@@ -1,5 +1,9 @@
 
-import { saveFeatures } from '@/gis/services/persistence/services/featureStorageService'
+import { repositoryFactory } from '@/gis/services/persistence/repositories/RepositoryFactory'
+import { REPOSITORY_TYPES } from '@/gis/services/persistence/constants/repositoryTypes'
+
+const getFeatureRepository = () =>
+  repositoryFactory.getRepository(REPOSITORY_TYPES.FEATURE)
 
 const notifyListeners = (listeners) => {
   listeners.forEach((listener) => listener())
@@ -50,39 +54,35 @@ export const drawState = {
   },
 
   addFeature(feature) {
+    getFeatureRepository().create(feature)
     this.features = [...this.features, feature]
-
-    saveFeatures(this.features)
 
     notifyListeners(this.listeners)
   },
 
   removeFeature(id) {
+    getFeatureRepository().delete(id)
     this.features = this.features.filter(
       (feature) => feature.id !== id
     )
-
-    saveFeatures(this.features)
 
     notifyListeners(this.listeners)
   },
 
   updateFeature(updatedFeature) {
+    getFeatureRepository().update(updatedFeature)
     this.features = this.features.map((feature) =>
       feature.id === updatedFeature.id
         ? updatedFeature
         : feature
     )
 
-    saveFeatures(this.features)
-
     notifyListeners(this.listeners)
   },
 
   setFeatures(features) {
-    this.features = features
-
-    saveFeatures(this.features)
+    getFeatureRepository().replaceAll(features)
+    this.features = [...features]
 
     notifyListeners(this.listeners)
   },

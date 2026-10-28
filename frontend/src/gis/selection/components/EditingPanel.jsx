@@ -26,6 +26,9 @@ export default function EditingPanel() {
         isEditing,
     } = state
 
+    const isMunicipalFacility =
+        selectedFeature?.layerId === 'public-facilities'
+
     const {
         updateFeatureInLayer,
        
@@ -134,7 +137,7 @@ export default function EditingPanel() {
                 </>
             )}
 
-            {selectedFeature && !isEditing && (
+            {selectedFeature && !isEditing && !isMunicipalFacility && (
 
                 <button
                     onClick={
@@ -147,7 +150,7 @@ export default function EditingPanel() {
 
             )}
 
-            {isEditing && (
+            {isEditing && !isMunicipalFacility && (
 
                 <button
                     onClick={
@@ -159,7 +162,7 @@ export default function EditingPanel() {
 
             )}
 
-            {isEditing && (
+            {isEditing && !isMunicipalFacility && (
                 <button
                     onClick={() => {
                         handleSave()
@@ -201,7 +204,7 @@ export default function EditingPanel() {
                 </p>
 
             )}
-            {isEditing && <DynamicAttributeEditor />}
+            {isEditing && !isMunicipalFacility && <DynamicAttributeEditor />}
 
         </div>
     )

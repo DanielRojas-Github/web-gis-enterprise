@@ -8,7 +8,11 @@ export const requireGISReadRole = (
   next
 ) => {
   const userRoles = request.authenticatedUser?.roles ?? [];
-  const hasReadRole = env.auth.readRoles.some(
+  const permittedRoles = [
+    ...env.auth.readRoles,
+    ...env.auth.writeRoles,
+  ];
+  const hasReadRole = permittedRoles.some(
     (role) => userRoles.includes(role)
   );
 
