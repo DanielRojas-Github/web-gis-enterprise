@@ -1,6 +1,6 @@
 import {
   createSyncOperation,
-} from '@/gis/services/persistence/models/SyncOperation'
+} from '@/gis/services/persistence/models/syncOperation'
 
 import {
   OPERATION_TYPES,
